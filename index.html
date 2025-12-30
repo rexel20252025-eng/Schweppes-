@@ -101,13 +101,20 @@ input,select{
       <label>Pays</label>
       <select id="loginCountry" required>
         <option value="">-- Sélectionner un pays --</option>
-        <option value="225">🇨🇮 Côte d'Ivoire (+225)</option>
-        <option value="229">🇧🇯 Bénin (+229)</option>
-        <option value="226">🇧🇫 Burkina Faso (+226)</option>
-        <option value="228">🇹🇬 Togo (+228)</option>
-        <option value="223">🇲🇱 Mali (+223)</option>
-        <option value="221">🇸🇳 Sénégal (+221)</option>
+        <!-- Pays Afrique -->
+        <option value="225" data-africa="true">🇨🇮 Côte d'Ivoire (+225)</option>
+        <option value="229" data-africa="true">🇧🇯 Bénin (+229)</option>
+        <option value="226" data-africa="true">🇧🇫 Burkina Faso (+226)</option>
+        <option value="228" data-africa="true">🇹🇬 Togo (+228)</option>
+        <option value="223" data-africa="true">🇲🇱 Mali (+223)</option>
+        <option value="221" data-africa="true">🇸🇳 Sénégal (+221)</option>
+        <!-- Hors Afrique -->
+        <option value="33" data-africa="false">🇫🇷 France (+33)</option>
+        <option value="1" data-africa="false">🇺🇸 États-Unis (+1)</option>
+        <option value="49" data-africa="false">🇩🇪 Allemagne (+49)</option>
+        <option value="1c" data-africa="false">🇨🇦 Canada (+1)</option>
       </select>
+      <div id="countryMessage" class="msg error"></div>
 
       <label>Numéro de téléphone</label>
       <input type="tel" id="loginTelephone" placeholder="0700000000" required>
@@ -134,13 +141,20 @@ input,select{
       <label>Pays</label>
       <select id="signupCountry" required>
         <option value="">-- Sélectionner un pays --</option>
-        <option value="225">🇨🇮 Côte d'Ivoire (+225)</option>
-        <option value="229">🇧🇯 Bénin (+229)</option>
-        <option value="226">🇧🇫 Burkina Faso (+226)</option>
-        <option value="228">🇹🇬 Togo (+228)</option>
-        <option value="223">🇲🇱 Mali (+223)</option>
-        <option value="221">🇸🇳 Sénégal (+221)</option>
+        <!-- Pays Afrique -->
+        <option value="225" data-africa="true">🇨🇮 Côte d'Ivoire (+225)</option>
+        <option value="229" data-africa="true">🇧🇯 Bénin (+229)</option>
+        <option value="226" data-africa="true">🇧🇫 Burkina Faso (+226)</option>
+        <option value="228" data-africa="true">🇹🇬 Togo (+228)</option>
+        <option value="223" data-africa="true">🇲🇱 Mali (+223)</option>
+        <option value="221" data-africa="true">🇸🇳 Sénégal (+221)</option>
+        <!-- Hors Afrique -->
+        <option value="33" data-africa="false">🇫🇷 France (+33)</option>
+        <option value="1" data-africa="false">🇺🇸 États-Unis (+1)</option>
+        <option value="49" data-africa="false">🇩🇪 Allemagne (+49)</option>
+        <option value="1c" data-africa="false">🇨🇦 Canada (+1)</option>
       </select>
+      <div id="countryMessageSignup" class="msg error"></div>
 
       <label>Numéro de téléphone</label>
       <input type="tel" id="signupTelephone" placeholder="0700000000" required>
@@ -167,8 +181,30 @@ function toggleForm(){
   document.getElementById('login-section').classList.toggle('active');
   document.getElementById('signup-section').classList.toggle('active');
 }
+
+function handleCountrySelection(selectElement, messageElement) {
+  const selected = selectElement.options[selectElement.selectedIndex];
+  if(selected.dataset.africa === "false" && selected.value !== ""){
+    messageElement.textContent = "Désolé, ce pays n'est pas disponible";
+    messageElement.style.display = 'block';
+  } else {
+    messageElement.textContent = "";
+    messageElement.style.display = 'none';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const loginCountry = document.getElementById('loginCountry');
+  const signupCountry = document.getElementById('signupCountry');
+  const loginMsg = document.getElementById('countryMessage');
+  const signupMsg = document.getElementById('countryMessageSignup');
+
+  if(loginCountry) loginCountry.addEventListener('change', () => handleCountrySelection(loginCountry, loginMsg));
+  if(signupCountry) signupCountry.addEventListener('change', () => handleCountrySelection(signupCountry, signupMsg));
+});
 </script>
 
+<!-- Firebase Scripts -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { 
@@ -420,5 +456,6 @@ onAuthStateChanged(auth, async (user) => {
     }
 });
 </script>
+
 </body>
 </html>
