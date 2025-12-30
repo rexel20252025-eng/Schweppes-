@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finance.r</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#f1f5f9,#e2e8f0);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.container{
+  background:#fff;
+  width:100%;
+  max-width:360px;
+  padding:26px 20px;
+  border-radius:18px;
+  box-shadow:0 15px 35px rgba(0,0,0,.08);
+}
+.logo{
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+  color:#1e3a8a;
+}
+.subtitle{
+  text-align:center;
+  font-size:13px;
+  color:#64748b;
+  margin-bottom:18px;
+}
+h2{
+  font-size:19px;
+  color:#1e3a8a;
+  margin-bottom:14px;
+}
+label{
+  font-size:12px;
+  color:#374151;
+  margin-bottom:4px;
+  display:block;
+}
+input,select{
+  width:100%;
+  padding:10px 12px;
+  margin-bottom:12px;
+  border-radius:10px;
+  border:1.6px solid #e5e7eb;
+  font-size:14px;
+}
+.btn{
+  width:100%;
+  padding:11px;
+  border:none;
+  border-radius:10px;
+  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  color:#fff;
+  font-weight:600;
+  cursor:pointer;
+}
+.toggle-link{
+  display:block;
+  text-align:center;
+  font-size:13px;
+  margin-top:12px;
+  color:#1e3a8a;
+  text-decoration:none;
+}
+.form-section{display:none}
+.form-section.active{display:block}
+.msg{
+  font-size:12px;
+  margin-bottom:10px;
+  display:none;
+}
+.error{color:#ef4444}
+.success{color:#16a34a}
+.referral-status.valid{color:#16a34a}
+.referral-status.invalid{color:#ef4444}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div class="logo">Schweppes</div>
+  <div class="subtitle">Plateforme d'investissement</div>
+
+  <!-- CONNEXION -->
+  <div id="login-section" class="form-section active">
+    <h2>Connexion</h2>
+    <div id="loginError" class="msg error"></div>
+
+    <form id="loginFormData">
+      <label>Pays</label>
+      <select id="loginCountry" required>
+        <option value="">-- Sélectionner un pays --</option>
+        <option value="225">🇨🇮 Côte d'Ivoire (+225)</option>
+        <option value="229">🇧🇯 Bénin (+229)</option>
+        <option value="226">🇧🇫 Burkina Faso (+226)</option>
+        <option value="228">🇹🇬 Togo (+228)</option>
+        <option value="223">🇲🇱 Mali (+223)</option>
+        <option value="221">🇸🇳 Sénégal (+221)</option>
+      </select>
+
+      <label>Numéro de téléphone</label>
+      <input type="tel" id="loginTelephone" placeholder="0700000000" required>
+
+      <label>Mot de passe</label>
+      <input type="password" id="loginPassword" required>
+
+      <button class="btn">Se connecter</button>
+    </form>
+
+    <a href="#" class="toggle-link" onclick="toggleForm()">Pas de compte ? S'inscrire</a>
+  </div>
+
+  <!-- INSCRIPTION -->
+  <div id="signup-section" class="form-section">
+    <h2>Inscription</h2>
+    <div id="signupError" class="msg error"></div>
+    <div id="signupSuccess" class="msg success"></div>
+
+    <form id="signupFormData">
+      <label>Nom et prénom</label>
+      <input type="text" id="signupUsername" required>
+
+      <label>Pays</label>
+      <select id="signupCountry" required>
+        <option value="">-- Sélectionner un pays --</option>
+        <option value="225">🇨🇮 Côte d'Ivoire (+225)</option>
+        <option value="229">🇧🇯 Bénin (+229)</option>
+        <option value="226">🇧🇫 Burkina Faso (+226)</option>
+        <option value="228">🇹🇬 Togo (+228)</option>
+        <option value="223">🇲🇱 Mali (+223)</option>
+        <option value="221">🇸🇳 Sénégal (+221)</option>
+      </select>
+
+      <label>Numéro de téléphone</label>
+      <input type="tel" id="signupTelephone" placeholder="0700000000" required>
+
+      <label>Mot de passe</label>
+      <input type="password" id="signupPassword" required>
+
+      <label>Confirmer</label>
+      <input type="password" id="confirmPassword" required>
+
+      <label>Code de parrainage (optionnel)</label>
+      <input type="text" id="referralCode">
+      <div id="referralStatus" class="msg referral-status"></div>
+
+      <button class="btn">Créer un compte</button>
+    </form>
+
+    <a href="#" class="toggle-link" onclick="toggleForm()">Déjà inscrit ? Connexion</a>
+  </div>
+</div>
+
+<script>
+function toggleForm(){
+  document.getElementById('login-section').classList.toggle('active');
+  document.getElementById('signup-section').classList.toggle('active');
+}
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { 
+  getDatabase, 
+  ref, 
+  set, 
+  get
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+// 🔁 CONFIGURATION FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
+  authDomain: "schweppes-15df3.firebaseapp.com",
+  databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
+  projectId: "schweppes-15df3",
+  storageBucket: "schweppes-15df3.appspot.com",
+  messagingSenderId: "1011077098372",
+  appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
+};
+
+// --- INITIALISATION ---
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
+let currentUser = null;
+
+// --- UTILITAIRES ---
+class Utils {
+    static generateReferralCode() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        return Array.from({ length: 6 }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+    }
+
+    static async checkReferralCode(code) {
+        if (!code) return null;
+        const snapshot = await get(ref(database, 'users'));
+        if (snapshot.exists()) {
+            const users = snapshot.val();
+            for (const userId in users) {
+                if (users[userId].referralCode === code) {
+                    return { userId, username: users[userId].username };
+                }
+            }
+        }
+        return null;
+    }
+
+    static showError(elementId, message) {
+        const el = document.getElementById(elementId);
+        if (el) {
+            el.textContent = message;
+            el.style.display = message ? 'block' : 'none';
+        }
+    }
+
+    static showSuccess(elementId, message) {
+        const el = document.getElementById(elementId);
+        if (el) {
+            el.textContent = message;
+            el.style.display = message ? 'block' : 'none';
+        }
+    }
+
+    static clearMessages() {
+        ['loginError', 'signupError', 'signupSuccess', 'referralStatus'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = '';
+                el.style.display = 'none';
+                el.className = el.className.replace(/(valid|invalid)/g, '').trim();
+            }
+        });
+    }
+
+    static updateReferralStatus(isValid, message) {
+        const el = document.getElementById('referralStatus');
+        if (el) {
+            el.textContent = message;
+            el.className = `referral-status ${isValid ? 'valid' : 'invalid'}`;
+            el.style.display = message ? 'block' : 'none';
+        }
+    }
+
+    static updateUserDisplay(userData) {
+        // Nom utilisateur
+        const nameEl = document.getElementById('user-name');
+        if (nameEl && userData?.username) nameEl.textContent = `Hello 👋 ${userData.username}`;
+        
+        // Téléphone dans #user-id
+        const idEl = document.getElementById('user-id');
+        if (idEl && userData?.phoneNumber) idEl.textContent = userData.phoneNumber;
+
+        // Email logique @temp.com (facultatif)
+        const emailEl = document.getElementById('user-email');
+        if (emailEl && userData?.phoneNumber) emailEl.textContent = `${userData.phoneNumber}@temp.com`;
+    }
+}
+
+// --- GESTION FORMULAIRES ---
+class FormManager {
+    static async handleSignup(event) {
+        event.preventDefault();
+        Utils.clearMessages();
+
+        try {
+            const username = document.getElementById("signupUsername").value.trim();
+            const telephone = document.getElementById("signupTelephone").value.trim();
+            const password = document.getElementById("signupPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            const referralCode = document.getElementById("referralCode")?.value.trim();
+
+            if (!username || !telephone || !password) throw new Error("Veuillez remplir tous les champs requis");
+            if (password !== confirmPassword) throw new Error("Les mots de passe ne correspondent pas");
+            if (password.length < 6) throw new Error("Le mot de passe doit contenir au moins 6 caractères");
+            if (telephone.length < 8) throw new Error("Numéro de téléphone invalide");
+
+            let referrerData = null;
+            if (referralCode) {
+                referrerData = await Utils.checkReferralCode(referralCode);
+                if (!referrerData) throw new Error("Code de parrainage invalide");
+            }
+
+            const email = `${telephone}@temp.com`;
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            const newReferralCode = Utils.generateReferralCode();
+
+            await set(ref(database, `users/${user.uid}`), {
+                username,
+                email,
+                phoneNumber: telephone,
+                balance: 0,
+                referralCode: newReferralCode,
+                referredBy: referrerData?.userId || null,
+                createdAt: Date.now()
+            });
+
+            // Bonus parrain
+            if (referrerData?.userId) {
+                const referrerRef = ref(database, `users/${referrerData.userId}/balance`);
+                const currentBalanceSnap = await get(referrerRef);
+                const currentBalance = currentBalanceSnap.exists() ? currentBalanceSnap.val() : 0;
+                await set(referrerRef, currentBalance + 10);
+            }
+
+            Utils.showSuccess("signupSuccess", "Compte créé avec succès ! Redirection...");
+            setTimeout(() => window.location.href = "accueil.html", 1500);
+
+        } catch (error) {
+            console.error("Erreur:", error);
+            Utils.showError("signupError", error.message);
+        }
+    }
+
+    static async handleLogin(event) {
+        event.preventDefault();
+        Utils.clearMessages();
+
+        try {
+            const telephone = document.getElementById("loginTelephone").value.trim();
+            const password = document.getElementById("loginPassword").value;
+
+            if (!telephone || !password) throw new Error("Veuillez remplir tous les champs");
+
+            const email = `${telephone}@temp.com`;
+            await signInWithEmailAndPassword(auth, email, password);
+            window.location.href = "accueil.html";
+
+        } catch (error) {
+            console.error("Erreur de connexion:", error);
+            Utils.showError("loginError", "Numéro ou mot de passe incorrect");
+        }
+    }
+
+    static async handleReferralCodeInput() {
+        const referralInput = document.getElementById('referralCode');
+        const code = referralInput.value.trim().toUpperCase();
+
+        if (!code) {
+            Utils.updateReferralStatus(true, '');
+            return;
+        }
+
+        try {
+            const referrerData = await Utils.checkReferralCode(code);
+            if (referrerData) {
+                Utils.updateReferralStatus(true, `Code valide ! Parrain: ${referrerData.username}`);
+            } else {
+                Utils.updateReferralStatus(false, 'Code de parrainage invalide');
+            }
+        } catch {
+            Utils.updateReferralStatus(false, 'Erreur de vérification du code');
+        }
+    }
+
+    static handleReferralCodeFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const referralCode = urlParams.get('ref');
+        const referralInput = document.getElementById('referralCode');
+        if (referralInput && referralCode) {
+            referralInput.value = referralCode.toUpperCase();
+            FormManager.handleReferralCodeInput();
+        }
+    }
+}
+
+// --- Fonction debounce ---
+function debounce(func, wait) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+    };
+}
+
+// --- Initialisation DOM ---
+document.addEventListener('DOMContentLoaded', () => {
+    const signupForm = document.getElementById("signupFormData");
+    const loginForm = document.getElementById("loginFormData");
+    const referralInput = document.getElementById("referralCode");
+
+    if (signupForm) signupForm.addEventListener("submit", FormManager.handleSignup);
+    if (loginForm) loginForm.addEventListener("submit", FormManager.handleLogin);
+    if (referralInput) referralInput.addEventListener("input", debounce(FormManager.handleReferralCodeInput, 500));
+
+    FormManager.handleReferralCodeFromURL();
+});
+
+// --- Authentification ---
+onAuthStateChanged(auth, async (user) => {
+    if(user){
+        currentUser = user;
+        const userRef = ref(database, `users/${user.uid}`);
+        
+        const snapshot = await get(userRef);
+        if(snapshot.exists()){
+            const data = snapshot.val();
+            Utils.updateUserDisplay(data); // ✅ Affiche nom + numéro dans #user-id + email
+        }
+    } else {
+        currentUser = null;
+        Utils.updateUserDisplay(null);
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lipton | Connexion & Inscription</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Playfair+Display:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            font-family: 'Montserrat', 'Segoe UI', sans-serif;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Effet de texture délicate en arrière-plan */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(#f0f0f0 2px, transparent 2px),
+                radial-gradient(#f0f0f0 2px, transparent 2px);
+            background-size: 60px 60px;
+            background-position: 0 0, 30px 30px;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        /* Décorations élégantes */
+        .decoration {
+            position: fixed;
+            z-index: -1;
+        }
+
+        .decoration-1 {
+            top: 10%;
+            left: 5%;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(74, 0, 224, 0.05) 0%, rgba(142, 45, 226, 0.05) 100%);
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .decoration-2 {
+            bottom: 10%;
+            right: 5%;
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(255, 175, 0, 0.05) 100%);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        .decoration-3 {
+            top: 50%;
+            right: 10%;
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, rgba(0, 200, 255, 0.05) 0%, rgba(0, 150, 255, 0.05) 100%);
+            border-radius: 40% 60% 60% 40% / 60% 30% 70% 40%;
+            animation: float 25s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        /* Logo principal */
+        .logo-container {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .logo-text {
+            color: #4A00E0;
+            font-size: 52px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            font-family: 'Playfair Display', serif;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, #4A00E0 0%, #8E2DE2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-text::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 10%;
+            width: 80%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #FFD700, #FF8A00, transparent);
+            border-radius: 2px;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+        }
+
+        .logo-tagline {
+            color: #666;
+            font-size: 16px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-top: 15px;
+            text-transform: uppercase;
+            position: relative;
+            padding: 0 20px;
+        }
+
+        .logo-tagline::before,
+        .logo-tagline::after {
+            content: '✦';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #FFD700;
+            font-size: 14px;
+        }
+
+        .logo-tagline::before {
+            left: 0;
+        }
+
+        .logo-tagline::after {
+            right: 0;
+        }
+
+        /* Conteneur du formulaire */
+        .form-container {
+            width: 420px;
+            margin-top: 120px;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            transition: all 0.5s ease;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                0 1px 3px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        #signup-section {
+            display: none;
+        }
+
+        /* Titre des formulaires */
+        h2 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #4A00E0, #8E2DE2);
+            border-radius: 2px;
+        }
+
+        /* Groupes de champs */
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 18px;
+            top: 42px;
+            color: #8E2DE2;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 18px 16px 50px;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            color: #333;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        input:focus {
+            border-color: #8E2DE2;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(142, 45, 226, 0.15);
+            background: #fff;
+        }
+
+        input::placeholder {
+            color: #aaa;
+            font-weight: 300;
+        }
+
+        input:focus + .input-icon {
+            color: #4A00E0;
+            transform: scale(1.1);
+        }
+
+        /* Boutons */
+        button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4A00E0 0%, #8E2DE2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 15px rgba(74, 0, 224, 0.2);
+            font-family: 'Montserrat', sans-serif;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(74, 0, 224, 0.3);
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        /* Diviseur */
+        .divider {
+            margin: 30px 0;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 45%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+        }
+
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+
+        /* Boutons sociaux */
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .social-button {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .social-button:hover {
+            background: #f9f9f9;
+            border-color: #8E2DE2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .social-button.google:hover {
+            color: #DB4437;
+            border-color: #DB4437;
+        }
+
+        .social-button.facebook:hover {
+            color: #4267B2;
+            border-color: #4267B2;
+        }
+
+        /* Lien de basculement */
+        .toggle-form {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .toggle-form a {
+            color: #8E2DE2;
+            text-decoration: none;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .toggle-form a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #4A00E0, #8E2DE2);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .toggle-form a:hover {
+            color: #4A00E0;
+        }
+
+        .toggle-form a:hover::after {
+            width: 100%;
+        }
+
+        /* Section parrainage */
+        .referral-section {
+            margin-top: 25px;
+            margin-bottom: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .optional-text {
+            color: #999;
+            font-size: 12px;
+            margin-left: 5px;
+            font-weight: normal;
+        }
+
+        /* Messages */
+        .error-message,
+        .success-message {
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-top: 15px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .error-message {
+            background-color: rgba(255, 68, 68, 0.08);
+            color: #ff4444;
+            border-left: 4px solid #ff4444;
+        }
+
+        .success-message {
+            background-color: rgba(0, 200, 81, 0.08);
+            color: #00C851;
+            border-left: 4px solid #00C851;
+        }
+
+        .referral-status {
+            font-size: 14px;
+            margin-top: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .referral-status.valid {
+            background-color: rgba(0, 200, 81, 0.08);
+            color: #00C851;
+            border-left: 3px solid #00C851;
+        }
+
+        .referral-status.invalid {
+            background-color: rgba(255, 68, 68, 0.08);
+            color: #ff4444;
+            border-left: 3px solid #ff4444;
+        }
+
+        /* Footer du formulaire */
+        .form-footer {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        /* Toggle mot de passe */
+        .password-toggle {
+            position: absolute;
+            right: 18px;
+            top: 42px;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s;
+            font-size: 18px;
+        }
+
+        .password-toggle:hover {
+            color: #8E2DE2;
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-container {
+                width: 100%;
+                max-width: 400px;
+                margin-top: 100px;
+            }
+            
+            .form-section {
+                padding: 30px 25px;
+            }
+            
+            .logo-text {
+                font-size: 44px;
+            }
+            
+            .logo-tagline {
+                font-size: 14px;
+            }
+            
+            h2 {
+                font-size: 24px;
+            }
+            
+            .decoration-1,
+            .decoration-2,
+            .decoration-3 {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+            
+            .form-section {
+                padding: 25px 20px;
+            }
+            
+            .social-buttons {
+                flex-direction: column;
+            }
+            
+            .logo-text {
+                font-size: 38px;
+            }
+            
+            .logo-tagline {
+                font-size: 13px;
+                letter-spacing: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Décorations -->
+    <div class="decoration decoration-1"></div>
+    <div class="decoration decoration-2"></div>
+    <div class="decoration decoration-3"></div>
+
+    <!-- Logo principal -->
+    <div class="logo-container">
+        <div class="logo-text">LIPTON</div>
+        <div class="logo-tagline">EXCELLENCE & PRESTIGE</div>
+    </div>
+
+    <!-- Conteneur du formulaire -->
+    <div class="form-container">
+        <div id="login-section" class="form-section">
+            <h2>Connexion</h2>
+            <form id="loginFormData">
+                <div class="input-group">
+                    <label for="loginTelephone">Numéro de téléphone</label>
+                    <div class="input-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <input type="tel" id="loginTelephone" required placeholder="Votre numéro de téléphone">
+                </div>
+                <div class="input-group">
+                    <label for="loginPassword">Mot de passe</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <input type="password" id="loginPassword" required placeholder="Votre mot de passe">
+                    <span class="password-toggle" id="toggleLoginPassword">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+                <div id="loginError" class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span></span>
+                </div>
+                <button type="submit">
+                    <i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>
+                    Se connecter
+                </button>
+                
+                <div class="divider">ou connectez-vous avec</div>
+                <div class="social-buttons">
+                    
+                    
+                </div>
+                <div class="toggle-form">
+                    <a onclick="toggleForm()">Pas encore inscrit ? Créer un compte</a>
+                </div>
+                <div class="form-footer">
+                    En vous connectant, vous acceptez nos conditions d'utilisation et notre politique de confidentialité.
+                </div>
+            </form>
+        </div>
+
+        <div id="signup-section" class="form-section">
+            <h2>Inscription</h2>
+            <form id="signupFormData">
+                <div class="input-group">
+                    <label for="signupUsername">Nom complet</label>
+                    <div class="input-icon">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <input type="text" id="signupUsername" required placeholder="Votre nom et prénom">
+                </div>
+                <div class="input-group">
+                    <label for="signupTelephone">Numéro de téléphone</label>
+                    <div class="input-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <input type="tel" id="signupTelephone" required placeholder="Votre numéro de téléphone">
+                </div>
+                <div class="input-group">
+                    <label for="signupPassword">Mot de passe</label>
+                    <div class="input-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <input type="password" id="signupPassword" required placeholder="Créez un mot de passe sécurisé">
+                    <span class="password-toggle" id="toggleSignupPassword">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+                <div class="input-group">
+                    <label for="confirmPassword">Confirmer le mot de passe</label>
+                    <div class="input-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <input type="password" id="confirmPassword" required placeholder="Confirmez votre mot de passe">
+                    <span class="password-toggle" id="toggleConfirmPassword">
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+                
+                <div class="referral-section">
+                    <div class="input-group">
+                        <label for="referralCode">
+                            Code de parrainage
+                            <span class="optional-text">(facultatif)</span>
+                        </label>
+                        <div class="input-icon">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <input type="text" id="referralCode" placeholder="Entrez votre code de parrainage">
+                        <div id="referralStatus" class="referral-status">
+                            <i class="fas fa-info-circle"></i>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="signupError" class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span></span>
+                </div>
+                <div id="signupSuccess" class="success-message">
+                    <i class="fas fa-check-circle"></i>
+                    <span></span>
+                </div>
+                <button type="submit">
+                    <i class="fas fa-user-plus" style="margin-right: 8px;"></i>
+                    S'inscrire
+                </button>
+
+                <div class="toggle-form">
+                    <a onclick="toggleForm()">Déjà inscrit ? Se connecter</a>
+                </div>
+                <div class="form-footer">
+                    En créant un compte, vous acceptez nos conditions d'utilisation et notre politique de confidentialité. Votre sécurité est notre priorité.
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleForm() {
+            const loginSection = document.getElementById('login-section');
+            const signupSection = document.getElementById('signup-section');
+            
+            if (loginSection.style.display === 'none') {
+                loginSection.style.display = 'flex';
+                signupSection.style.display = 'none';
+            } else {
+                loginSection.style.display = 'none';
+                signupSection.style.display = 'flex';
+            }
+            
+            // Clear form fields and messages
+            document.querySelectorAll('.error-message, .success-message, .referral-status').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+        
+        // Toggle password visibility
+        function setupPasswordToggle() {
+            const toggles = document.querySelectorAll('.password-toggle');
+            toggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const input = this.parentElement.querySelector('input');
+                    const icon = this.querySelector('i');
+                    
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('fa-eye');
+                        icon.classList.add('fa-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.remove('fa-eye-slash');
+                        icon.classList.add('fa-eye');
+                    }
+                });
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            setupPasswordToggle();
+        });
+    </script>
+    
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { 
+  getAuth, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { 
+  getDatabase, 
+  ref, 
+  set, 
+  get, 
+  update 
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+// 🔁 CONFIGURATION FIREBASE
+const firebaseConfig = {
+  apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
+  authDomain: "schweppes-15df3.firebaseapp.com",
+  databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
+  projectId: "schweppes-15df3",
+  storageBucket: "schweppes-15df3.appspot.com",
+  messagingSenderId: "1011077098372",
+  appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
+};
+
+// --- INITIALISATION ---
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const database = getDatabase(app);
+
+// --- UTILITAIRES ---
+class Utils {
+    static generateReferralCode() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        return Array.from({ length: 6 }, () => chars.charAt(Math.floor(Math.random() * chars.length))).join('');
+    }
+
+    static async checkReferralCode(code) {
+        if (!code) return null;
+        const snapshot = await get(ref(database, 'users'));
+        if (snapshot.exists()) {
+            const users = snapshot.val();
+            for (const userId in users) {
+                if (users[userId].referralCode === code) {
+                    return { userId, username: users[userId].username };
+                }
+            }
+        }
+        return null;
+    }
+
+    static showError(elementId, message) {
+        const el = document.getElementById(elementId);
+        if (el) {
+            el.textContent = message;
+            el.style.display = message ? 'block' : 'none';
+        }
+    }
+
+    static showSuccess(elementId, message) {
+        const el = document.getElementById(elementId);
+        if (el) {
+            el.textContent = message;
+            el.style.display = message ? 'block' : 'none';
+        }
+    }
+
+    static clearMessages() {
+        ['loginError', 'signupError', 'signupSuccess', 'referralStatus'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.textContent = '';
+                el.style.display = 'none';
+                el.className = el.className.replace(/(valid|invalid)/g, '').trim();
+            }
+        });
+    }
+
+    static updateReferralStatus(isValid, message) {
+        const el = document.getElementById('referralStatus');
+        if (el) {
+            el.textContent = message;
+            el.className = `referral-status ${isValid ? 'valid' : 'invalid'}`;
+            el.style.display = message ? 'block' : 'none';
+        }
+    }
+}
+
+// --- GESTION FORMULAIRES ---
+class FormManager {
+    static async handleSignup(event) {
+        event.preventDefault();
+        Utils.clearMessages();
+
+        try {
+            const username = document.getElementById("signupUsername").value.trim();
+            const telephone = document.getElementById("signupTelephone").value.trim();
+            const password = document.getElementById("signupPassword").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+            const referralCode = document.getElementById("referralCode")?.value.trim();
+
+            if (!username || !telephone || !password) throw new Error("Veuillez remplir tous les champs requis");
+            if (password !== confirmPassword) throw new Error("Les mots de passe ne correspondent pas");
+            if (password.length < 6) throw new Error("Le mot de passe doit contenir au moins 6 caractères");
+            if (telephone.length < 8) throw new Error("Numéro de téléphone invalide");
+
+            let referrerData = null;
+            if (referralCode) {
+                referrerData = await Utils.checkReferralCode(referralCode);
+                if (!referrerData) throw new Error("Code de parrainage invalide");
+            }
+
+            const email = `${telephone}@temp.com`;
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            const newReferralCode = Utils.generateReferralCode();
+
+            await set(ref(database, `users/${user.uid}`), {
+                username,
+                email,
+                phoneNumber: telephone,
+                balance: 0,
+                referralCode: newReferralCode,
+                referredBy: referrerData?.userId || null,
+                createdAt: Date.now()
+            });
+
+            // Bonus parrain (10 unités)
+            if (referrerData?.userId) {
+                const referrerRef = ref(database, `users/${referrerData.userId}/balance`);
+                const currentBalanceSnap = await get(referrerRef);
+                const currentBalance = currentBalanceSnap.exists() ? currentBalanceSnap.val() : 0;
+                await set(referrerRef, currentBalance + 10);
+            }
+
+            Utils.showSuccess("signupSuccess", "Compte créé avec succès ! Redirection...");
+            setTimeout(() => window.location.href = "accueil.html", 1500);
+
+        } catch (error) {
+            console.error("Erreur:", error);
+            Utils.showError("signupError", error.message);
+        }
+    }
+
+    static async handleLogin(event) {
+        event.preventDefault();
+        Utils.clearMessages();
+
+        try {
+            const telephone = document.getElementById("loginTelephone").value.trim();
+            const password = document.getElementById("loginPassword").value;
+
+            if (!telephone || !password) throw new Error("Veuillez remplir tous les champs");
+
+            const email = `${telephone}@temp.com`;
+            await signInWithEmailAndPassword(auth, email, password);
+            window.location.href = "accueil.html";
+
+        } catch (error) {
+            console.error("Erreur de connexion:", error);
+            Utils.showError("loginError", "Numéro ou mot de passe incorrect");
+        }
+    }
+
+    static async handleReferralCodeInput() {
+        const referralInput = document.getElementById('referralCode');
+        const code = referralInput.value.trim().toUpperCase();
+
+        if (!code) {
+            Utils.updateReferralStatus(true, '');
+            return;
+        }
+
+        try {
+            const referrerData = await Utils.checkReferralCode(code);
+            if (referrerData) {
+                Utils.updateReferralStatus(true, `Code valide ! Parrain: ${referrerData.username}`);
+            } else {
+                Utils.updateReferralStatus(false, 'Code de parrainage invalide');
+            }
+        } catch {
+            Utils.updateReferralStatus(false, 'Erreur de vérification du code');
+        }
+    }
+
+    static handleReferralCodeFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const referralCode = urlParams.get('ref');
+        const referralInput = document.getElementById('referralCode');
+        if (referralInput && referralCode) {
+            referralInput.value = referralCode.toUpperCase();
+            FormManager.handleReferralCodeInput();
+        }
+    }
+}
+
+// --- Fonction debounce ---
+function debounce(func, wait) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func(...args), wait);
+    };
+}
+
+// --- Initialisation DOM ---
+document.addEventListener('DOMContentLoaded', () => {
+    const signupForm = document.getElementById("signupFormData");
+    const loginForm = document.getElementById("loginFormData");
+    const referralInput = document.getElementById("referralCode");
+
+    if (signupForm) signupForm.addEventListener("submit", FormManager.handleSignup);
+    if (loginForm) loginForm.addEventListener("submit", FormManager.handleLogin);
+    if (referralInput) referralInput.addEventListener("input", debounce(FormManager.handleReferralCodeInput, 500));
+
+    FormManager.handleReferralCodeFromURL();
+});
+
+// --- Surveillance Auth ---
+onAuthStateChanged(auth, user => {
+    if (user) console.log("Utilisateur connecté:", user.uid);
+    else console.log("Utilisateur déconnecté");
+});
+</script>
+</body>
+</html>

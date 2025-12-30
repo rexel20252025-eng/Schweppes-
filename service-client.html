@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schweppes Service Client</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: white;
+            color: #333;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 2.5em;
+            color: #FFA500;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .hours {
+            font-size: 1.3em;
+            color: #666;
+            margin-bottom: 40px;
+            padding: 15px;
+            background-color: #FFF8DC;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .description {
+            font-size: 1.2em;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 50px;
+            padding: 0 20px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 50px;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            color: white;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 165, 0, 0.4);
+            cursor: pointer;
+            border: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 165, 0, 0.6);
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2em;
+            }
+
+            .title {
+                font-size: 2em;
+            }
+
+            .hours {
+                font-size: 1.1em;
+            }
+
+            .description {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-image">
+        <div class="hero-content">
+            <h1>🥤 SCHWEPPES 🥤</h1>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="title">Schweppes Service Client</h2>
+        
+        <div class="hours">
+            ⏰ Heures du travail : de 09h à 18h
+        </div>
+
+        <p class="description">
+            En cas de problème, veuillez contacter le service client.<br>
+            L'équipe résoudra votre problème.
+        </p>
+
+        <a href="#" class="cta-button">
+            📞 Service Client
+        </a>
+    </div>
+</body>
+</html>

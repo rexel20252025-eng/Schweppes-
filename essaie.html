@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interface Mobile</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: white;
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .content {
+            padding: 0;
+        }
+
+        .palette-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+            padding: 20px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border-radius: 0 0 25px 25px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .money-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            font-size: 40px;
+            opacity: 0.12;
+            pointer-events: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 10px;
+            z-index: 0;
+        }
+
+        .money-icon {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .money-icon:nth-child(2) { animation-delay: 1s; }
+        .money-icon:nth-child(3) { animation-delay: 2s; }
+        .money-icon:nth-child(4) { animation-delay: 3s; }
+        .money-icon:nth-child(5) { animation-delay: 4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .user-logo {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            backdrop-filter: blur(10px);
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .user-id {
+            font-size: 13px;
+            opacity: 0.9;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .balance-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .balance-item {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .balance-label {
+            font-size: 12px;
+            opacity: 0.95;
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        .balance-amount {
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .balance-count {
+            font-size: 10px;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .action-buttons {
+            padding: 20px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-action {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-icon {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .btn-recharge {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+        }
+
+        .btn-recharge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn-retrait {
+            background: linear-gradient(135deg, #FF6B6B 0%, #EE5A52 100%);
+            color: white;
+        }
+
+        .btn-retrait:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .menu-list {
+            padding: 10px 20px 20px 20px;
+        }
+
+        .menu-item {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-decoration: none;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .menu-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .menu-item:nth-child(1) .menu-icon { fill: #8B5CF6; }
+        .menu-item:nth-child(1) .menu-text { color: #8B5CF6; }
+        .menu-item:nth-child(2) .menu-icon { fill: #EC4899; }
+        .menu-item:nth-child(2) .menu-text { color: #EC4899; }
+        .menu-item:nth-child(3) .menu-icon { fill: #3B82F6; }
+        .menu-item:nth-child(3) .menu-text { color: #3B82F6; }
+        .menu-item:nth-child(4) .menu-icon { fill: #F59E0B; }
+        .menu-item:nth-child(4) .menu-text { color: #F59E0B; }
+        .menu-item:nth-child(5) .menu-icon { fill: #10B981; }
+        .menu-item:nth-child(5) .menu-text { color: #10B981; }
+        .menu-item:nth-child(6) .menu-icon { fill: #06B6D4; }
+        .menu-item:nth-child(6) .menu-text { color: #06B6D4; }
+
+        .menu-text {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 600;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .menu-arrow {
+            width: 20px;
+            height: 20px;
+            fill: #999;
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #FF4757 0%, #E84118 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        .logout-icon {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #666;
+            padding: 4px 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-item.active {
+            color: #667eea;
+        }
+
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 4px;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .icon-home { fill: currentColor; }
+        .icon-dashboard { fill: currentColor; }
+        .icon-share { fill: currentColor; }
+        .icon-account { fill: currentColor; }
+    </style>
+</head>
+<body>
+   
+   
+<nav class="bottom-nav">
+        <a class="nav-item active" data-page="accueil" href="accueil.html">
+            <svg class="nav-icon icon-home" viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+            <span class="nav-label">Accueil</span>
+        </a>
+
+        <a class="nav-item" data-page="actifs" href="machine.html">
+            <svg class="nav-icon icon-dashboard" viewBox="0 0 24 24">
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+            </svg>
+            <span class="nav-label">Actifs</span>
+        </a>
+
+        <a class="nav-item" data-page="partage" href="equipe.html">
+            <svg class="nav-icon icon-share" viewBox="0 0 24 24">
+                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
+            </svg>
+            <span class="nav-label">Partage</span>
+        </a>
+
+        <a class="nav-item" data-page="compte" href="solde.html">
+            <svg class="nav-icon icon-account" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+            </svg>
+            <span class="nav-label">Compte</span>
+        </a>
+    </nav>   
+   
+    
+
+    
+</body> 
+</html>

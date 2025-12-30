@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historique de Retrait - Schweppes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .back-arrow {
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 15px;
+            color: #666;
+            transition: color 0.3s;
+        }
+
+        .back-arrow:hover {
+            color: #000;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        #history-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: box-shadow 0.3s, transform 0.2s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .orange-text {
+            color: #ff6b35;
+            font-weight: 700;
+        }
+
+        .badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .badge-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-failed {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .no-history {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+
+            .row {
+                padding: 10px 0;
+            }
+
+            .label, .value {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span class="back-arrow">←</span>
+        <div class="header-title">Schweppes historique de retrait</div>
+    </div>
+
+    <div id="history-container">
+        <div class="no-history">Chargement...</div>
+    </div>
+
+   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+    // 🔁 NOUVELLE CONFIG FIREBASE (SCHWEPPES)
+    const firebaseConfig = {
+        apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
+        authDomain: "schweppes-15df3.firebaseapp.com",
+        databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
+        projectId: "schweppes-15df3",
+        storageBucket: "schweppes-15df3.firebasestorage.app",
+        messagingSenderId: "1011077098372",
+        appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
+    };
+
+    // --- Init Firebase ---
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const database = getDatabase(app);
+
+    // --- Utils ---
+    function formatAmount(amount) { 
+        return `${amount.toLocaleString('fr-FR')} FCFA`; 
+    }
+
+    function formatDate(ts) { 
+        const date = new Date(ts);
+        const days = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+        const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+        return `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()} à ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}`;
+    }
+
+    // --- Badge statut ---
+    function statusBadge(status){
+        if(status.toLowerCase() === 'terminé') 
+            return `<span class="badge badge-success">${status}</span>`;
+        if(status.toLowerCase() === 'en attente') 
+            return `<span class="badge badge-pending">${status}</span>`;
+        return `<span class="badge badge-failed">${status}</span>`;
+    }
+
+    // --- Create card ---
+    function createWithdrawalCard(w) {
+        const fees = w.fees || 0;
+        const toReceive = w.amount - fees;
+        return `
+        <div class="card">
+            <div class="row">
+                <span class="label">Montant retiré</span>
+                <span class="value">− ${formatAmount(w.amount)}</span>
+            </div>
+            <div class="row">
+                <span class="label">Date & heure</span>
+                <span class="value">${formatDate(w.timestamp)}</span>
+            </div>
+            <div class="row">
+                <span class="label">Statut</span>
+                <span class="value">${statusBadge(w.status)}</span>
+            </div>
+            <div class="row">
+                <span class="label">Frais d'opération</span>
+                <span class="value">− ${formatAmount(fees)}</span>
+            </div>
+            <div class="row">
+                <span class="label">Montant à recevoir</span>
+                <span class="value orange-text">${formatAmount(toReceive)}</span>
+            </div>
+        </div>`;
+    }
+
+    // --- Display history ---
+    function displayWithdrawalHistory(history){
+        const container = document.getElementById('history-container');
+        if(!history || Object.keys(history).length === 0){
+            container.innerHTML = '<div class="no-history">Aucun retrait disponible</div>';
+            return;
+        }
+
+        container.innerHTML = '';
+        Object.entries(history)
+            .sort(([,a],[,b]) => b.timestamp - a.timestamp)
+            .forEach(([,w]) => {
+                container.innerHTML += createWithdrawalCard(w);
+            });
+    }
+
+    // --- Auth ---
+    onAuthStateChanged(auth, user => {
+        if(user){
+            const historyRef = ref(database, `users/${user.uid}/withdrawalHistory`);
+            onValue(historyRef, snapshot => {
+                displayWithdrawalHistory(snapshot.val());
+            });
+        } else {
+            window.location.href = 'login.html';
+        }
+    });
+
+    // --- Back button ---
+    document.querySelector('.back-arrow')
+        .addEventListener('click', () => history.back());
+</script> 
+</body>
+</html>

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schweppes - Carte liée</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            animation: slideDown 0.5s ease;
+            border: 1px solid #f0f0f0;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .back-button {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: #667eea;
+            border-color: #667eea;
+            transform: scale(1.1) rotate(-10deg);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .back-button:hover svg {
+            stroke: white;
+        }
+
+        .back-button svg {
+            width: 22px;
+            height: 22px;
+            stroke: #667eea;
+            transition: stroke 0.3s ease;
+        }
+
+        .header-title {
+            flex: 1;
+        }
+
+        .header-title h1 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .header-title p {
+            font-size: 14px;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        .card-container {
+            background: #ffffff;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+            animation: fadeIn 0.6s ease 0.2s both;
+            border: 1px solid #f0f0f0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 25px;
+            padding: 35px;
+            color: white;
+            box-shadow: 
+                0 15px 35px rgba(102, 126, 234, 0.25),
+                0 5px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 20px 40px rgba(102, 126, 234, 0.3),
+                0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.5; }
+            50% { transform: scale(1.1) rotate(180deg); opacity: 0.8; }
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .operator-logo {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.2);
+            letter-spacing: 1px;
+        }
+
+        .card-number {
+            font-size: 22px;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            opacity: 0.95;
+        }
+
+        .card-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .card-info-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        .card-info-value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .info-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .info-row:hover {
+            padding-left: 10px;
+            background: rgba(102, 126, 234, 0.05);
+            margin: 0 -10px;
+            padding-right: 10px;
+            border-radius: 8px;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #6c757d;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-label::before {
+            content: '●';
+            color: #667eea;
+            font-size: 18px;
+        }
+
+        .info-value {
+            color: #2c3e50;
+            font-weight: 700;
+            font-size: 14px;
+            padding: 6px 15px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .link-date {
+            text-align: center;
+            color: #95a5a6;
+            font-size: 13px;
+            margin-top: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-weight: 500;
+            border: 1px solid #e9ecef;
+        }
+
+        .message {
+            padding: 18px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            font-weight: 500;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .message-error {
+            background: #fee;
+            color: #c33;
+            border: 2px solid #fcc;
+        }
+
+        .message-success {
+            background: #efe;
+            color: #3c3;
+            border: 2px solid #cfc;
+        }
+
+        .loading {
+            animation: shimmer 1.5s infinite;
+            background: linear-gradient(90deg, 
+                rgba(255,255,255,0.2) 0%, 
+                rgba(255,255,255,0.5) 50%, 
+                rgba(255,255,255,0.2) 100%);
+            background-size: 200% 100%;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-button" id="backButton">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <div class="header-title">
+                <h1>Schweppes</h1>
+                <p>Carte liée</p>
+            </div>
+        </div>
+
+        <div class="card-container">
+            <div id="message" class="message"></div>
+
+            <div class="card">
+                <div class="card-content">
+                    <div class="operator-logo loading" id="operatorDisplay">---</div>
+                    <div class="card-number loading" id="phoneInfo">-- -- -- -- --</div>
+                    <div class="card-info">
+                        <div class="card-info-item">
+                            <div class="card-info-label">Opérateur</div>
+                            <div class="card-info-value loading" id="operatorInfo">---</div>
+                        </div>
+                        <div class="card-info-item" style="text-align: right;">
+                            <div class="card-info-label">Statut</div>
+                            <div class="card-info-value">
+                                ACTIF
+                                <span class="badge">✓</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <div class="info-row">
+                    <span class="info-label">Type de compte</span>
+                    <span class="info-value">Mobile Money</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Méthode de retrait</span>
+                    <span class="info-value">Instantané</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Sécurité</span>
+                    <span class="info-value">Vérifiée ✓</span>
+                </div>
+            </div>
+
+            <div class="link-date loading" id="linkDate">🔗 Compte lié le --/--/----</div>
+        </div>
+    </div>
+
+    <script type="module">
+    // --- Import Firebase ---
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+    import { 
+        getAuth, 
+        onAuthStateChanged, 
+        createUserWithEmailAndPassword, 
+        signInWithEmailAndPassword 
+    } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+    import { getStorage } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-storage.js";
+
+    // --- Configuration Firebase (SCHWEPPES) ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
+        authDomain: "schweppes-15df3.firebaseapp.com",
+        databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
+        projectId: "schweppes-15df3",
+        storageBucket: "schweppes-15df3.firebasestorage.app",
+        messagingSenderId: "1011077098372",
+        appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
+    };
+
+    // --- Initialisation ---
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+    const storage = getStorage(app);
+
+    // --- Fonctions utilitaires ---
+    const formatPhoneNumber = phone => phone.replace(/(\d{2})(?=\d)/g, "$1 ");
+    const formatDate = timestamp => {
+        const date = new Date(timestamp);
+        return date.toLocaleDateString('fr-FR', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    };
+
+    // --- Gestion des messages ---
+    const showMessage = (text, type) => {
+        const messageDiv = document.getElementById('message');
+        if (!messageDiv) return;
+
+        messageDiv.className = `message message-${type}`;
+        messageDiv.textContent = text;
+        messageDiv.style.display = 'block';
+
+        setTimeout(() => {
+            messageDiv.style.display = 'none';
+        }, 5000);
+    };
+
+    // --- Affichage des informations du compte ---
+    const displayAccountInfo = async (user) => {
+        try {
+            const snapshot = await get(ref(db, `users/${user.uid}/withdrawalConfig`));
+            const data = snapshot.val();
+
+            if (data) {
+                document.getElementById('operatorDisplay').textContent = data.operator;
+                document.getElementById('operatorInfo').textContent = data.operator;
+                document.getElementById('phoneInfo').textContent = formatPhoneNumber(data.phone);
+                document.getElementById('linkDate').textContent =
+                    `🔗 Compte lié le ${formatDate(data.configuredAt)}`;
+
+                document.querySelectorAll('.loading')
+                    .forEach(el => el.classList.remove('loading'));
+            } else {
+                showMessage('Aucun compte lié trouvé', 'error');
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement des données:', error);
+            showMessage(`Erreur: ${error.message}`, 'error');
+        }
+    };
+
+    // --- Bouton retour ---
+    document.getElementById('backButton')?.addEventListener('click', () => {
+        window.history.back();
+    });
+
+    // --- Vérification de l'authentification ---
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            displayAccountInfo(user);
+        } else {
+            window.location.href = 'retrait.html';
+        }
+    });
+</script>
+</body>
+</html>
