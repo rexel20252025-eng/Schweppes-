@@ -360,250 +360,281 @@
     </nav>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-    import { getDatabase, ref, get, update, onValue } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { getDatabase, ref, get, update, onValue } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-    // 🔥 Configuration Firebase SCHWEPPES (NOUVELLE BASE)
-    const firebaseConfig = {
-        apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
-        authDomain: "schweppes-15df3.firebaseapp.com",
-        databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
-        projectId: "schweppes-15df3",
-        storageBucket: "schweppes-15df3.firebasestorage.app",
-        messagingSenderId: "1011077098372",
-        appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
+// 🔥 Configuration Firebase SCHWEPPES
+const firebaseConfig = {
+    apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
+    authDomain: "schweppes-15df3.firebaseapp.com",
+    databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
+    projectId: "schweppes-15df3",
+    storageBucket: "schweppes-15df3.firebasestorage.app",
+    messagingSenderId: "1011077098372",
+    appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+let currentUser = null;
+
+// --- CONFIG VIP ---
+const VIP_CONFIG = {
+    1: {
+        nom: "VIP-1",
+        price: 5500,
+        dailyRevenue: 1050,
+        cycleDuration: 20,
+        totalRevenue: 21000,
+        image: "vip1.png"
+    },
+    2: {
+        nom: "VIP-2",
+        price: 12500,
+        dailyRevenue: 2500,
+        cycleDuration: 19,
+        totalRevenue: 47500,
+        image: "vip2.png"
+    },
+    3: {
+        nom: "VIP-3",
+        price: 18500,
+        dailyRevenue: 3500,
+        cycleDuration: 18,
+        totalRevenue: 63000,
+        image: "vip3.png"
+    },
+    4: {
+        nom: "VIP-4",
+        price: 35000,
+        dailyRevenue: 5000,
+        cycleDuration: 17,
+        totalRevenue: 85000,
+        image: "vip4.png"
+    },
+    5: {
+        nom: "VIP-5",
+        price: 100000,
+        dailyRevenue: 20350,
+        cycleDuration: 16,
+        totalRevenue: 325600,
+        image: "vip5.png"
+    }
+};
+
+// --- UTILITAIRES ---
+const USD_TO_FCFA = 587;
+
+function formatDualCurrency(amountFCFA) {
+    const amountUSD = (amountFCFA / USD_TO_FCFA).toFixed(2);
+    return {
+        fcfa: Number(amountFCFA).toLocaleString('fr-FR') + ' FCFA',
+        usd: parseFloat(amountUSD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' $'
     };
+}
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
+function showNotification(message, type = 'success') {
+    const notification = document.querySelector('.notification') || document.getElementById('notification');
+    if (!notification) return;
+    notification.textContent = message;
+    notification.className = `notification ${type}`;
+    notification.style.display = 'block';
+    setTimeout(() => notification.style.display = 'none', 3000);
+}
 
-    let currentUser = null;
+// --- VIP FUNCTIONS ---
+function getVipsContainer() {
+    return document.getElementById('vips-container');
+}
 
-    // ✅ CONFIG VIPS HARMONISÉE (identique au script investissement)
-    const VIP_CONFIG = {
-        1: { nom: "VIP-1", dailyRevenue: 350, cycleDuration: 48, totalRevenue: 16800, price: 3500, limit: 1, image: "vip1.png" },
-        2: { nom: "VIP-2", dailyRevenue: 750, cycleDuration: 48, totalRevenue: 36000, price: 5500, limit: 1, image: "vip2.png" },
-        3: { nom: "VIP-3", dailyRevenue: 2000, cycleDuration: 48, totalRevenue: 96000, price: 18000, limit: 1, image: "vip3.png" },
-        4: { nom: "VIP-4", dailyRevenue: 3500, cycleDuration: 48, totalRevenue: 168000, price: 30000, limit: 1, image: "vip4.png" },
-        5: { nom: "VIP-5", dailyRevenue: 5000, cycleDuration: 48, totalRevenue: 240000, price: 50000, limit: 2, image: "vip5.png" },
-        6: { nom: "VIP-6", dailyRevenue: 8500, cycleDuration: 48, totalRevenue: 408000, price: 75000, limit: 2, image: "vip6.png" },
-        7: { nom: "VIP-7", dailyRevenue: 20000, cycleDuration: 48, totalRevenue: 960000, price: 100000, limit: 2, image: "vip7.png" }
-    };
+function calculateCycleProgress(investment) {
+    const config = VIP_CONFIG[investment.productId];
+    if (!config) return { isComplete: true, progress: 100, remainingDays: 0 };
 
-    // --- Fonctions utilitaires ---
-    function showNotification(message, type = 'success') {
-        const notification = document.querySelector('.notification') || document.getElementById('notification');
-        if (!notification) return;
-        notification.textContent = message;
-        notification.className = `notification ${type}`;
-        notification.style.display = 'block';
-        setTimeout(() => notification.style.display = 'none', 3000);
+    const totalCollected = investment.totalCollected || 0;
+    const timestamp = investment.timestamp ? new Date(investment.timestamp).getTime() : Date.now();
+    const daysInCycle = Math.floor((Date.now() - timestamp) / (1000 * 60 * 60 * 24));
+    const remainingDays = Math.max(0, config.cycleDuration - daysInCycle);
+    const progress = Math.min((totalCollected / config.totalRevenue) * 100, 100);
+
+    return { isComplete: totalCollected >= config.totalRevenue, progress, remainingDays };
+}
+
+function isReadyToCollect(investment) {
+    const lastCollection = investment.lastCollection;
+    if (!lastCollection) return true;
+    
+    const lastDate = new Date(lastCollection);
+    const today = new Date();
+    return lastDate.getDate() !== today.getDate() || 
+           lastDate.getMonth() !== today.getMonth() || 
+           lastDate.getFullYear() !== today.getFullYear();
+}
+
+// --- STATS ---
+function updateStats(investments) {
+    const totalVipsEl = document.getElementById('total-vips');
+    const totalRevenueEl = document.getElementById('total-revenue');
+
+    if (totalVipsEl) totalVipsEl.textContent = investments.length;
+    if (totalRevenueEl) {
+        const total = investments.reduce((sum, inv) => sum + (inv.totalCollected || 0), 0);
+        const dual = formatDualCurrency(total);
+        totalRevenueEl.textContent = `${dual.fcfa} / ${dual.usd}`;
     }
+}
 
-    function getVipsContainer() {
-        return document.getElementById('vips-container');
-    }
+// --- RENDER VIP ---
+function renderVIPs(investments) {
+    const container = getVipsContainer();
+    if (!container) return;
 
-    function formatCurrency(amount) {
-        return Number(amount).toLocaleString('fr-FR') + ' FCFA';
-    }
-
-    function calculateCycleProgress(investment) {
-        const config = VIP_CONFIG[investment.productId];
-        if (!config) return { isComplete: true, progress: 100, remainingDays: 0 };
-
-        const totalCollected = investment.totalCollected || 0;
-        const timestamp = investment.timestamp ? new Date(investment.timestamp).getTime() : Date.now();
-        const daysInCycle = Math.floor((Date.now() - timestamp) / (1000 * 60 * 60 * 24));
-        const remainingDays = Math.max(0, config.cycleDuration - daysInCycle);
-        const progress = Math.min((totalCollected / config.totalRevenue) * 100, 100);
-
-        return { isComplete: totalCollected >= config.totalRevenue, progress, remainingDays };
-    }
-
-    function isReadyToCollect(investment) {
-        const lastCollection = investment.lastCollection;
-        if (!lastCollection) return true;
-        
-        const lastDate = new Date(lastCollection);
-        const today = new Date();
-        return lastDate.getDate() !== today.getDate() || 
-               lastDate.getMonth() !== today.getMonth() || 
-               lastDate.getFullYear() !== today.getFullYear();
-    }
-
-    // --- Stats globales ---
-    function updateStats(investments) {
-        const totalVipsEl = document.getElementById('total-vips');
-        const totalRevenueEl = document.getElementById('total-revenue');
-
-        if (totalVipsEl) totalVipsEl.textContent = investments.length;
-        if (totalRevenueEl) {
-            const total = investments.reduce((sum, inv) => sum + (inv.totalCollected || 0), 0);
-            totalRevenueEl.textContent = formatCurrency(total);
-        }
-    }
-
-    // --- Rendu VIPs ---
-    function renderVIPs(investments) {
-        const container = getVipsContainer();
-        if (!container) return;
-
-        if (investments.length === 0) {
-            container.innerHTML = `
-                <div style="text-align:center;padding:40px;background:#f8f9ff;border-radius:20px;border:2px dashed #667eea;">
-                    <div style="font-size:64px;margin-bottom:20px;">✨</div>
-                    <h2>Aucun VIP actif</h2>
-                    <p>Investissez dans une boisson pour commencer à gagner !</p>
-                    <a href="invest.html" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:15px 30px;border-radius:25px;text-decoration:none;font-weight:600;">Investir maintenant</a>
-                </div>
-            `;
-            return;
-        }
-
-        container.innerHTML = investments.map(inv => {
-            const config = VIP_CONFIG[inv.productId];
-            if (!config) return '';
-            
-            const { isComplete, progress, remainingDays } = calculateCycleProgress(inv);
-            const canCollect = !isComplete && isReadyToCollect(inv);
-
-            return `
-            <div class="vip-card">
-                <div class="vip-header">
-                    <div class="vip-logo" style="background-image: url('images/${config.image}');"></div>
-                    <div>
-                        <div class="vip-title">${config.nom}</div>
-                        <div class="vip-subtitle">${formatCurrency(config.dailyRevenue)} / jour</div>
-                    </div>
-                </div>
-                <div class="vip-details">
-                    <div><strong>Date:</strong> ${new Date(inv.startDate || inv.timestamp).toLocaleDateString('fr-FR')}</div>
-                    <div><strong>Restant:</strong> ${remainingDays} jours</div>
-                </div>
-                <div class="progress-container">
-                    <div class="progress-header">
-                        <span>Total collecté</span>
-                        <span>${formatCurrency(inv.totalCollected || 0)} / ${formatCurrency(config.totalRevenue)}</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: ${progress}%"></div>
-                    </div>
-                </div>
-                <button class="collect-btn" onclick="window.collectRevenue('${inv.id}')" ${(!canCollect || isComplete)?'disabled':''}>
-                    ${isComplete ? '✅ Cycle terminé' : (canCollect ? '💰 Réclamer' : '⏳ Aujourd\'hui')}
-                </button>
+    if (investments.length === 0) {
+        container.innerHTML = `
+            <div style="text-align:center;padding:40px;background:#f8f9ff;border-radius:20px;border:2px dashed #667eea;">
+                <div style="font-size:64px;margin-bottom:20px;">✨</div>
+                <h2>Aucun VIP actif</h2>
+                <p>Investissez dans une boisson pour commencer à gagner !</p>
+                <a href="invest.html" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:15px 30px;border-radius:25px;text-decoration:none;font-weight:600;">Investir maintenant</a>
             </div>
-            `;
-        }).join('');
+        `;
+        return;
     }
 
-    // --- Charger VIPs ---
-    async function loadVIPs() {
-        if (!currentUser) return;
+    container.innerHTML = investments.map(inv => {
+        const config = VIP_CONFIG[inv.productId];
+        if (!config) return '';
 
+        const { isComplete, progress, remainingDays } = calculateCycleProgress(inv);
+        const canCollect = !isComplete && isReadyToCollect(inv);
+        const daily = formatDualCurrency(config.dailyRevenue);
+        const totalCollected = formatDualCurrency(inv.totalCollected || 0);
+        const totalRevenue = formatDualCurrency(config.totalRevenue);
+
+        return `
+        <div class="vip-card">
+            <div class="vip-header">
+                <div class="vip-logo" style="background-image: url('images/${config.image}');"></div>
+                <div>
+                    <div class="vip-title">${config.nom}</div>
+                    <div class="vip-subtitle">${daily.fcfa} / ${daily.usd} / jour</div>
+                </div>
+            </div>
+            <div class="vip-details">
+                <div><strong>Date:</strong> ${new Date(inv.startDate || inv.timestamp).toLocaleDateString('fr-FR')}</div>
+                <div><strong>Restant:</strong> ${remainingDays} jours</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-header">
+                    <span>Total collecté</span>
+                    <span>${totalCollected.fcfa} / ${totalRevenue.fcfa} / ${totalCollected.usd} / ${totalRevenue.usd}</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress}%"></div>
+                </div>
+            </div>
+            <button class="collect-btn" onclick="window.collectRevenue('${inv.id}')" ${(!canCollect || isComplete)?'disabled':''}>
+                ${isComplete ? '✅ Cycle terminé' : (canCollect ? '💰 Réclamer' : '⏳ Aujourd\'hui')}
+            </button>
+        </div>
+        `;
+    }).join('');
+}
+
+// --- LOAD VIPS ---
+async function loadVIPs() {
+    if (!currentUser) return;
+    const container = getVipsContainer();
+    if (!container) return;
+
+    container.innerHTML = '<div style="text-align:center;padding:20px;">🔄 Chargement...</div>';
+
+    try {
+        const snapshot = await get(ref(db, `investments/${currentUser.uid}`));
+        const investments = [];
+        if (snapshot.exists()) {
+            snapshot.forEach(child => {
+                const investment = { id: child.key, ...child.val() };
+                if (investment.status === 'active') investments.push(investment);
+            });
+        }
+
+        updateStats(investments);
+        renderVIPs(investments);
+    } catch (error) {
+        console.error("Erreur loadVIPs:", error);
+        showNotification("❌ Erreur chargement VIPs", "error");
+        container.innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;">❌ Erreur de chargement</div>';
+    }
+}
+
+// --- COLLECT REVENUE ---
+window.collectRevenue = async function(investmentId) {
+    if (!currentUser) {
+        showNotification('❌ Connectez-vous', 'error');
+        return;
+    }
+
+    try {
+        const investmentRef = ref(db, `investments/${currentUser.uid}/${investmentId}`);
+        const userRef = ref(db, `users/${currentUser.uid}`);
+        const [invSnap, userSnap] = await Promise.all([get(investmentRef), get(userRef)]);
+        if (!invSnap.exists()) throw new Error("Investissement introuvable");
+
+        const investment = invSnap.val();
+        const userBalance = parseFloat(userSnap.val()?.balance || 0);
+        const config = VIP_CONFIG[investment.productId];
+        if (!config) throw new Error("Configuration VIP manquante");
+        if (investment.totalCollected >= config.totalRevenue) throw new Error("Cycle terminé");
+        if (!isReadyToCollect(investment)) throw new Error("Déjà collecté aujourd'hui");
+
+        const newTotal = (investment.totalCollected || 0) + config.dailyRevenue;
+        const updates = {
+            [`users/${currentUser.uid}/balance`]: userBalance + config.dailyRevenue,
+            [`investments/${currentUser.uid}/${investmentId}/totalCollected`]: newTotal,
+            [`investments/${currentUser.uid}/${investmentId}/lastCollection`]: Date.now()
+        };
+
+        await update(ref(db), updates);
+        const collectedDual = formatDualCurrency(config.dailyRevenue);
+        showNotification(`✅ ${collectedDual.fcfa} / ${collectedDual.usd} collectés !`, "success");
+        loadVIPs();
+    } catch (error) {
+        console.error("Erreur collectRevenue:", error);
+        showNotification(error.message || "❌ Erreur collecte", "error");
+    }
+};
+
+// --- SIGN OUT ---
+window.signOutUser = async function() {
+    try { await signOut(auth); showNotification('👋 Déconnecté', 'success'); }
+    catch (error) { console.error(error); }
+};
+
+// --- AUTH LISTENER ---
+onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+    if (user) {
+        loadVIPs();
+        onValue(ref(db, `investments/${user.uid}`), () => loadVIPs());
+    } else {
         const container = getVipsContainer();
-        if (!container) return;
-
-        container.innerHTML = '<div style="text-align:center;padding:20px;">🔄 Chargement...</div>';
-
-        try {
-            const snapshot = await get(ref(db, `investments/${currentUser.uid}`));
-            const investments = [];
-
-            if (snapshot.exists()) {
-                snapshot.forEach(child => {
-                    const investment = { id: child.key, ...child.val() };
-                    if (investment.status === 'active') investments.push(investment);
-                });
-            }
-
-            updateStats(investments);
-            renderVIPs(investments);
-        } catch (error) {
-            console.error("Erreur loadVIPs:", error);
-            showNotification("❌ Erreur chargement VIPs", "error");
-            container.innerHTML = '<div style="text-align:center;padding:40px;color:#ef4444;">❌ Erreur de chargement</div>';
-        }
+        if (container) container.innerHTML = `
+            <div style="text-align:center;padding:60px;background:#f8f9ff;border-radius:20px;border:2px dashed #667eea;">
+                <div style="font-size:64px;margin-bottom:20px;">🔐</div>
+                <h2>Connexion requise</h2>
+                <p>Connectez-vous pour voir vos VIPs.</p>
+                <a href="index.html" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:15px 30px;border-radius:25px;text-decoration:none;font-weight:600;">Se connecter</a>
+            </div>
+        `;
+        updateStats([]);
     }
+});
 
-    // --- Collecte revenus ---
-    window.collectRevenue = async function(investmentId) {
-        if (!currentUser) {
-            showNotification('❌ Connectez-vous', 'error');
-            return;
-        }
-
-        try {
-            const investmentRef = ref(db, `investments/${currentUser.uid}/${investmentId}`);
-            const userRef = ref(db, `users/${currentUser.uid}`);
-
-            const [invSnap, userSnap] = await Promise.all([get(investmentRef), get(userRef)]);
-            if (!invSnap.exists()) throw new Error("Investissement introuvable");
-
-            const investment = invSnap.val();
-            const userBalance = parseFloat(userSnap.val()?.balance || 0);
-            const config = VIP_CONFIG[investment.productId];
-            
-            if (!config) throw new Error("Configuration VIP manquante");
-            if (investment.totalCollected >= config.totalRevenue) throw new Error("Cycle terminé");
-            if (!isReadyToCollect(investment)) throw new Error("Déjà collecté aujourd'hui");
-
-            const newTotal = (investment.totalCollected || 0) + config.dailyRevenue;
-            const updates = {
-                [`users/${currentUser.uid}/balance`]: userBalance + config.dailyRevenue,
-                [`investments/${currentUser.uid}/${investmentId}/totalCollected`]: newTotal,
-                [`investments/${currentUser.uid}/${investmentId}/lastCollection`]: Date.now()
-            };
-
-            await update(ref(db), updates);
-            showNotification(`✅ ${formatCurrency(config.dailyRevenue)} collectés !`, "success");
-            loadVIPs(); // Refresh
-        } catch (error) {
-            console.error("Erreur collectRevenue:", error);
-            showNotification(error.message || "❌ Erreur collecte", "error");
-        }
-    };
-
-    // --- Déconnexion ---
-    window.signOutUser = async function() {
-        try {
-            await signOut(auth);
-            showNotification('👋 Déconnecté', 'success');
-        } catch (error) {
-            console.error("Erreur déconnexion:", error);
-        }
-    };
-
-    // --- Écoute auth ---
-    onAuthStateChanged(auth, (user) => {
-        currentUser = user;
-        if (user) {
-            loadVIPs();
-            // Écoute temps réel
-            onValue(ref(db, `investments/${user.uid}`), () => loadVIPs());
-        } else {
-            const container = getVipsContainer();
-            if (container) {
-                container.innerHTML = `
-                    <div style="text-align:center;padding:60px;background:#f8f9ff;border-radius:20px;border:2px dashed #667eea;">
-                        <div style="font-size:64px;margin-bottom:20px;">🔐</div>
-                        <h2>Connexion requise</h2>
-                        <p>Connectez-vous pour voir vos VIPs.</p>
-                        <a href="index.html" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:15px 30px;border-radius:25px;text-decoration:none;font-weight:600;">Se connecter</a>
-                    </div>
-                `;
-            }
-            updateStats([]);
-        }
-    });
-
-    // --- DOM Ready ---
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('✅ Script VIPs SCHWEPPES chargé');
-    });
-</script> 
+// --- DOM Ready ---
+document.addEventListener('DOMContentLoaded', () => { console.log('✅ Script VIPs SCHWEPPES chargé'); });
+</script>
 </body>
 </html>
