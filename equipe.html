@@ -419,9 +419,10 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-import { getDatabase, ref, get, update, onValue, set, push } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+import { getDatabase, ref, get, update, onValue, set, push } 
+from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-/* 🔁 NOUVELLE BASE FIREBASE : SCHWEPPES */
+/* 🔁 BASE FIREBASE : SCHWEPPES */
 const firebaseConfig = {
     apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
     authDomain: "schweppes-15df3.firebaseapp.com",
@@ -432,15 +433,18 @@ const firebaseConfig = {
     appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
 };
 
-/* --- Init Firebase --- */
+/* --- INIT FIREBASE --- */
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 
 let currentUser = null;
-let processedTransactions = new Set(); // 🔥 Protection double traitement
+let processedTransactions = new Set(); // 🔒 Anti-doublon
 
-// 🔥 ÉLÉMENTS UI
+/* 🔥 TAUX CONVERSION */
+const FCFA_TO_USD_RATE = 587;
+
+/* 🔥 UI ELEMENTS */
 const elements = {
     copyReferralCodeBtn: document.getElementById('copyReferralCodeBtn'),
     copyReferralLinkBtn: document.getElementById('copyReferralLinkBtn'),
@@ -448,9 +452,14 @@ const elements = {
     teamCount: document.getElementById('teamCount')
 };
 
-// Utils
-const formatCurrency = (amount) => Number(amount).toLocaleString('fr-FR') + ' FCFA';
+/* 🛠️ UTILS */
 const parseAmount = (amount) => Math.round(parseFloat(amount || 0));
+
+const formatCurrencyWithUSD = (amountFCFA) => {
+    const fcfa = parseAmount(amountFCFA);
+    const usd = (fcfa / FCFA_TO_USD_RATE).toFixed(2);
+    return `${fcfa.toLocaleString('fr-FR')} FCFA  (~${usd} $)`;
+};
 
 const showNotification = () => {
     const notification = document.getElementById('copyNotification');
@@ -472,7 +481,7 @@ const copyToClipboard = async (elementId) => {
     }
 };
 
-// 🔥 COMPTEUR ÉQUIPE
+/* 👥 COMPTEUR ÉQUIPE */
 const updateTeamCount = async (userUid) => {
     if (!userUid || !elements.teamCount) return;
 
@@ -495,7 +504,7 @@ const updateTeamCount = async (userUid) => {
     }
 };
 
-// 🔥 BONUS 20%
+/* 💰 BONUS 20% */
 const creditReferralBonus = async (transaction, transactionId) => {
     const txKey = `TX-${transactionId}`;
     if (processedTransactions.has(txKey) || transaction.credited) return;
@@ -555,7 +564,7 @@ const creditReferralBonus = async (transaction, transactionId) => {
     }
 };
 
-// 🚀 LISTENER TRANSACTIONS
+/* 🚀 LISTENER TRANSACTIONS */
 const startBonusListener = () => {
     if (!currentUser) return;
 
@@ -577,7 +586,7 @@ const startBonusListener = () => {
     });
 };
 
-// 🔥 UI
+/* 🖥️ UI */
 const updateUI = async () => {
     if (!currentUser) return;
 
@@ -587,10 +596,16 @@ const updateUI = async () => {
         const data = snap.val();
         if (!data) return;
 
-        if (elements.totalBonus)
-            elements.totalBonus.textContent = formatCurrency(data.totalReferralBonus || 0);
+        if (elements.totalBonus) {
+            elements.totalBonus.textContent =
+                formatCurrencyWithUSD(data.totalReferralBonus || 0);
+        }
 
-        document.getElementById('referralCode')?.setAttribute('value', data.referralCode || '');
+        document.getElementById('referralCode')?.setAttribute(
+            'value',
+            data.referralCode || ''
+        );
+
         document.getElementById('referralLink')?.setAttribute(
             'value',
             `${location.origin}/index.html?ref=${data.referralCode || ''}`
@@ -598,7 +613,7 @@ const updateUI = async () => {
     });
 };
 
-// 🎛️ EVENTS
+/* 🎛️ EVENTS */
 const setupEvents = () => {
     elements.copyReferralCodeBtn?.addEventListener('click', () =>
         copyToClipboard('referralCode')
@@ -608,7 +623,7 @@ const setupEvents = () => {
     );
 };
 
-// 🚀 INIT
+/* 🚀 INIT */
 onAuthStateChanged(auth, async (user) => {
     if (!user) {
         window.location.href = 'index.html';
