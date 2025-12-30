@@ -1004,262 +1004,226 @@
     </nav>
 
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-        import { 
-            getDatabase, ref, get, update, push, serverTimestamp, onValue 
-        } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+<script type="module">
+/* =========================
+   IMPORT FIREBASE
+========================= */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+import { 
+    getDatabase,
+    ref,
+    get,
+    update,
+    push,
+    onValue,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-        // Firebase Config
-        const firebaseConfig = {
-            apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
-            authDomain: "schweppes-15df3.firebaseapp.com",
-            databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
-            projectId: "schweppes-15df3",
-            storageBucket: "schweppes-15df3.firebasestorage.app",
-            messagingSenderId: "1011077098372",
-            appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
-        };
+/* =========================
+   CONFIG FIREBASE
+========================= */
+const firebaseConfig = {
+    apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
+    authDomain: "schweppes-15df3.firebaseapp.com",
+    databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
+    projectId: "schweppes-15df3",
+    storageBucket: "schweppes-15df3.firebasestorage.app",
+    messagingSenderId: "1011077098372",
+    appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
+};
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
 
-        let currentUser = null;
-        let currentSolde = 0;
-        let currentProduct = null;
+/* =========================
+   VARIABLES GLOBALES
+========================= */
+let currentUser = null;
+let currentSolde = 0;
+let currentProduct = null;
 
-        // Configuration des produits
-        const PRODUCT_CONFIG = {
-            1: { nom: "VIP-1", price: 5500, dailyRevenue: 1050, cycleDuration: 20, totalRevenue: 21000, limit: 1 },
-            2: { nom: "VIP-2", price: 12500, dailyRevenue: 2500, cycleDuration: 19, totalRevenue: 47500, limit: 1 },
-            3: { nom: "VIP-3", price: 18500, dailyRevenue: 3500, cycleDuration: 18, totalRevenue: 63000, limit: 1 },
-            4: { nom: "VIP-4", price: 35000, dailyRevenue: 5000, cycleDuration: 17, totalRevenue: 85000, limit: 1 },
-            5: { nom: "VIP-5", price: 100000, dailyRevenue: 20350, cycleDuration: 16, totalRevenue: 325600, limit: 2 }
-        };
+/* =========================
+   PRODUITS VIP
+========================= */
+const PRODUCT_CONFIG = {
+    1: { productId: 1, nom: "VIP 1", price: 5500, dailyRevenue: 1050, cycleDuration: 20, totalRevenue: 21000, limit: 1 },
+    2: { productId: 2, nom: "VIP 2", price: 12500, dailyRevenue: 2500, cycleDuration: 19, totalRevenue: 47500, limit: 1 },
+    3: { productId: 3, nom: "VIP 3", price: 18500, dailyRevenue: 3500, cycleDuration: 18, totalRevenue: 63000, limit: 1 },
+    4: { productId: 4, nom: "VIP 4", price: 35000, dailyRevenue: 5000, cycleDuration: 17, totalRevenue: 85000, limit: 1 },
+    5: { productId: 5, nom: "VIP 5", price: 100000, dailyRevenue: 20350, cycleDuration: 16, totalRevenue: 325600, limit: 2 }
+};
 
-        const formatCurrency = (amount) => Number(amount).toLocaleString('fr-FR') + ' FCFA';
+/* =========================
+   UTILITAIRES
+========================= */
+const formatCurrency = (n) =>
+    Number(n).toLocaleString("fr-FR") + " FCFA";
 
-        // Carrousel
-        function initCarousel() {
-            const track = document.getElementById('carouselTrack');
-            const dotsContainer = document.getElementById('carouselDots');
-            const slides = track.children;
-            let currentIndex = 0;
+function showNotification(message, type = "success") {
+    const n = document.getElementById("notification");
+    n.textContent = message;
+    n.style.background = type === "success" ? "#10b981" : "#ef4444";
+    n.style.display = "block";
+    setTimeout(() => n.style.display = "none", 4000);
+}
 
-            for (let i = 0; i < slides.length; i++) {
-                const dot = document.createElement('div');
-                dot.className = 'dot';
-                dot.addEventListener('click', () => goToSlide(i));
-                dotsContainer.appendChild(dot);
-            }
+/* =========================
+   BALANCE LIVE
+========================= */
+function setupBalanceListener(uid) {
+    onValue(ref(db, `users/${uid}/balance`), snap => {
+        currentSolde = Number(snap.val() || 0);
+    });
+}
 
-            const dots = dotsContainer.children;
+/* =========================
+   CHECK INVEST ACTIF
+========================= */
+async function checkActiveInvestments(uid, productId) {
+    const snap = await get(ref(db, `investments/${uid}`));
+    if (!snap.exists()) return 0;
 
-            function goToSlide(index) {
-                currentIndex = index;
-                track.style.transform = `translateX(-${index * 100}%)`;
-                updateDots();
-            }
+    let count = 0;
+    Object.values(snap.val()).forEach(inv => {
+        if (
+            inv.productId === productId &&
+            inv.status === "active" &&
+            inv.remainingDays > 0
+        ) count++;
+    });
+    return count;
+}
 
-            function updateDots() {
-                for (let i = 0; i < dots.length; i++) {
-                    dots[i].classList.toggle('active', i === currentIndex);
-                }
-            }
+/* =========================
+   LIMITES BOUTONS
+========================= */
+async function updateInvestmentLimits(uid) {
+    for (const id in PRODUCT_CONFIG) {
+        const product = PRODUCT_CONFIG[id];
+        const active = await checkActiveInvestments(uid, product.productId);
+        const btn = document.getElementById(`btn${id}`);
+        if (!btn) continue;
 
-            setInterval(() => {
-                currentIndex = (currentIndex + 1) % slides.length;
-                goToSlide(currentIndex);
-            }, 4000);
+        if (active >= product.limit) {
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-lock"></i> Limite atteinte';
+        } else {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-rocket"></i> Investir';
+        }
+    }
+}
 
-            updateDots();
+/* =========================
+   MODAL
+========================= */
+window.openModal = (productId) => {
+    currentProduct = PRODUCT_CONFIG[productId];
+
+    document.getElementById("modalVipBadge").textContent = currentProduct.nom;
+    document.getElementById("modalAmount").textContent = formatCurrency(currentProduct.price);
+    document.getElementById("modalDaily").textContent = formatCurrency(currentProduct.dailyRevenue);
+    document.getElementById("modalCycle").textContent = currentProduct.cycleDuration + " jours";
+    document.getElementById("modalTotal").textContent = formatCurrency(currentProduct.totalRevenue);
+
+    document.getElementById("modal").classList.add("active");
+};
+
+window.closeModal = () => {
+    document.getElementById("modal").classList.remove("active");
+    currentProduct = null;
+};
+
+/* =========================
+   CLIQUE INVESTIR
+========================= */
+window.investProduct = async (productId) => {
+    if (!currentUser) {
+        showNotification("Veuillez vous connecter", "error");
+        return;
+    }
+
+    const product = PRODUCT_CONFIG[productId];
+    if (currentSolde < product.price) {
+        showNotification("Solde insuffisant", "error");
+        return;
+    }
+
+    openModal(productId);
+};
+
+/* =========================
+   CONFIRM INVEST
+========================= */
+window.confirmInvestment = async () => {
+    if (!currentUser || !currentProduct) return;
+
+    const btn = document.getElementById("confirmBtn");
+    btn.disabled = true;
+
+    try {
+        const active = await checkActiveInvestments(
+            currentUser.uid,
+            currentProduct.productId
+        );
+
+        if (active >= currentProduct.limit) {
+            showNotification("Limite atteinte", "error");
+            closeModal();
+            return;
         }
 
-        // Notifications
-        function showNotification(message, type = 'success') {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.style.backgroundColor = type === 'success' ? '#10b981' : '#ef4444';
-            notification.style.display = 'block';
-            setTimeout(() => notification.style.display = 'none', 4000);
-        }
+        const newBalance = currentSolde - currentProduct.price;
+        const now = new Date();
 
-        // Vérification investissements actifs
-        async function checkActiveInvestments(userId, productId) {
-            try {
-                const investmentsRef = ref(db, `investments/${userId}`);
-                const snapshot = await get(investmentsRef);
-                if (!snapshot.exists()) return 0;
+        const updates = {};
+        updates[`users/${currentUser.uid}/balance`] = newBalance;
 
-                let activeCount = 0;
-                Object.values(snapshot.val()).forEach(inv => {
-                    if (inv.productId === productId && inv.status === 'active' && inv.remainingDays > 0) {
-                        activeCount++;
-                    }
-                });
-                return activeCount;
-            } catch (error) {
-                console.error("Erreur checkActiveInvestments:", error);
-                return 0;
-            }
-        }
-
-        // Mise à jour limites boutons
-        async function updateInvestmentLimits(userId) {
-            for (const productId in PRODUCT_CONFIG) {
-                const activeCount = await checkActiveInvestments(userId, Number(productId));
-                const remaining = PRODUCT_CONFIG[productId].limit - activeCount;
-                const btn = document.getElementById(`btn${productId}`);
-
-                if (btn) {
-                    btn.disabled = remaining <= 0;
-                    btn.innerHTML = remaining <= 0 ? 
-                        '<i class="fas fa-lock"></i> Limite atteinte' : 
-                        '<i class="fas fa-rocket"></i> Investir';
-                }
-            }
-        }
-
-        // OUVERTURE MODAL
-        window.openModal = function(productId, amount) {
-            currentProduct = PRODUCT_CONFIG[productId];
-            const modal = document.getElementById('modal');
-            const modalVipBadge = document.getElementById('modalVipBadge');
-            const modalAmount = document.getElementById('modalAmount');
-            const modalDaily = document.getElementById('modalDaily');
-            const modalCycle = document.getElementById('modalCycle');
-            const modalTotal = document.getElementById('modalTotal');
-
-            modalVipBadge.textContent = currentProduct.nom;
-            modalAmount.textContent = formatCurrency(amount);
-            modalDaily.textContent = formatCurrency(currentProduct.dailyRevenue);
-            modalCycle.textContent = `${currentProduct.cycleDuration} jours`;
-            modalTotal.textContent = formatCurrency(currentProduct.totalRevenue);
-
-            modal.classList.add('active');
+        const invRef = push(ref(db, `investments/${currentUser.uid}`));
+        updates[`investments/${currentUser.uid}/${invRef.key}`] = {
+            productId: currentProduct.productId,
+            amount: currentProduct.price,
+            dailyRevenue: currentProduct.dailyRevenue,
+            totalRevenue: currentProduct.totalRevenue,
+            remainingDays: currentProduct.cycleDuration,
+            startDate: now.toISOString(),
+            status: "active",
+            totalCollected: 0,
+            lastCollection: now.toISOString(),
+            timestamp: serverTimestamp()
         };
 
-        // FERMER MODAL
-        window.closeModal = function() {
-            document.getElementById('modal').classList.remove('active');
-            currentProduct = null;
-        };
+        await update(ref(db), updates);
 
-        // INVESTIR
-        window.investProduct = async function(productId, amount) {
-            if (!currentUser) {
-                showNotification("🔐 Connectez-vous d'abord", "error");
-                setTimeout(() => window.location.href = 'login.html', 1500);
-                return;
-            }
+        showNotification("Investissement activé avec succès");
+        closeModal();
+        updateInvestmentLimits(currentUser.uid);
 
-            if (currentSolde < amount) {
-                showNotification(`💰 Solde insuffisant: ${formatCurrency(currentSolde)}`, "error");
-                return;
-            }
+        setTimeout(() => location.href = "machine.html", 2000);
 
-            const product = PRODUCT_CONFIG[productId];
-            if (!product) {
-                showNotification("❌ Produit invalide", "error");
-                return;
-            }
+    } catch (e) {
+        console.error(e);
+        showNotification("Erreur serveur", "error");
+    } finally {
+        btn.disabled = false;
+    }
+};
 
-            openModal(productId, amount);
-        };
-
-        // CONFIRMER INVESTISSEMENT
-        window.confirmInvestment = async function() {
-            if (!currentUser || !currentProduct) return;
-
-            const confirmBtn = document.getElementById('confirmBtn');
-            const confirmText = document.getElementById('confirmText');
-            const loadingSpinner = document.getElementById('loadingSpinner');
-
-            confirmBtn.disabled = true;
-            confirmText.style.display = 'none';
-            loadingSpinner.style.display = 'inline';
-
-            try {
-                const activeCount = await checkActiveInvestments(currentUser.uid, currentProduct.productId || Object.keys(PRODUCT_CONFIG).indexOf(currentProduct.nom.split('-')[1]) + 1);
-
-                if (activeCount >= currentProduct.limit) {
-                    showNotification(`❌ Limite ${currentProduct.nom} atteinte`, "error");
-                    closeModal();
-                    return;
-                }
-
-                const newBalance = currentSolde - currentProduct.price;
-                const updates = { [`users/${currentUser.uid}/balance`]: newBalance };
-
-                const investmentsRef = ref(db, `investments/${currentUser.uid}`);
-                const newInvRef = push(investmentsRef);
-                const now = new Date();
-
-                updates[`investments/${currentUser.uid}/${newInvRef.key}`] = {
-                    productId: currentProduct.productId || 1,
-                    amount: currentProduct.price,
-                    startDate: now.toISOString(),
-                    endDate: new Date(now.getTime() + currentProduct.cycleDuration * 24 * 60 * 60 * 1000).toISOString(),
-                    status: 'active',
-                    remainingDays: currentProduct.cycleDuration,
-                    dailyRevenue: currentProduct.dailyRevenue,
-                    totalRevenue: currentProduct.totalRevenue,
-                    totalCollected: 0,
-                    lastCollection: now.toISOString(),
-                    timestamp: serverTimestamp()
-                };
-
-                await update(ref(db), updates);
-
-                showNotification(`✅ ${currentProduct.nom} activé ! ${formatCurrency(currentProduct.price)} investis`, "success");
-                closeModal();
-                updateInvestmentLimits(currentUser.uid);
-                setTimeout(() => window.location.href = 'machine.html', 2500);
-
-            } catch (error) {
-                console.error("Erreur investissement:", error);
-                showNotification("❌ Erreur serveur, réessayez", "error");
-            } finally {
-                confirmBtn.disabled = false;
-                confirmText.style.display = 'inline';
-                loadingSpinner.style.display = 'none';
-            }
-        };
-
-        // Écouteur balance
-        function setupBalanceListener(userId) {
-            const balanceRef = ref(db, `users/${userId}/balance`);
-            onValue(balanceRef, (snapshot) => {
-                const balance = parseFloat(snapshot.val() || 0);
-                currentSolde = balance;
-            });
-        }
-
-        // INITIALISATION
-        onAuthStateChanged(auth, async (user) => {
-            currentUser = user;
-            if (user) {
-                setupBalanceListener(user.uid);
-                await updateInvestmentLimits(user.uid);
-            } else {
-                // Rediriger vers login si pas connecté
-                // window.location.href = 'login.html';
-            }
-        });
-
-        // Initialisation au chargement
-        document.addEventListener('DOMContentLoaded', () => {
-            initCarousel();
-        });
-
-        // Fermer modal en cliquant dehors
-        document.getElementById('modal').addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-overlay')) {
-                closeModal();
-            }
-        });
-    </script>
+/* =========================
+   AUTH INIT
+========================= */
+onAuthStateChanged(auth, user => {
+    if (user) {
+        currentUser = user;
+        setupBalanceListener(user.uid);
+        updateInvestmentLimits(user.uid);
+    } else {
+        currentUser = null;
+        currentSolde = 0;
+    }
+});
+</script>
 </body>
 </html>
