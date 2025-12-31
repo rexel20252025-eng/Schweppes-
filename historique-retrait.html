@@ -73,24 +73,37 @@ const auth = getAuth(app);
 const db = getDatabase(app);
 const USD_TO_FCFA = 587;
 
+// --- FORMAT MONTANT FCFA / USD ---
 function formatDualCurrency(amountFCFA) {
     const usd = (amountFCFA / USD_TO_FCFA).toFixed(2);
     return { fcfa: Math.round(amountFCFA).toLocaleString(), usd: parseFloat(usd).toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2}) };
 }
 
-function formatDate(timestamp) {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(timestamp).toLocaleDateString('fr-FR', options);
+// --- FORMAT DATE + HEURE ---
+function formatDateTime(timestamp) {
+    if(!timestamp) return "Date inconnue";
+    let date;
+    if(typeof timestamp === 'number') date = new Date(timestamp);
+    else if(typeof timestamp === 'string') {
+        const parsed = Date.parse(timestamp);
+        date = isNaN(parsed) ? null : new Date(parsed);
+    } else date = null;
+    if(!date || isNaN(date.getTime())) return "Date inconnue";
+
+    return date.toLocaleDateString('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric' })
+           + ', ' + date.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
 }
 
+// --- STATUT ---
 function getStatusBadge(status) {
     const s = (status || '').toLowerCase();
-    if(s === 'success' || s === 'succès') return '<span class="badge badge-success">Succès</span>';
+    if(s === 'success' || s === 'payé' || s === 'succès') return '<span class="badge badge-success">Payé</span>';
     if(s === 'pending' || s === 'en attente' || s === 'traitement bancaire') return '<span class="badge badge-pending">En traitement</span>';
     if(s === 'failed' || s === 'échoué') return '<span class="badge badge-failed">Échoué</span>';
     return `<span class="badge badge-pending">${status || 'Inconnu'}</span>`;
 }
 
+// --- AFFICHER L'HISTORIQUE ---
 function displayWithdrawalHistory(userId) {
     const withdrawalsRef = ref(db, `users/${userId}/withdrawalHistory`);
     onValue(withdrawalsRef, snapshot => {
@@ -102,13 +115,25 @@ function displayWithdrawalHistory(userId) {
             return;
         }
 
-        Object.values(history).forEach(w => {
+        // Convertir en tableau et trier : En traitement en haut, Payé en bas
+        const arr = Object.values(history).sort((a,b) => {
+            const statusOrder = { 'pending': 0, 'en traitement':0, 'traitement bancaire':0, 'success':1, 'payé':1, 'succès':1 };
+            const aStatus = (a.status||'').toLowerCase();
+            const bStatus = (b.status||'').toLowerCase();
+            if(statusOrder[aStatus] !== statusOrder[bStatus]) return statusOrder[aStatus] - statusOrder[bStatus];
+            // Sinon par date (plus récent en haut)
+            const aTime = new Date(a.date).getTime() || 0;
+            const bTime = new Date(b.date).getTime() || 0;
+            return bTime - aTime;
+        });
+
+        arr.forEach(w => {
             const fees = w.fees || 0;
             const net = (w.amount || 0) - fees;
             const amt = formatDualCurrency(w.amount || 0);
             const feesFmt = formatDualCurrency(fees);
             const netFmt = formatDualCurrency(net);
-            const dateStr = formatDate(w.date || Date.now());
+            const dateStr = formatDateTime(w.date || Date.now());
             const statusBadge = getStatusBadge(w.status);
 
             const div = document.createElement('div');
@@ -118,7 +143,7 @@ function displayWithdrawalHistory(userId) {
                 <div class="row"><span class="label">Frais d'opération :</span><span class="value">- ${feesFmt.fcfa} FCFA / $${feesFmt.usd}</span></div>
                 <div class="row"><span class="label">Montant à recevoir :</span><span class="value">${netFmt.fcfa} FCFA / $${netFmt.usd}</span></div>
                 <div class="row"><span class="label">Statut :</span><span class="value">${statusBadge}</span></div>
-                <div class="row"><span class="label">Date :</span><span class="value">${dateStr}</span></div>
+                <div class="row"><span class="label">Date & Heure :</span><span class="value">${dateStr}</span></div>
             `;
             container.appendChild(div);
         });
@@ -126,12 +151,8 @@ function displayWithdrawalHistory(userId) {
 }
 
 onAuthStateChanged(auth, user => {
-    if(user) {
-        displayWithdrawalHistory(user.uid);
-    } else {
-        const container = document.getElementById('history-container');
-        container.innerHTML = '<div class="no-history">Aucun retrait.</div>';
-    }
+    if(user) displayWithdrawalHistory(user.uid);
+    else document.getElementById('history-container').innerHTML = '<div class="no-history">Aucun retrait.</div>';
 });
 </script>
 </body>
