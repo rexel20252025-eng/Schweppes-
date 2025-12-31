@@ -45,7 +45,7 @@ body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ub
 <body>
 <div class="header">
 <span class="back-arrow" onclick="history.back()">←</span>
-<div class="header-title">Schweppes - Historique de retrait</div>
+<div class="header-title">Schweppes  Historique deretrait</div>
 </div>
 
 <div id="history-container">
@@ -68,92 +68,96 @@ const firebaseConfig = {
   appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
 };
 
+// --- Init Firebase ---
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 const USD_TO_FCFA = 587;
 
-// --- FORMAT MONTANT FCFA / USD ---
-function formatDualCurrency(amountFCFA) {
-    const usd = (amountFCFA / USD_TO_FCFA).toFixed(2);
-    return { fcfa: Math.round(amountFCFA).toLocaleString(), usd: parseFloat(usd).toLocaleString('en-US', {minimumFractionDigits:2,maximumFractionDigits:2}) };
+// --- Utils ---
+function formatDualCurrency(amount) {
+    const usd = (amount / USD_TO_FCFA).toFixed(2);
+    return { fcfa: Math.round(amount).toLocaleString(), usd: parseFloat(usd).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) };
 }
 
-// --- FORMAT DATE + HEURE ---
-function formatDateTime(timestamp) {
-    if(!timestamp) return "Date inconnue";
-    let date;
-    if(typeof timestamp === 'number') date = new Date(timestamp);
-    else if(typeof timestamp === 'string') {
-        const parsed = Date.parse(timestamp);
-        date = isNaN(parsed) ? null : new Date(parsed);
-    } else date = null;
-    if(!date || isNaN(date.getTime())) return "Date inconnue";
-
-    return date.toLocaleDateString('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric' })
-           + ', ' + date.toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+function formatDate(ts) {
+    if(!ts) return "Date inconnue";
+    const date = new Date(Number(ts));
+    return date.toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
 }
 
-// --- STATUT ---
-function getStatusBadge(status) {
+function statusBadge(status) {
     const s = (status || '').toLowerCase();
-    if(s === 'success' || s === 'payé' || s === 'succès') return '<span class="badge badge-success">Payé</span>';
-    if(s === 'pending' || s === 'en attente' || s === 'traitement bancaire') return '<span class="badge badge-pending">En traitement</span>';
-    if(s === 'failed' || s === 'échoué') return '<span class="badge badge-failed">Échoué</span>';
-    return `<span class="badge badge-pending">${status || 'Inconnu'}</span>`;
+    if(s === 'success' || s === 'payé' || s === 'succès' || s === 'terminé') return `<span class="badge badge-success">${status}</span>`;
+    if(s === 'pending' || s === 'en attente' || s === 'traitement bancaire') return `<span class="badge badge-pending">${status}</span>`;
+    return `<span class="badge badge-failed">${status}</span>`;
 }
 
-// --- AFFICHER L'HISTORIQUE ---
-function displayWithdrawalHistory(userId) {
-    const withdrawalsRef = ref(db, `users/${userId}/withdrawalHistory`);
-    onValue(withdrawalsRef, snapshot => {
-        const container = document.getElementById('history-container');
-        container.innerHTML = '';
-        const history = snapshot.val();
-        if(!history) {
-            container.innerHTML = '<div class="no-history">Aucun retrait effectué.</div>';
-            return;
-        }
+function createWithdrawalCard(w) {
+    const amt = formatDualCurrency(w.amount || 0);
+    const fees = formatDualCurrency(w.fees || 0);
+    const net = formatDualCurrency((w.amount || 0) - (w.fees || 0));
+    const dateStr = formatDate(w.date || w.timestamp || Date.now());
 
-        // Convertir en tableau et trier : En traitement en haut, Payé en bas
-        const arr = Object.values(history).sort((a,b) => {
-            const statusOrder = { 'pending': 0, 'en traitement':0, 'traitement bancaire':0, 'success':1, 'payé':1, 'succès':1 };
-            const aStatus = (a.status||'').toLowerCase();
-            const bStatus = (b.status||'').toLowerCase();
-            if(statusOrder[aStatus] !== statusOrder[bStatus]) return statusOrder[aStatus] - statusOrder[bStatus];
-            // Sinon par date (plus récent en haut)
-            const aTime = new Date(a.date).getTime() || 0;
-            const bTime = new Date(b.date).getTime() || 0;
-            return bTime - aTime;
-        });
-
-        arr.forEach(w => {
-            const fees = w.fees || 0;
-            const net = (w.amount || 0) - fees;
-            const amt = formatDualCurrency(w.amount || 0);
-            const feesFmt = formatDualCurrency(fees);
-            const netFmt = formatDualCurrency(net);
-            const dateStr = formatDateTime(w.date || Date.now());
-            const statusBadge = getStatusBadge(w.status);
-
-            const div = document.createElement('div');
-            div.classList.add('card');
-            div.innerHTML = `
-                <div class="row"><span class="label">Montant retirer :</span><span class="value">- ${amt.fcfa} FCFA / $${amt.usd}</span></div>
-                <div class="row"><span class="label">Frais d'opération :</span><span class="value">- ${feesFmt.fcfa} FCFA / $${feesFmt.usd}</span></div>
-                <div class="row"><span class="label">Montant à recevoir :</span><span class="value">${netFmt.fcfa} FCFA / $${netFmt.usd}</span></div>
-                <div class="row"><span class="label">Statut :</span><span class="value">${statusBadge}</span></div>
-                <div class="row"><span class="label">Date & Heure :</span><span class="value">${dateStr}</span></div>
-            `;
-            container.appendChild(div);
-        });
-    });
+    return `
+    <div class="card">
+        <div class="row"><span class="label">Montant retiré :</span><span class="value">− ${amt.fcfa} FCFA / $${amt.usd}</span></div>
+        <div class="row"><span class="label">Frais d'opération :</span><span class="value">− ${fees.fcfa} FCFA / $${fees.usd}</span></div>
+        <div class="row"><span class="label">Montant à recevoir :</span><span class="value orange-text">${net.fcfa} FCFA / $${net.usd}</span></div>
+        <div class="row"><span class="label">Statut :</span><span class="value">${statusBadge(w.status)}</span></div>
+        <div class="row"><span class="label">Date de retrait :</span><span class="value">${dateStr}</span></div>
+    </div>`;
 }
 
+// --- Display history ---
+function displayWithdrawalHistory(history){
+    const container = document.getElementById('history-container');
+    if(!history || Object.keys(history).length === 0){
+        container.innerHTML = '<div class="no-history">Aucun retrait disponible</div>';
+        return;
+    }
+    container.innerHTML = '';
+
+    const todayStr = new Date().toDateString();
+
+    Object.entries(history)
+        .sort(([,a],[,b]) => {
+            const aDateObj = new Date(a.date || a.timestamp);
+            const bDateObj = new Date(b.date || b.timestamp);
+
+            const aDateStr = aDateObj.toDateString();
+            const bDateStr = bDateObj.toDateString();
+
+            // 1️⃣ Les retraits d'aujourd'hui en haut
+            if(aDateStr === todayStr && bDateStr !== todayStr) return -1;
+            if(bDateStr === todayStr && aDateStr !== todayStr) return 1;
+
+            // 2️⃣ Si même jour, tri par timestamp (heure) descendant
+            if(aDateStr === bDateStr) return (b.timestamp || b.date) - (a.timestamp || a.date);
+
+            // 3️⃣ Sinon tri normal par order ou date descendant
+            return (b.order || b.date) - (a.order || a.date);
+        })
+        .forEach(([,w]) => {
+            container.innerHTML += createWithdrawalCard(w);
+        });
+}
+
+// --- Auth ---
 onAuthStateChanged(auth, user => {
-    if(user) displayWithdrawalHistory(user.uid);
-    else document.getElementById('history-container').innerHTML = '<div class="no-history">Aucun retrait.</div>';
+    if(user){
+        const historyRef = ref(db, `users/${user.uid}/withdrawalHistory`);
+        onValue(historyRef, snapshot => {
+            displayWithdrawalHistory(snapshot.val());
+        });
+    } else {
+        window.location.href = 'login.html';
+    }
 });
+
+// --- Back button ---
+document.querySelector('.back-arrow')?.addEventListener('click', () => history.back());
 </script>
+
 </body>
 </html>
