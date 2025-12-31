@@ -6,25 +6,91 @@
 <title>Schweppes - Retrait</title>
 
 <style>
-/* ====== STYLE IDENTIQUE (non modifié) ====== */
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fff;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-.container{background:#fff;border:2px solid #e5e7eb;border-radius:24px;padding:40px;max-width:420px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,.08)}
+body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    background:#ffffff;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:20px
+}
+.container{
+    background:#fff;
+    border:2px solid #e5e7eb;
+    border-radius:24px;
+    padding:40px;
+    max-width:420px;
+    width:100%;
+    box-shadow:0 10px 40px rgba(0,0,0,.08)
+}
 .header{text-align:center;margin-bottom:32px}
-.logo{color:#ef4444;font-size:28px;font-weight:700;letter-spacing:2px}
-.subtitle{color:#6b7280;font-size:14px}
-.balance{color:#10b981;font-size:24px;font-weight:700;margin-top:10px}
+.logo{font-size:28px;font-weight:700;color:#ef4444;letter-spacing:2px}
+.subtitle{color:#6b7280;font-size:14px;margin-top:4px}
+.balance{
+    color:#10b981;
+    font-size:24px;
+    font-weight:700;
+    margin-top:12px
+}
 .form-group{margin-bottom:20px}
-label{display:block;font-weight:600;margin-bottom:6px}
-input,select{width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:12px;font-size:16px}
-.withdrawal-summary{background:#f9fafb;border-radius:12px;padding:16px;margin:20px 0;display:none}
+label{display:block;font-weight:600;margin-bottom:6px;color:#374151}
+input{
+    width:100%;
+    padding:12px;
+    border:2px solid #e5e7eb;
+    border-radius:12px;
+    font-size:16px
+}
+.withdrawal-summary{
+    background:#f9fafb;
+    border-radius:12px;
+    padding:16px;
+    margin:20px 0;
+    display:none
+}
 .withdrawal-summary.visible{display:block}
-.summary-row{display:flex;justify-content:space-between;margin-bottom:8px}
-.summary-total{border-top:2px dashed #d1d5db;padding-top:10px}
-.btn-withdraw{width:100%;padding:14px;background:#ef4444;color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer}
-.btn-withdraw:disabled{background:#9ca3af}
-.error{background:#fee2e2;color:#991b1b;padding:10px;border-radius:8px}
-.success{background:#d1fae5;color:#065f46;padding:10px;border-radius:8px}
+.summary-row{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:8px;
+    font-size:14px
+}
+.summary-total{
+    border-top:2px dashed #d1d5db;
+    padding-top:10px;
+    font-weight:700
+}
+.btn-withdraw{
+    width:100%;
+    padding:14px;
+    background:#ef4444;
+    color:#fff;
+    border:none;
+    border-radius:12px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer
+}
+.btn-withdraw:disabled{
+    background:#9ca3af;
+    cursor:not-allowed
+}
+.error{
+    background:#fee2e2;
+    color:#991b1b;
+    padding:10px;
+    border-radius:8px;
+    margin-top:12px
+}
+.success{
+    background:#d1fae5;
+    color:#065f46;
+    padding:10px;
+    border-radius:8px;
+    margin-top:12px
+}
 </style>
 </head>
 
@@ -32,48 +98,56 @@ input,select{width:100%;padding:12px;border:2px solid #e5e7eb;border-radius:12px
 <div class="container">
 
 <div class="header">
-<div class="logo">SCHWEPPES</div>
-<div class="subtitle">Retrait disponible 24h/24</div>
-<div class="balance" id="current-balance">0 FCFA</div>
+    <div class="logo">SCHWEPPES</div>
+    <div class="subtitle">Retrait disponible 24h/24</div>
+    <div class="balance" id="current-balance">0 FCFA</div>
 </div>
 
-<form id="withdrawal-form">
+<form>
 
 <div class="form-group">
-<label>Devise</label>
-<select id="currency">
-<option value="FCFA">FCFA</option>
-<option value="USD">$</option>
-</select>
+    <label>Montant à retirer (FCFA)</label>
+    <input type="number" id="amount" placeholder="Ex: 10000">
 </div>
 
 <div class="form-group">
-<label>Montant à retirer</label>
-<input type="number" id="amount" placeholder="Entrez le montant">
-</div>
-
-<div class="form-group">
-<label>Code de retrait</label>
-<input type="text" id="withdrawalCode" maxlength="6" placeholder="Code à 6 chiffres">
+    <label>Code de retrait</label>
+    <input type="text" id="withdrawalCode" maxlength="6" placeholder="Code à 6 chiffres">
 </div>
 
 <div class="withdrawal-summary" id="withdrawal-summary">
-<div class="summary-row">
-<span>Montant demandé</span>
-<span id="requested-amount">0</span>
-</div>
-<div class="summary-row">
-<span>Frais (1%)</span>
-<span id="fees-amount">0</span>
-</div>
-<div class="summary-row summary-total">
-<strong>Vous recevrez</strong>
-<strong id="total-amount">0</strong>
-</div>
+
+    <div class="summary-row">
+        <span>Montant demandé</span>
+        <span id="requested-fcfa">0 FCFA</span>
+    </div>
+    <div class="summary-row">
+        <span>Équivalent $</span>
+        <span id="requested-usd">0 $</span>
+    </div>
+
+    <div class="summary-row">
+        <span>Frais (1%)</span>
+        <span id="fees-fcfa">0 FCFA</span>
+    </div>
+    <div class="summary-row">
+        <span>Frais en $</span>
+        <span id="fees-usd">0 $</span>
+    </div>
+
+    <div class="summary-row summary-total">
+        <span>Vous recevrez</span>
+        <span id="total-fcfa">0 FCFA</span>
+    </div>
+    <div class="summary-row summary-total">
+        <span>Vous recevrez en $</span>
+        <span id="total-usd">0 $</span>
+    </div>
+
 </div>
 
-<button class="btn-withdraw" id="withdrawal-button" type="button" disabled>
-Confirmer le retrait
+<button class="btn-withdraw" id="withdraw-btn" type="button" disabled>
+    Confirmer le retrait
 </button>
 
 <div id="message"></div>
@@ -100,72 +174,80 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-const RATE = 587; // 1$ = 587 FCFA
+const USD_RATE = 587;
 const FEE_RATE = 0.01;
+const MIN = 1000;
+const MAX = 850000;
 
 let currentUser = null;
-let balanceFCFA = 0;
-let withdrawalCodeDB = "";
+let balance = 0;
+let savedCode = "";
 
-function format(amount, currency){
-return currency === "USD"
-? amount.toFixed(2) + " $"
-: amount.toLocaleString("fr-FR") + " FCFA";
-}
+function formatFCFA(n){return n.toLocaleString("fr-FR")+" FCFA"}
+function formatUSD(n){return n.toFixed(2)+" $"}
 
 onAuthStateChanged(auth, async user => {
 if(!user) return;
 currentUser = user;
 
-const snap = await get(ref(db, `users/${user.uid}`));
+const snap = await get(ref(db,`users/${user.uid}`));
 if(snap.exists()){
 const data = snap.val();
-balanceFCFA = data.balance || 0;
-withdrawalCodeDB = data.withdrawalConfig?.code || "";
-document.getElementById("current-balance").textContent =
-balanceFCFA.toLocaleString("fr-FR")+" FCFA";
+balance = data.balance || 0;
+savedCode = data.withdrawalConfig?.code || "";
+document.getElementById("current-balance").textContent = formatFCFA(balance);
 }
 });
 
 function updateSummary(){
 const amount = parseFloat(amountInput.value)||0;
-const currency = currencySelect.value;
+const code = codeInput.value;
+const summary = document.getElementById("withdrawal-summary");
 
-let amountFCFA = currency === "USD" ? amount * RATE : amount;
-let feesFCFA = amountFCFA * FEE_RATE;
-let totalFCFA = amountFCFA - feesFCFA;
+if(amount < MIN || amount > MAX || amount > balance || code !== savedCode){
+btn.disabled = true;
+summary.classList.remove("visible");
+return;
+}
 
-summary.classList.toggle("visible", amount>0);
+const fees = Math.round(amount * FEE_RATE);
+const total = amount - fees;
 
-requested.textContent = format(currency==="USD"?amount:amountFCFA, currency);
-fees.textContent = format(currency==="USD"?feesFCFA/RATE:feesFCFA, currency);
-total.textContent = format(currency==="USD"?totalFCFA/RATE:totalFCFA, currency);
+document.getElementById("requested-fcfa").textContent = formatFCFA(amount);
+document.getElementById("requested-usd").textContent = formatUSD(amount/USD_RATE);
 
-btn.disabled = !(amountFCFA>0 && amountFCFA<=balanceFCFA && codeInput.value===withdrawalCodeDB);
+document.getElementById("fees-fcfa").textContent = formatFCFA(fees);
+document.getElementById("fees-usd").textContent = formatUSD(fees/USD_RATE);
+
+document.getElementById("total-fcfa").textContent = formatFCFA(total);
+document.getElementById("total-usd").textContent = formatUSD(total/USD_RATE);
+
+summary.classList.add("visible");
+btn.disabled = false;
 }
 
 async function processWithdrawal(){
 const amount = parseFloat(amountInput.value);
-const currency = currencySelect.value;
-let amountFCFA = currency==="USD"?amount*RATE:amount;
-let fees = amountFCFA*FEE_RATE;
-
-const newBalance = balanceFCFA - amountFCFA;
+const fees = Math.round(amount * FEE_RATE);
+const newBalance = balance - amount;
 
 const key = push(ref(db,`users/${currentUser.uid}/withdrawalHistory`)).key;
 
 await update(ref(db),{
 [`users/${currentUser.uid}/balance`]: newBalance,
 [`users/${currentUser.uid}/withdrawalHistory/${key}`]:{
-amount: amountFCFA,
-currency,
+amount,
 fees,
+total: amount-fees,
+currency:"FCFA",
+rate:USD_RATE,
 status:"Traitement Bancaire",
 timestamp: serverTimestamp()
 }
 });
 
 show("✅ Retrait lancé avec succès",false);
+btn.disabled = true;
 }
 
 function show(msg,error=true){
@@ -174,16 +256,13 @@ document.getElementById("message").innerHTML =
 }
 
 const amountInput = document.getElementById("amount");
-const currencySelect = document.getElementById("currency");
 const codeInput = document.getElementById("withdrawalCode");
-const summary = document.getElementById("withdrawal-summary");
-const requested = document.getElementById("requested-amount");
-const fees = document.getElementById("fees-amount");
-const total = document.getElementById("total-amount");
-const btn = document.getElementById("withdrawal-button");
+const btn = document.getElementById("withdraw-btn");
 
-amountInput.oninput = currencySelect.onchange = codeInput.oninput = updateSummary;
+amountInput.oninput = updateSummary;
+codeInput.oninput = updateSummary;
 btn.onclick = processWithdrawal;
 </script>
+
 </body>
 </html>
