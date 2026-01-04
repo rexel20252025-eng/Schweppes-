@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interface Mobile - Schweppes Invest</title>
+    <title>Schweppes - Investissement VIP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-      * {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -559,7 +559,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .limit-reached {
@@ -700,10 +702,21 @@
             font-weight: 500;
         }
 
-        .icon-home { fill: currentColor; }
-        .icon-dashboard { fill: currentColor; }
-        .icon-share { fill: currentColor; }
-        .icon-account { fill: currentColor; }
+        .icon-home {
+            fill: currentColor;
+        }
+
+        .icon-dashboard {
+            fill: currentColor;
+        }
+
+        .icon-share {
+            fill: currentColor;
+        }
+
+        .icon-account {
+            fill: currentColor;
+        }
 
         .content-section {
             padding: 0 20px 20px 20px;
@@ -715,23 +728,21 @@
                 grid-template-columns: 50px 65px 65px 55px 75px;
                 font-size: 10px;
             }
-            
             .table-cell {
                 font-size: 10px;
             }
-            
             .vip-level {
                 font-size: 9px !important;
                 padding: 3px 5px !important;
             }
-        }  
+        }
     </style>
 </head>
 <body>
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
-    <!-- Carrousel -->
+    <!-- Carrousel d'images pleine largeur -->
     <div class="carousel-container">
         <div class="carousel-track" id="carouselTrack">
             <div class="carousel-slide">
@@ -743,14 +754,17 @@
             <div class="carousel-slide">
                 <img src="https://image.noelshack.com/fichiers/2025/52/7/1766961314-images-2.jpeg" alt="Image 3">
             </div>
+            <div class="carousel-slide">
+                <img src="https://image.noelshack.com/fichiers/2025/52/7/1766961253-file-0000000038f07243ac7cde18a0a0a688.jpg" alt="Image 4">
+            </div>
         </div>
         <div class="carousel-dots" id="carouselDots"></div>
     </div>
 
-    <!-- Telegram -->
+    <!-- Bouton de groupe Telegram -->
     <div class="group-link-container">
-        <a href="https://t.me/Schweppes108" class="group-link" target="_blank">
-            <svg viewBox="0 0 24 24" fill="currentColor">
+        <a href="https://t.me/Schweppes197" class="group-link" target="_blank">
+            <svg viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
             </svg>
             Service client Schweppes
@@ -758,10 +772,8 @@
     </div>
 
     <div class="content">
-        <!-- Section VIP Cards -->
+        <!-- Section VIP -->
         <div class="vip-section">
-            <h2 class="vip-title">Défilé l'écran vers la gauche 
-            </h2>
             <div class="vip-scroll-container">
                 <div class="vip-scroll" id="vipScroll">
                     <!-- VIP 1 -->
@@ -774,12 +786,12 @@
                         </div>
                         <div class="vip-info">
                             <div class="vip-info-label">Cycle</div>
-                            <div class="vip-info-value">20 jours</div>
+                            <div class="vip-info-value">21 jours</div>
                         </div>
                         <div class="vip-divider"></div>
                         <div class="vip-info">
                             <div class="vip-info-label">Revenus Total</div>
-                            <div class="vip-info-value">21.000 FCFA <span class="usd">≈ 35,78 $</span></div>
+                            <div class="vip-info-value">22.050 FCFA <span class="usd">≈ 37,50 $</span></div>
                         </div>
                         <button class="vip-action-btn" id="btn1" onclick="investProduct(1, 5500)">
                             <i class="fas fa-rocket"></i> Investir
@@ -789,7 +801,7 @@
                     <!-- VIP 2 -->
                     <div class="vip-card vip-premium">
                         <div class="vip-badge">VIP 2</div>
-                        <div class="vip-amount">12.500 FCFA<div class="vip-usd">≈ 21,33 $</div></div>
+                        <div class="vip-amount">10.500 FCFA<div class="vip-usd">≈ 21,33 $</div></div>
                         <div class="vip-info">
                             <div class="vip-info-label">Revenus quotidien</div>
                             <div class="vip-info-value">2.500 FCFA <span class="usd">≈ 4,26 $</span></div>
@@ -803,7 +815,7 @@
                             <div class="vip-info-label">Revenus Total</div>
                             <div class="vip-info-value">47.500 FCFA <span class="usd">≈ 80,93 $</span></div>
                         </div>
-                        <button class="vip-action-btn" id="btn2" onclick="investProduct(2, 12500)">
+                        <button class="vip-action-btn" id="btn2" onclick="investProduct(2, 10500)">
                             <i class="fas fa-rocket"></i> Investir
                         </button>
                     </div>
@@ -814,7 +826,7 @@
                         <div class="vip-amount">18.500 FCFA<div class="vip-usd">≈ 31,52 $</div></div>
                         <div class="vip-info">
                             <div class="vip-info-label">Revenus quotidien</div>
-                            <div class="vip-info-value">3.500 FCFA <span class="usd">≈ 5,96 $</span></div>
+                            <div class="vip-info-value">4.000 FCFA <span class="usd">≈ 6,80 $</span></div>
                         </div>
                         <div class="vip-info">
                             <div class="vip-info-label">Cycle</div>
@@ -823,9 +835,9 @@
                         <div class="vip-divider"></div>
                         <div class="vip-info">
                             <div class="vip-info-label">Revenus Total</div>
-                            <div class="vip-info-value">63.000 FCFA <span class="usd">≈ 107,33 $</span></div>
+                            <div class="vip-info-value">72.000 FCFA <span class="usd">≈ 122,45 $</span></div>
                         </div>
-                        <button class="vip-action-btn" id="btn3" onclick="investProduct(3, 18500)">
+                        <button class="vip-action-btn" id="btn3" onclick="investProduct(3, 10500)">
                             <i class="fas fa-rocket"></i> Investir
                         </button>
                     </div>
@@ -836,7 +848,7 @@
                         <div class="vip-amount">35.000 FCFA<div class="vip-usd">≈ 59,63 $</div></div>
                         <div class="vip-info">
                             <div class="vip-info-label">Revenus quotidien</div>
-                            <div class="vip-info-value">5.000 FCFA <span class="usd">≈ 8,52 $</span></div>
+                            <div class="vip-info-value">6.500 FCFA <span class="usd">≈ 11,05 $</span></div>
                         </div>
                         <div class="vip-info">
                             <div class="vip-info-label">Cycle</div>
@@ -845,7 +857,7 @@
                         <div class="vip-divider"></div>
                         <div class="vip-info">
                             <div class="vip-info-label">Revenus Total</div>
-                            <div class="vip-info-value">85.000 FCFA <span class="usd">≈ 144,82 $</span></div>
+                            <div class="vip-info-value">110.500 FCFA <span class="usd">≈ 187,93 $</span></div>
                         </div>
                         <button class="vip-action-btn" id="btn4" onclick="investProduct(4, 35000)">
                             <i class="fas fa-rocket"></i> Investir
@@ -876,93 +888,88 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Tableau des Revenus -->
-    <div class="revenue-section">
-        <h2 class="revenue-title">📊 Tableau des Revenus</h2>
-        <div class="revenue-container">
-            <div class="revenue-table">
-                <div class="table-header">
-                    <div class="table-cell">VIP</div>
-                    <div class="table-cell">Investir</div>
-                    <div class="table-cell">Rev/Jour</div>
-                    <div class="table-cell">Cycle</div>
-                    <div class="table-cell">Total</div>
-                </div>
-                
-                <div class="table-row" id="revenueRow1">
-                    <div class="table-cell vip-level vip-1">VIP 1</div>
-                    <div class="table-cell">5.500 FCFA</div>
-                    <div class="table-cell">1.050 FCFA</div>
-                    <div class="table-cell"><span class="cycle-badge">20j</span></div>
-                    <div class="table-cell">21.000 FCFA</div>
-                </div>
-                
-                <div class="table-row" id="revenueRow2">
-                    <div class="table-cell vip-level vip-2">VIP 2</div>
-                    <div class="table-cell">12.500 FCFA</div>
-                    <div class="table-cell">2.500 FCFA</div>
-                    <div class="table-cell"><span class="cycle-badge">19j</span></div>
-                    <div class="table-cell">47.500 FCFA</div>
-                </div>
-                
-                <div class="table-row" id="revenueRow3">
-                    <div class="table-cell vip-level vip-3">VIP 3</div>
-                    <div class="table-cell">18.500 FCFA</div>
-                    <div class="table-cell">3.500 FCFA</div>
-                    <div class="table-cell"><span class="cycle-badge">18j</span></div>
-                    <div class="table-cell">63.000 FCFA</div>
-                </div>
-                
-                <div class="table-row" id="revenueRow4">
-                    <div class="table-cell vip-level vip-4">VIP 4</div>
-                    <div class="table-cell">35.000 FCFA</div>
-                    <div class="table-cell">5.000 FCFA</div>
-                    <div class="table-cell"><span class="cycle-badge">17j</span></div>
-                    <div class="table-cell">85.000 FCFA</div>
-                </div>
-                
-                <div class="table-row" id="revenueRow5">
-                    <div class="table-cell vip-level vip-5">VIP 5</div>
-                    <div class="table-cell">100.000 FCFA</div>
-                    <div class="table-cell">20.350 FCFA</div>
-                    <div class="table-cell"><span class="cycle-badge">16j</span></div>
-                    <div class="table-cell">325.600 FCFA</div>
+        <!-- Section Tableau des Revenus AMÉLIORÉ -->
+        <div class="revenue-section">
+            <h2 class="revenue-title">Tableau des Revenus</h2>
+            <div class="revenue-container">
+                <div class="revenue-table">
+                    <div class="table-header">
+                        <div class="table-cell">VIP</div>
+                        <div class="table-cell">Investir</div>
+                        <div class="table-cell">Rev/Jour</div>
+                        <div class="table-cell">Cycle</div>
+                        <div class="table-cell">Total</div>
+                    </div>
+                    <div class="table-row" id="revenueRow1">
+                        <div class="table-cell vip-level vip-1">VIP 1</div>
+                        <div class="table-cell">5.500 FCFA</div>
+                        <div class="table-cell">1.050 FCFA</div>
+                        <div class="table-cell"><span class="cycle-badge">20j</span></div>
+                        <div class="table-cell">21.000 FCFA</div>
+                    </div>
+                    <div class="table-row" id="revenueRow2">
+                        <div class="table-cell vip-level vip-2">VIP 2</div>
+                        <div class="table-cell">12.500 FCFA</div>
+                        <div class="table-cell">2.500 FCFA</div>
+                        <div class="table-cell"><span class="cycle-badge">19j</span></div>
+                        <div class="table-cell">47.500 FCFA</div>
+                    </div>
+                    <div class="table-row" id="revenueRow3">
+                        <div class="table-cell vip-level vip-3">VIP 3</div>
+                        <div class="table-cell">18.500 FCFA</div>
+                        <div class="table-cell">3.500 FCFA</div>
+                        <div class="table-cell"><span class="cycle-badge">18j</span></div>
+                        <div class="table-cell">63.000 FCFA</div>
+                    </div>
+                    <div class="table-row" id="revenueRow4">
+                        <div class="table-cell vip-level vip-4">VIP 4</div>
+                        <div class="table-cell">35.000 FCFA</div>
+                        <div class="table-cell">5.000 FCFA</div>
+                        <div class="table-cell"><span class="cycle-badge">17j</span></div>
+                        <div class="table-cell">85.000 FCFA</div>
+                    </div>
+                    <div class="table-row" id="revenueRow5">
+                        <div class="table-cell vip-level vip-5">VIP 5</div>
+                        <div class="table-cell">100.000 FCFA</div>
+                        <div class="table-cell">20.350 FCFA</div>
+                        <div class="table-cell"><span class="cycle-badge">16j</span></div>
+                        <div class="table-cell">325.600 FCFA</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal de confirmation -->
     <div class="modal-overlay" id="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-vip-badge" id="modalVipBadge">VIP 1</div>
                 <h3 class="modal-title">Confirmer l'investissement</h3>
-                <p class="modal-subtitle">Vérifiez bien les détails avant de confirmer</p>
+                <p class="modal-subtitle">Veuillez vérifier les détails avant de confirmer</p>
             </div>
             <div class="modal-info-grid">
                 <div class="modal-info-row">
                     <div class="modal-info-label">Montant à investir</div>
-                    <div class="modal-info-value" id="modalAmount">5.500 FCFA</div>
+                    <div class="modal-info-value" id="modalAmount">3.500 FCFA</div>
                 </div>
                 <div class="modal-info-row">
                     <div class="modal-info-label">Revenu quotidien</div>
-                    <div class="modal-info-value" id="modalDaily">1.050 FCFA</div>
+                    <div class="modal-info-value" id="modalDaily">350 FCFA</div>
                 </div>
                 <div class="modal-info-row">
                     <div class="modal-info-label">Durée du cycle</div>
-                    <div class="modal-info-value" id="modalCycle">20 jours</div>
+                    <div class="modal-info-value" id="modalCycle">48 jours</div>
                 </div>
                 <div class="modal-info-row">
                     <div class="modal-info-label">Revenu total</div>
-                    <div class="modal-info-value" id="modalTotal">21.000 FCFA</div>
+                    <div class="modal-info-value" id="modalTotal">16.800 FCFA</div>
                 </div>
             </div>
             <div class="modal-buttons">
                 <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Annuler</button>
-                <button class="modal-btn modal-btn-confirm" id="confirmBtn" onclick="confirmInvestment()">
+                <button class="modal-btn modal-btn-confirm" onclick="confirmInvestment()" id="confirmBtn">
                     <span id="confirmText">Confirmer l'investissement</span>
                     <span id="loadingSpinner" style="display: none;">
                         <div class="loading-spinner"></div> Traitement...
@@ -972,7 +979,7 @@
         </div>
     </div>
 
-    <!-- Navigation -->
+    <!-- Navigation fixe en bas -->
     <nav class="bottom-nav">
         <a href="accueil.html" class="nav-item active" data-page="accueil">
             <svg class="nav-icon icon-home" viewBox="0 0 24 24">
@@ -980,21 +987,18 @@
             </svg>
             <span class="nav-label">Accueil</span>
         </a>
-
         <a href="machine.html" class="nav-item" data-page="actifs">
             <svg class="nav-icon icon-dashboard" viewBox="0 0 24 24">
                 <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
             </svg>
             <span class="nav-label">Actifs</span>
         </a>
-
         <a href="equipe.html" class="nav-item" data-page="partage">
             <svg class="nav-icon icon-share" viewBox="0 0 24 24">
                 <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
             </svg>
             <span class="nav-label">Partage</span>
         </a>
-
         <a href="solde.html" class="nav-item" data-page="compte">
             <svg class="nav-icon icon-account" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
@@ -1003,227 +1007,216 @@
         </a>
     </nav>
 
+    <script type="module">
+        /* ========================= IMPORT FIREBASE ========================= */
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+        import { getDatabase, ref, get, update, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-<script type="module">
-/* =========================
-   IMPORT FIREBASE
-========================= */
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-import { 
-    getDatabase,
-    ref,
-    get,
-    update,
-    push,
-    onValue,
-    serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
-
-/* =========================
-   CONFIG FIREBASE
-========================= */
-const firebaseConfig = {
-    apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
-    authDomain: "schweppes-15df3.firebaseapp.com",
-    databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
-    projectId: "schweppes-15df3",
-    storageBucket: "schweppes-15df3.firebasestorage.app",
-    messagingSenderId: "1011077098372",
-    appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-/* =========================
-   VARIABLES GLOBALES
-========================= */
-let currentUser = null;
-let currentSolde = 0;
-let currentProduct = null;
-
-/* =========================
-   PRODUITS VIP
-========================= */
-const PRODUCT_CONFIG = {
-    1: { productId: 1, nom: "VIP 1", price: 5500, dailyRevenue: 1050, cycleDuration: 20, totalRevenue: 21000, limit: 1 },
-    2: { productId: 2, nom: "VIP 2", price: 12500, dailyRevenue: 2500, cycleDuration: 19, totalRevenue: 47500, limit: 1 },
-    3: { productId: 3, nom: "VIP 3", price: 18500, dailyRevenue: 3500, cycleDuration: 18, totalRevenue: 63000, limit: 1 },
-    4: { productId: 4, nom: "VIP 4", price: 35000, dailyRevenue: 5000, cycleDuration: 17, totalRevenue: 85000, limit: 1 },
-    5: { productId: 5, nom: "VIP 5", price: 100000, dailyRevenue: 20350, cycleDuration: 16, totalRevenue: 325600, limit: 2 }
-};
-
-/* =========================
-   UTILITAIRES
-========================= */
-const formatCurrency = (n) =>
-    Number(n).toLocaleString("fr-FR") + " FCFA";
-
-function showNotification(message, type = "success") {
-    const n = document.getElementById("notification");
-    n.textContent = message;
-    n.style.background = type === "success" ? "#10b981" : "#ef4444";
-    n.style.display = "block";
-    setTimeout(() => n.style.display = "none", 4000);
-}
-
-/* =========================
-   BALANCE LIVE
-========================= */
-function setupBalanceListener(uid) {
-    onValue(ref(db, `users/${uid}/balance`), snap => {
-        currentSolde = Number(snap.val() || 0);
-    });
-}
-
-/* =========================
-   CHECK INVEST ACTIF
-========================= */
-async function checkActiveInvestments(uid, productId) {
-    const snap = await get(ref(db, `investments/${uid}`));
-    if (!snap.exists()) return 0;
-
-    let count = 0;
-    Object.values(snap.val()).forEach(inv => {
-        if (
-            inv.productId === productId &&
-            inv.status === "active" &&
-            inv.remainingDays > 0
-        ) count++;
-    });
-    return count;
-}
-
-/* =========================
-   LIMITES BOUTONS
-========================= */
-async function updateInvestmentLimits(uid) {
-    for (const id in PRODUCT_CONFIG) {
-        const product = PRODUCT_CONFIG[id];
-        const active = await checkActiveInvestments(uid, product.productId);
-        const btn = document.getElementById(`btn${id}`);
-        if (!btn) continue;
-
-        if (active >= product.limit) {
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-lock"></i> Limite atteinte';
-        } else {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-rocket"></i> Investir';
-        }
-    }
-}
-
-/* =========================
-   MODAL
-========================= */
-window.openModal = (productId) => {
-    currentProduct = PRODUCT_CONFIG[productId];
-
-    document.getElementById("modalVipBadge").textContent = currentProduct.nom;
-    document.getElementById("modalAmount").textContent = formatCurrency(currentProduct.price);
-    document.getElementById("modalDaily").textContent = formatCurrency(currentProduct.dailyRevenue);
-    document.getElementById("modalCycle").textContent = currentProduct.cycleDuration + " jours";
-    document.getElementById("modalTotal").textContent = formatCurrency(currentProduct.totalRevenue);
-
-    document.getElementById("modal").classList.add("active");
-};
-
-window.closeModal = () => {
-    document.getElementById("modal").classList.remove("active");
-    currentProduct = null;
-};
-
-/* =========================
-   CLIQUE INVESTIR
-========================= */
-window.investProduct = async (productId) => {
-    if (!currentUser) {
-        showNotification("Veuillez vous connecter", "error");
-        return;
-    }
-
-    const product = PRODUCT_CONFIG[productId];
-    if (currentSolde < product.price) {
-        showNotification("Solde insuffisant", "error");
-        return;
-    }
-
-    openModal(productId);
-};
-
-/* =========================
-   CONFIRM INVEST
-========================= */
-window.confirmInvestment = async () => {
-    if (!currentUser || !currentProduct) return;
-
-    const btn = document.getElementById("confirmBtn");
-    btn.disabled = true;
-
-    try {
-        const active = await checkActiveInvestments(
-            currentUser.uid,
-            currentProduct.productId
-        );
-
-        if (active >= currentProduct.limit) {
-            showNotification("Limite atteinte", "error");
-            closeModal();
-            return;
-        }
-
-        const newBalance = currentSolde - currentProduct.price;
-        const now = new Date();
-
-        const updates = {};
-        updates[`users/${currentUser.uid}/balance`] = newBalance;
-
-        const invRef = push(ref(db, `investments/${currentUser.uid}`));
-        updates[`investments/${currentUser.uid}/${invRef.key}`] = {
-            productId: currentProduct.productId,
-            amount: currentProduct.price,
-            dailyRevenue: currentProduct.dailyRevenue,
-            totalRevenue: currentProduct.totalRevenue,
-            remainingDays: currentProduct.cycleDuration,
-            startDate: now.toISOString(),
-            status: "active",
-            totalCollected: 0,
-            lastCollection: now.toISOString(),
-            timestamp: serverTimestamp()
+        /* ========================= CONFIG FIREBASE ========================= */
+        const firebaseConfig = {
+            apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
+            authDomain: "schweppes-15df3.firebaseapp.com",
+            databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
+            projectId: "schweppes-15df3",
+            storageBucket: "schweppes-15df3.firebasestorage.app",
+            messagingSenderId: "1011077098372",
+            appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
         };
 
-        await update(ref(db), updates);
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
 
-        showNotification("Investissement activé avec succès");
-        closeModal();
-        updateInvestmentLimits(currentUser.uid);
+        /* ========================= VARIABLES GLOBALES ========================= */
+        let currentUser = null;
+        let currentSolde = 0;
+        let currentProduct = null;
 
-        setTimeout(() => location.href = "machine.html", 2000);
+        /* ========================= PRODUITS VIP ========================= */
+        const PRODUCT_CONFIG = {
+            1: { productId: 1, nom: "VIP 1", price: 5500, dailyRevenue: 1050, cycleDuration: 22, totalRevenue: 22050, limit: 1 },
+            2: { productId: 2, nom: "VIP 2", price: 10500, dailyRevenue: 2500, cycleDuration: 19, totalRevenue: 47500, limit: 1 },
+            3: { productId: 3, nom: "VIP 3", price: 18500, dailyRevenue: 4000, cycleDuration: 18, totalRevenue: 72, limit: 1 },
+            4: { productId: 4, nom: "VIP 4", price: 35000, dailyRevenue: 6500, cycleDuration: 17, totalRevenue: 110500, limit: 1 },
+            5: { productId: 5, nom: "VIP 5", price: 100000, dailyRevenue: 20350, cycleDuration: 16, totalRevenue: 325600, limit: 2 }
+        };
 
-    } catch (e) {
-        console.error(e);
-        showNotification("Erreur serveur", "error");
-    } finally {
-        btn.disabled = false;
-    }
-};
+        /* ========================= UTILITAIRES ========================= */
+        const formatCurrency = (n) => Number(n).toLocaleString("fr-FR") + " FCFA";
 
-/* =========================
-   AUTH INIT
-========================= */
-onAuthStateChanged(auth, user => {
-    if (user) {
-        currentUser = user;
-        setupBalanceListener(user.uid);
-        updateInvestmentLimits(user.uid);
-    } else {
-        currentUser = null;
-        currentSolde = 0;
-    }
-});
-</script>
+        function showNotification(message, type = "success") {
+            const n = document.getElementById("notification");
+            n.textContent = message;
+            n.style.background = type === "success" ? "#10b981" : "#ef4444";
+            n.style.display = "block";
+            setTimeout(() => n.style.display = "none", 4000);
+        }
+
+        /* ========================= BALANCE LIVE ========================= */
+        function setupBalanceListener(uid) {
+            onValue(ref(db, `users/${uid}/balance`), snap => {
+                currentSolde = Number(snap.val() || 0);
+            });
+        }
+
+        /* ========================= CHECK INVEST ACTIF ========================= */
+        async function checkActiveInvestments(uid, productId) {
+            const snap = await get(ref(db, `investments/${uid}`));
+            if (!snap.exists()) return 0;
+            let count = 0;
+            Object.values(snap.val()).forEach(inv => {
+                if (
+                    inv.productId === productId &&
+                    inv.status === "active" &&
+                    inv.remainingDays > 0
+                ) count++;
+            });
+            return count;
+        }
+
+        /* ========================= LIMITES BOUTONS ========================= */
+        async function updateInvestmentLimits(uid) {
+            for (const id in PRODUCT_CONFIG) {
+                const product = PRODUCT_CONFIG[id];
+                const active = await checkActiveInvestments(uid, product.productId);
+                const btn = document.getElementById(`btn${id}`);
+                if (!btn) continue;
+                if (active >= product.limit) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i class="fas fa-lock"></i> Limite atteinte';
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-rocket"></i> Investir';
+                }
+            }
+        }
+
+        /* ========================= MODAL ========================= */
+        window.openModal = (productId) => {
+            currentProduct = PRODUCT_CONFIG[productId];
+            document.getElementById("modalVipBadge").textContent = currentProduct.nom;
+            document.getElementById("modalAmount").textContent = formatCurrency(currentProduct.price);
+            document.getElementById("modalDaily").textContent = formatCurrency(currentProduct.dailyRevenue);
+            document.getElementById("modalCycle").textContent = currentProduct.cycleDuration + " jours";
+            document.getElementById("modalTotal").textContent = formatCurrency(currentProduct.totalRevenue);
+            document.getElementById("modal").classList.add("active");
+        };
+
+        window.closeModal = () => {
+            document.getElementById("modal").classList.remove("active");
+            currentProduct = null;
+        };
+
+        /* ========================= CLIQUE INVESTIR ========================= */
+        window.investProduct = async (productId) => {
+            if (!currentUser) {
+                showNotification("Veuillez vous connecter", "error");
+                return;
+            }
+            const product = PRODUCT_CONFIG[productId];
+            if (currentSolde < product.price) {
+                showNotification("Solde insuffisant", "error");
+                return;
+            }
+            openModal(productId);
+        };
+
+        /* ========================= CONFIRM INVEST ========================= */
+        window.confirmInvestment = async () => {
+            if (!currentUser || !currentProduct) return;
+            const btn = document.getElementById("confirmBtn");
+            btn.disabled = true;
+            
+            try {
+                const active = await checkActiveInvestments(
+                    currentUser.uid,
+                    currentProduct.productId
+                );
+                
+                if (active >= currentProduct.limit) {
+                    showNotification("Limite atteinte", "error");
+                    closeModal();
+                    return;
+                }
+
+                const newBalance = currentSolde - currentProduct.price;
+                const now = new Date();
+                const updates = {};
+                updates[`users/${currentUser.uid}/balance`] = newBalance;
+
+                const invRef = push(ref(db, `investments/${currentUser.uid}`));
+                updates[`investments/${currentUser.uid}/${invRef.key}`] = {
+                    productId: currentProduct.productId,
+                    amount: currentProduct.price,
+                    dailyRevenue: currentProduct.dailyRevenue,
+                    totalRevenue: currentProduct.totalRevenue,
+                    remainingDays: currentProduct.cycleDuration,
+                    startDate: now.toISOString(),
+                    status: "active",
+                    totalCollected: 0,
+                    lastCollection: now.toISOString(),
+                    timestamp: serverTimestamp()
+                };
+
+                await update(ref(db), updates);
+                showNotification("Investissement activé avec succès");
+                closeModal();
+                updateInvestmentLimits(currentUser.uid);
+                setTimeout(() => location.href = "machine.html", 2000);
+            } catch (e) {
+                console.error(e);
+                showNotification("Erreur serveur", "error");
+            } finally {
+                btn.disabled = false;
+            }
+        };
+
+        /* ========================= AUTH INIT ========================= */
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                currentUser = user;
+                setupBalanceListener(user.uid);
+                updateInvestmentLimits(user.uid);
+            } else {
+                currentUser = null;
+                currentSolde = 0;
+            }
+        });
+
+        /* ========================= CARROUSEL ========================= */
+        document.addEventListener('DOMContentLoaded', function() {
+            const track = document.getElementById('carouselTrack');
+            const dotsContainer = document.getElementById('carouselDots');
+            const slides = document.querySelectorAll('.carousel-slide');
+            
+            let currentSlide = 0;
+            
+            // Créer les dots
+            slides.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                if (index === 0) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(index));
+                dotsContainer.appendChild(dot);
+            });
+            
+            function goToSlide(index) {
+                currentSlide = index;
+                track.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                // Mettre à jour les dots
+                document.querySelectorAll('.dot').forEach((dot, i) => {
+                    dot.classList.toggle('active', i === currentSlide);
+                });
+            }
+            
+            // Auto-play
+            setInterval(() => {
+                currentSlide = (currentSlide + 1) % slides.length;
+                goToSlide(currentSlide);
+            }, 5000);
+        });
+    </script>
 </body>
 </html>
