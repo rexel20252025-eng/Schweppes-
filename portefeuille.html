@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schweppes - Compte de Retrait</title>
+    <title>NESTCAFE - Compte de Retrait</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         * {
@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #ffffff;
+            background: linear-gradient(135deg, #f5ebe0 0%, #ecddd0 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -28,7 +28,7 @@
             background: white;
             border-radius: 20px 20px 0 0;
             padding: 25px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 20px rgba(139,69,19,0.1);
             display: flex;
             align-items: center;
             gap: 15px;
@@ -49,7 +49,7 @@
         }
 
         .back-btn:hover {
-            background: #667eea;
+            background: #8B4513;
             color: white;
             transform: scale(1.05);
         }
@@ -65,7 +65,7 @@
             background: white;
             border-radius: 0 0 20px 20px;
             padding: 30px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            box-shadow: 0 8px 30px rgba(139,69,19,0.12);
         }
 
         .form-group {
@@ -92,9 +92,9 @@
 
         .field-input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #8B4513;
             background: white;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 4px rgba(139, 69, 19, 0.1);
         }
 
         .operator-selector {
@@ -111,7 +111,7 @@
         }
 
         .operator-selector:hover {
-            border-color: #667eea;
+            border-color: #8B4513;
             background: white;
         }
 
@@ -129,7 +129,7 @@
         .submit-btn {
             width: 100%;
             padding: 18px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #d2691e 0%, #8B4513 100%);
             color: white;
             border: none;
             border-radius: 12px;
@@ -142,7 +142,7 @@
 
         .submit-btn:hover:not(:disabled) {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 20px rgba(139, 69, 19, 0.4);
         }
 
         .submit-btn:disabled {
@@ -212,13 +212,13 @@
         }
 
         .operator:hover {
-            border-color: #667eea;
+            border-color: #8B4513;
             background: white;
         }
 
         .operator.selected {
-            border-color: #667eea;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #8B4513;
+            background: linear-gradient(135deg, #d2691e 0%, #8B4513 100%);
             color: white;
         }
 
@@ -249,13 +249,13 @@
         }
 
         .confirm-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #d2691e 0%, #8B4513 100%);
             color: white;
         }
 
         .confirm-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 6px 15px rgba(139, 69, 19, 0.4);
         }
 
         #message {
@@ -294,8 +294,8 @@
         }
 
         .alert-info {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
+            background: #fff8f0;
+            border-left: 4px solid #8B4513;
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 25px;
@@ -304,7 +304,7 @@
         }
 
         .alert-info strong {
-            color: #1976d2;
+            color: #8B4513;
             display: block;
             margin-bottom: 10px;
             font-size: 15px;
@@ -321,7 +321,7 @@
 
         .alert-info li strong {
             display: inline;
-            color: #1976d2;
+            color: #8B4513;
             font-size: 14px;
         }
     </style>
@@ -332,7 +332,7 @@
     <div class="container">
         <div class="header animate__animated animate__fadeInDown">
             <button class="back-btn" onclick="window.history.back()">←</button>
-            <h1 class="header-title">Schweppes compte de retrait</h1>
+            <h1 class="header-title">NESTCAFE compte de retrait</h1>
         </div>
 
         <div class="card animate__animated animate__fadeInUp">
@@ -400,7 +400,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebas
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-// 🔥 Configuration Firebase SCHWEPPES (NOUVELLE BASE)
+// 🔥 Configuration Firebase NESTCAFE
 const firebaseConfig = {
     apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
     authDomain: "schweppes-15df3.firebaseapp.com",
@@ -411,10 +411,10 @@ const firebaseConfig = {
     appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
 };
 
-// --- Initialisation Firebase (CORRIGÉE) ---
+// --- Initialisation Firebase ---
 const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);  // ✅ AJOUTÉ (app) - BUG CORRIGÉ
-const auth = getAuth(app);    // ✅ AJOUTÉ (app) - BUG CORRIGÉ
+const db = getDatabase(app);
+const auth = getAuth(app);
 
 // --- Éléments DOM ---
 const operatorSelector = document.getElementById('operatorSelector');
