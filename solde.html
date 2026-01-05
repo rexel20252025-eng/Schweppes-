@@ -243,6 +243,37 @@
             fill: #999;
         }
 
+        .btn-download {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 16px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            text-decoration: none;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .download-icon {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
+
         .btn-logout {
             background: linear-gradient(135deg, #FF4757 0%, #E84118 100%);
             color: white;
@@ -439,6 +470,13 @@
                 </svg>
             </a>
 
+            <a href="https://appsgeyser.io/19405840/Nestcafe" target="_blank" class="btn-download">
+                <svg class="download-icon" viewBox="0 0 24 24">
+                    <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/>
+                </svg>
+                Télécharger l'application NESTCAFE
+            </a>
+
             <button class="btn-logout" id="logout-btn">
                 <svg class="logout-icon" viewBox="0 0 24 24">
                     <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
@@ -568,7 +606,7 @@
 
         static updateUserDisplay(userData) {
             const nameEl = document.getElementById('user-name');
-            if (nameEl && userData?.username) nameEl.textContent = `Hello 👋 ${userData.username}`;
+            if (nameEl && userData?.username) nameEl.textContent = `${userData.username}`;
 
             const idEl = document.getElementById('user-id');
             if (idEl && userData?.phoneNumber) idEl.textContent = userData.phoneNumber;
@@ -695,7 +733,6 @@
         }
     }
 
-    // --- DEBOUNCE ---
     function debounce(func, wait) {
         let timeout;
         return (...args) => {
@@ -704,7 +741,6 @@
         };
     }
 
-    // --- CALCULS STATISTIQUES ---
     async function calculateRecharges(userId) {
         try {
             const snapshot = await get(ref(db, 'transactions'));
@@ -765,7 +801,6 @@
         if(countEl) countEl.textContent = `${recharges.count} recharge${recharges.count === 1 ? '' : 's'}`;
     }
 
-    // --- INITIALISATION DOM ---
     document.addEventListener('DOMContentLoaded', () => {
         const signupForm = document.getElementById("signupFormData");
         const loginForm = document.getElementById("loginFormData");
@@ -777,7 +812,6 @@
 
         FormManager.handleReferralCodeFromURL();
 
-        // Gestion du changement d'onglet actif
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach(item => {
             item.addEventListener('click', function(e) {
@@ -788,18 +822,19 @@
             });
         });
 
-        // Bouton de déconnexion
-        document.getElementById('logout-btn').addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error('Erreur déconnexion:', error);
-            }
-        });
+        const logoutBtn = document.getElementById('logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async () => {
+                try {
+                    await signOut(auth);
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    console.error('Erreur déconnexion:', error);
+                }
+            });
+        }
     });
 
-    // --- AUTHENTIFICATION ---
     onAuthStateChanged(auth, async (user) => {
         if(user){
             currentUser = user;
@@ -817,13 +852,14 @@
             currentUser = null;
             Utils.updateUserDisplay(null);
             
-            // Reset tous les soldes
             ['main-balance', 'total-recharge', 'total-withdrawals', 'total-revenue'].forEach(id => {
                 Utils.updateBalanceDisplay(id, 0);
             });
             
-            document.getElementById('recharge-count').textContent = '0 recharge';
-            document.getElementById('withdrawal-count').textContent = '0 retrait';
+            const rechargeCountEl = document.getElementById('recharge-count');
+            const withdrawalCountEl = document.getElementById('withdrawal-count');
+            if (rechargeCountEl) rechargeCountEl.textContent = '0 recharge';
+            if (withdrawalCountEl) withdrawalCountEl.textContent = '0 retrait';
 
             setTimeout(() => {
                 if (window.location.pathname.includes('accueil')) {
@@ -832,4 +868,6 @@
             }, 1000);
         }
     });
-</script>    
+</script>
+</body>
+</html>
