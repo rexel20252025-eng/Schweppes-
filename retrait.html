@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Schweppes - Retrait</title>
+<title>NESTCAFE - Retrait</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{
     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-    background:#ffffff;
+    background:linear-gradient(135deg, #f5ebe0, #ecddd0);
     min-height:100vh;
     display:flex;
     justify-content:center;
@@ -18,18 +18,18 @@ body{
 }
 .container{
     background:#fff;
-    border:2px solid #e5e7eb;
+    border:2px solid #d2b48c;
     border-radius:24px;
     padding:40px;
     max-width:420px;
     width:100%;
-    box-shadow:0 10px 40px rgba(0,0,0,.08)
+    box-shadow:0 10px 40px rgba(139,69,19,.12)
 }
 .header{text-align:center;margin-bottom:32px}
-.logo{font-size:28px;font-weight:700;color:#ef4444;letter-spacing:2px}
+.logo{font-size:28px;font-weight:700;color:#8B4513;letter-spacing:2px}
 .subtitle{color:#6b7280;font-size:14px;margin-top:4px}
 .balance{
-    color:#10b981;
+    color:#d2691e;
     font-size:24px;
     font-weight:700;
     margin-top:12px
@@ -41,10 +41,16 @@ input{
     padding:12px;
     border:2px solid #e5e7eb;
     border-radius:12px;
-    font-size:16px
+    font-size:16px;
+    transition:border-color 0.3s
+}
+input:focus{
+    outline:none;
+    border-color:#8B4513
 }
 .withdrawal-summary{
-    background:#f9fafb;
+    background:#fff8f0;
+    border:1px solid #d2b48c;
     border-radius:12px;
     padding:16px;
     margin:20px 0;
@@ -58,20 +64,26 @@ input{
     font-size:14px
 }
 .summary-total{
-    border-top:2px dashed #d1d5db;
+    border-top:2px dashed #d2b48c;
     padding-top:10px;
-    font-weight:700
+    font-weight:700;
+    color:#8B4513
 }
 .btn-withdraw{
     width:100%;
     padding:14px;
-    background:#ef4444;
+    background:linear-gradient(135deg, #d2691e, #8B4513);
     color:#fff;
     border:none;
     border-radius:12px;
     font-size:16px;
     font-weight:600;
-    cursor:pointer
+    cursor:pointer;
+    transition:all 0.3s
+}
+.btn-withdraw:hover:not(:disabled){
+    transform:translateY(-2px);
+    box-shadow:0 4px 12px rgba(139,69,19,0.3)
 }
 .btn-withdraw:disabled{
     background:#9ca3af;
@@ -98,7 +110,7 @@ input{
 <div class="container">
 
 <div class="header">
-    <div class="logo">SCHWEPPES</div>
+    <div class="logo">☕ NESTCAFE</div>
     <div class="subtitle">Retrait disponible 24h/24</div>
     <div class="balance" id="current-balance">0 FCFA</div>
 </div>
@@ -121,24 +133,12 @@ input{
         <span id="requested-fcfa">0 FCFA</span>
     </div>
     <div class="summary-row">
-        <span>Équivalent $</span>
-        <span id="requested-usd">0 $</span>
-    </div>
-    <div class="summary-row">
         <span>Frais (1%)</span>
         <span id="fees-fcfa">0 FCFA</span>
-    </div>
-    <div class="summary-row">
-        <span>Frais en $</span>
-        <span id="fees-usd">0 $</span>
     </div>
     <div class="summary-row summary-total">
         <span>Vous recevrez</span>
         <span id="total-fcfa">0 FCFA</span>
-    </div>
-    <div class="summary-row summary-total">
-        <span>Vous recevrez en $</span>
-        <span id="total-usd">0 $</span>
     </div>
 </div>
 
@@ -170,7 +170,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getDatabase(app);
 
-const USD_RATE = 587;
 const FEE_RATE = 0.01;
 const MIN = 1000;
 const MAX = 850000;
@@ -180,7 +179,6 @@ let balance = 0;
 let savedCode = "";
 
 function formatFCFA(n){return n.toLocaleString("fr-FR")+" FCFA"}
-function formatUSD(n){return n.toFixed(2)+" $"}
 
 onAuthStateChanged(auth, async user => {
     if(!user) return;
@@ -225,13 +223,8 @@ function updateSummary(){
     const total = amount - fees;
 
     document.getElementById("requested-fcfa").textContent = formatFCFA(amount);
-    document.getElementById("requested-usd").textContent = formatUSD(amount/USD_RATE);
-
     document.getElementById("fees-fcfa").textContent = formatFCFA(fees);
-    document.getElementById("fees-usd").textContent = formatUSD(fees/USD_RATE);
-
     document.getElementById("total-fcfa").textContent = formatFCFA(total);
-    document.getElementById("total-usd").textContent = formatUSD(total/USD_RATE);
 
     summary.classList.add("visible");
     btn.disabled = false;
@@ -262,7 +255,6 @@ async function processWithdrawal(){
             fees,
             total: amount-fees,
             currency:"FCFA",
-            rate:USD_RATE,
             status:"Traitement Bancaire",
             timestamp: serverTimestamp()
         }
