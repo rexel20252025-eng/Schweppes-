@@ -23,7 +23,7 @@
         }
 
         .palette-card {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.95) 0%, rgba(118, 75, 162, 0.95) 100%);
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.95) 0%, rgba(210, 105, 30, 0.95) 100%);
             padding: 20px;
             color: white;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
@@ -129,20 +129,6 @@
             font-size: 18px;
             font-weight: bold;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: baseline;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .currency-fcfa {
-            font-size: 18px;
-        }
-
-        .currency-usd {
-            font-size: 14px;
-            opacity: 0.9;
-            font-weight: 500;
         }
 
         .balance-count {
@@ -509,7 +495,6 @@
         onValue
     } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-    // --- CONFIGURATION FIREBASE ---
     const firebaseConfig = {
         apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
         authDomain: "schweppes-15df3.firebaseapp.com",
@@ -520,13 +505,11 @@
         appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
     };
 
-    // --- INITIALISATION ---
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getDatabase(app);
     let currentUser = null;
 
-    // --- UTILITAIRES ---
     class Utils {
         static generateReferralCode() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -594,26 +577,18 @@
             if (emailEl && userData?.phoneNumber) emailEl.textContent = `${userData.phoneNumber}@temp.com`;
         }
 
-        // --- FONCTION MISE À JOUR : FCFA → USD ---
-        static formatDualCurrency(amountFCFA) {
-            const USD_TO_FCFA = 587; // <-- 1$ = 587 FCFA
-            const amountUSD = (amountFCFA / USD_TO_FCFA).toFixed(2);
-            return {
-                fcfa: Math.round(amountFCFA).toLocaleString(),
-                usd: parseFloat(amountUSD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-            };
+        static formatCurrency(amountFCFA) {
+            return Math.round(amountFCFA).toLocaleString() + ' FCFA';
         }
 
         static updateBalanceDisplay(elementId, amountFCFA) {
             const el = document.getElementById(elementId);
             if (el && amountFCFA !== undefined) {
-                const currencies = this.formatDualCurrency(amountFCFA);
-                el.innerHTML = `<span class="currency-fcfa">${currencies.fcfa}</span> <span class="currency-usd">FCFA / $${currencies.usd}</span>`;
+                el.textContent = this.formatCurrency(amountFCFA);
             }
         }
     }
 
-    // --- FORMULAIRES ---
     class FormManager {
         static async handleSignup(event) {
             event.preventDefault();
@@ -858,5 +833,3 @@
         }
     });
 </script>    
-</body>
-</html>
