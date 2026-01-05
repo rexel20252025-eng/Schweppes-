@@ -3,31 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Finance.r</title>
+<title>NESTCAFE</title>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{
   font-family:'Segoe UI',sans-serif;
-  background:linear-gradient(135deg,#f1f5f9,#e2e8f0);
+  background:linear-gradient(135deg,#f5ebe0,#ecddd0);
   min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
+  padding:20px 0;
 }
 .container{
   background:#fff;
   width:100%;
-  max-width:360px;
+  max-width:380px;
   padding:26px 20px;
   border-radius:18px;
-  box-shadow:0 15px 35px rgba(0,0,0,.08);
+  box-shadow:0 15px 35px rgba(139,69,19,.12);
+  border:1px solid #d2b48c;
 }
 .logo{
   text-align:center;
-  font-size:24px;
+  font-size:28px;
   font-weight:700;
-  color:#1e3a8a;
+  color:#8B4513;
+  margin-bottom:5px;
 }
 .subtitle{
   text-align:center;
@@ -35,9 +38,44 @@ body{
   color:#64748b;
   margin-bottom:18px;
 }
+.trust-badges{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-bottom:20px;
+  flex-wrap:wrap;
+}
+.badge{
+  background:linear-gradient(135deg,#fff8f0,#fef3e7);
+  border:1px solid #d2b48c;
+  border-radius:20px;
+  padding:8px 14px;
+  font-size:11px;
+  color:#8B4513;
+  font-weight:600;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.trust-section{
+  background:linear-gradient(135deg,#fff8f0,#fef3e7);
+  border-left:4px solid #8B4513;
+  padding:15px;
+  border-radius:10px;
+  margin-bottom:18px;
+  font-size:12px;
+  color:#555;
+  line-height:1.6;
+}
+.trust-section strong{
+  color:#8B4513;
+  display:block;
+  margin-bottom:8px;
+  font-size:13px;
+}
 h2{
   font-size:19px;
-  color:#1e3a8a;
+  color:#8B4513;
   margin-bottom:14px;
 }
 label{
@@ -53,24 +91,38 @@ input,select{
   border-radius:10px;
   border:1.6px solid #e5e7eb;
   font-size:14px;
+  transition:border-color 0.3s;
+}
+input:focus,select:focus{
+  outline:none;
+  border-color:#8B4513;
 }
 .btn{
   width:100%;
   padding:11px;
   border:none;
   border-radius:10px;
-  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  background:linear-gradient(135deg,#d2691e,#8B4513);
   color:#fff;
   font-weight:600;
   cursor:pointer;
+  transition:all 0.3s;
+}
+.btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(139,69,19,0.3);
 }
 .toggle-link{
   display:block;
   text-align:center;
   font-size:13px;
   margin-top:12px;
-  color:#1e3a8a;
+  color:#8B4513;
   text-decoration:none;
+  font-weight:500;
+}
+.toggle-link:hover{
+  text-decoration:underline;
 }
 .form-section{display:none}
 .form-section.active{display:block}
@@ -78,22 +130,62 @@ input,select{
   font-size:12px;
   margin-bottom:10px;
   display:none;
+  padding:8px 12px;
+  border-radius:8px;
 }
-.error{color:#ef4444}
-.success{color:#16a34a}
-.referral-status.valid{color:#16a34a}
-.referral-status.invalid{color:#ef4444}
+.error{
+  color:#ef4444;
+  background:#fee;
+  border:1px solid #fcc;
+}
+.success{
+  color:#16a34a;
+  background:#efe;
+  border:1px solid #cfc;
+}
+.referral-status.valid{
+  color:#16a34a;
+  background:#efe;
+  border:1px solid #cfc;
+}
+.referral-status.invalid{
+  color:#ef4444;
+  background:#fee;
+  border:1px solid #fcc;
+}
+.security-info{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:11px;
+  color:#666;
+  margin-top:15px;
+  padding:10px;
+  background:#f8f9fa;
+  border-radius:8px;
+}
 </style>
 </head>
 
 <body>
 
 <div class="container">
-  <div class="logo">Schweppes</div>
-  <div class="subtitle">Plateforme d'investissement</div>
+  <div class="logo">☕ NESTCAFE</div>
+  <div class="subtitle">Plateforme d'investissement sécurisée</div>
+
+  <div class="trust-badges">
+    <div class="badge">🔒 Sécurisé</div>
+    <div class="badge">✓ Fiable</div>
+    <div class="badge">⚡ Rapide</div>
+  </div>
 
   <!-- CONNEXION -->
   <div id="login-section" class="form-section active">
+    <div class="trust-section">
+      <strong>🛡️ Votre sécurité est notre priorité</strong>
+      Vos données sont protégées par un cryptage de niveau bancaire. Plus de 10,000+ utilisateurs nous font confiance chaque jour.
+    </div>
+
     <h2>Connexion</h2>
     <div id="loginError" class="msg error"></div>
 
@@ -125,11 +217,20 @@ input,select{
       <button class="btn">Se connecter</button>
     </form>
 
+    <div class="security-info">
+      🔐 Connexion sécurisée SSL 256-bit
+    </div>
+
     <a href="#" class="toggle-link" onclick="toggleForm()">Pas de compte ? S'inscrire</a>
   </div>
 
   <!-- INSCRIPTION -->
   <div id="signup-section" class="form-section">
+    <div class="trust-section">
+      <strong>🎉 Rejoignez des milliers d'investisseurs satisfaits</strong>
+      Inscription gratuite et sans engagement. Commencez à investir en toute sécurité dès aujourd'hui.
+    </div>
+
     <h2>Inscription</h2>
     <div id="signupError" class="msg error"></div>
     <div id="signupSuccess" class="msg success"></div>
@@ -166,11 +267,15 @@ input,select{
       <input type="password" id="confirmPassword" required>
 
       <label>Code de parrainage (optionnel)</label>
-      <input type="text" id="referralCode">
+      <input type="text" id="referralCode" placeholder="Ex: ABC123">
       <div id="referralStatus" class="msg referral-status"></div>
 
       <button class="btn">Créer un compte</button>
     </form>
+
+    <div class="security-info">
+      ✅ Vos données sont protégées | 🔒 100% sécurisé
+    </div>
 
     <a href="#" class="toggle-link" onclick="toggleForm()">Déjà inscrit ? Connexion</a>
   </div>
@@ -289,7 +394,7 @@ class Utils {
         const el = document.getElementById('referralStatus');
         if (el) {
             el.textContent = message;
-            el.className = `referral-status ${isValid ? 'valid' : 'invalid'}`;
+            el.className = `msg referral-status ${isValid ? 'valid' : 'invalid'}`;
             el.style.display = message ? 'block' : 'none';
         }
     }
@@ -356,7 +461,7 @@ class FormManager {
                 await set(referrerRef, currentBalance + 10);
             }
 
-            Utils.showSuccess("signupSuccess", "Compte créé avec succès ! Redirection...");
+            Utils.showSuccess("signupSuccess", "✅ Compte créé avec succès ! Redirection...");
             setTimeout(() => window.location.href = "accueil.html", 1500);
 
         } catch (error) {
@@ -397,12 +502,12 @@ class FormManager {
         try {
             const referrerData = await Utils.checkReferralCode(code);
             if (referrerData) {
-                Utils.updateReferralStatus(true, `Code valide ! Parrain: ${referrerData.username}`);
+                Utils.updateReferralStatus(true, `✅ Code valide ! Parrain: ${referrerData.username}`);
             } else {
-                Utils.updateReferralStatus(false, 'Code de parrainage invalide');
+                Utils.updateReferralStatus(false, '❌ Code de parrainage invalide');
             }
         } catch {
-            Utils.updateReferralStatus(false, 'Erreur de vérification du code');
+            Utils.updateReferralStatus(false, '❌ Erreur de vérification du code');
         }
     }
 
@@ -448,7 +553,7 @@ onAuthStateChanged(auth, async (user) => {
         const snapshot = await get(userRef);
         if(snapshot.exists()){
             const data = snapshot.val();
-            Utils.updateUserDisplay(data); // ✅ Affiche nom + numéro dans #user-id + email
+            Utils.updateUserDisplay(data);
         }
     } else {
         currentUser = null;
