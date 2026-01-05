@@ -3,1017 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schweppes - Investissement VIP</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Interface Mobile Nescafé</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f7fa;
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-
-        .content {
-            padding: 20px;
-            padding-top: 0;
-        }
-
-        /* Section VIP Cards */
-        .vip-section {
-            padding: 20px;
-            position: relative;
-        }
-
-        .vip-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 16px;
-        }
-
-        .vip-scroll-container {
-            position: relative;
-        }
-
-        .vip-scroll {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            padding-bottom: 16px;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: smooth;
-        }
-
-        .scroll-arrow {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            cursor: pointer;
-            z-index: 100;
-            transition: all 0.3s ease;
-            pointer-events: auto;
-        }
-
-        .scroll-arrow:active {
-            transform: translateY(-50%) scale(0.9);
-        }
-
-        .scroll-arrow svg {
-            width: 20px;
-            height: 20px;
-            fill: #667eea;
-        }
-
-        .scroll-arrow-left {
-            left: 10px;
-        }
-
-        .scroll-arrow-right {
-            right: 10px;
-        }
-
-        .scroll-arrow.hidden {
-            opacity: 0;
-            pointer-events: none;
-            visibility: hidden;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(102, 126, 234, 0.95);
-            color: white;
-            padding: 10px 16px;
-            border-radius: 25px;
-            font-size: 13px;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            animation: pulseSlide 2s ease-in-out infinite;
-            z-index: 150;
-            pointer-events: none;
-        }
-
-        .scroll-indicator.hidden {
-            display: none;
-        }
-
-        .scroll-indicator svg {
-            width: 20px;
-            height: 20px;
-            fill: white;
-            animation: slideRight 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulseSlide {
-            0%, 100% {
-                transform: translateY(-50%) scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: translateY(-50%) scale(1.05);
-                opacity: 0.9;
-            }
-        }
-
-        @keyframes slideRight {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            50% {
-                transform: translateX(5px);
-            }
-        }
-
-        .vip-scroll::-webkit-scrollbar {
-            height: 6px;
-        }
-
-        .vip-scroll::-webkit-scrollbar-track {
-            background: #e2e8f0;
-            border-radius: 3px;
-        }
-
-        .vip-scroll::-webkit-scrollbar-thumb {
-            background: #cbd5e0;
-            border-radius: 3px;
-        }
-
-        .vip-card {
-            min-width: 280px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 24px;
-            color: white;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-            scroll-snap-align: start;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .vip-card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            pointer-events: none;
-        }
-
-        .vip-card.vip-premium {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .vip-card.vip-elite {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .vip-card.vip-gold {
-            background: linear-gradient(135deg, #ffd89b 0%, #ff6b6b 100%);
-        }
-
-        .vip-badge {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.3);
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
-
-        .vip-amount {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .vip-info {
-            margin-bottom: 12px;
-        }
-
-        .vip-info-label {
-            font-size: 12px;
-            opacity: 0.9;
-            font-weight: 500;
-        }
-
-        .vip-info-value {
-            font-size: 16px;
-            font-weight: 700;
-            margin-top: 2px;
-        }
-
-        .vip-divider {
-            height: 1px;
-            background: rgba(255, 255, 255, 0.3);
-            margin: 16px 0;
-        }
-
-        .vip-action-btn {
-            width: 100%;
-            background: white;
-            color: #667eea;
-            border: none;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-
-        .vip-action-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Section Tableau des Revenus - VERSION AMÉLIORÉE */
-        .revenue-section {
-            padding: 1px;
-            margin-top: 20px;
-        }
-
-        .revenue-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 16px;
-        }
-
-        .revenue-container {
-            background: white;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            margin-bottom: 20px;
-        }
-
-        .revenue-table {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .table-header {
-            display: grid;
-            grid-template-columns: 60px 1fr 1fr 70px 1fr;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 700;
-            font-size: 11px;
-            padding: 12px 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .table-row {
-            display: grid;
-            grid-template-columns: 60px 1fr 1fr 70px 1fr;
-            border-bottom: 1px solid #f0f0f0;
-            padding: 10px;
-            align-items: center;
-            transition: background-color 0.2s ease;
-        }
-
-        .table-row:last-child {
-            border-bottom: none;
-        }
-
-        .table-row:hover {
-            background-color: #f8fafc;
-        }
-
-        .table-cell {
-            text-align: center;
-            font-size: 12px;
-            color: #4a5568;
-            padding: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .table-header .table-cell {
-            color: white;
-            font-size: 10px;
-        }
-
-        .vip-level {
-            font-weight: 700 !important;
-            border-radius: 8px;
-            padding: 4px 8px !important;
-            font-size: 11px !important;
-            white-space: nowrap;
-        }
-
-        .vip-1 {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white !important;
-        }
-
-        .vip-2 {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white !important;
-        }
-
-        .vip-3 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white !important;
-        }
-
-        .vip-4 {
-            background: linear-gradient(135deg, #ffd89b 0%, #ff6b6b 100%);
-            color: #2d3748 !important;
-        }
-
-        .vip-5 {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white !important;
-        }
-
-        .vip-6 {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white !important;
-        }
-
-        .vip-7 {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white !important;
-        }
-
-        /* Badge pour le cycle */
-        .cycle-badge {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            font-weight: 600;
-            border-radius: 6px;
-            padding: 4px 6px;
-            font-size: 11px;
-        }
-
-        /* Statut d'investissement */
-        .invested {
-            background-color: rgba(72, 187, 120, 0.1) !important;
-            position: relative;
-        }
-
-        .invested::after {
-            content: "✓";
-            position: absolute;
-            right: 10px;
-            color: #48bb78;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        /* Modal de confirmation */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            padding: 20px;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 24px;
-            padding: 32px 24px;
-            max-width: 400px;
-            width: 100%;
-            max-height: 80vh;
-            overflow-y: auto;
-            animation: modalSlideUp 0.3s ease;
-        }
-
-        @keyframes modalSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .modal-vip-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            color: #2d3748;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .modal-subtitle {
-            font-size: 14px;
-            color: #718096;
-        }
-
-        .modal-info-grid {
-            background: #f7fafc;
-            border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-
-        .modal-info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-        .modal-info-row:last-child {
-            border-bottom: none;
-        }
-
-        .modal-info-label {
-            font-size: 14px;
-            color: #718096;
-            font-weight: 500;
-        }
-
-        .modal-info-value {
-            font-size: 16px;
-            color: #2d3748;
-            font-weight: 700;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 14px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-btn-cancel {
-            background: #e2e8f0;
-            color: #4a5568;
-        }
-
-        .modal-btn-confirm {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .modal-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 16px 24px;
-            border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            z-index: 3000;
-            display: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-            animation: slideInRight 0.3s ease;
-        }
-
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Spinner de chargement */
-        .loading-spinner {
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .limit-reached {
-            color: #ef4444 !important;
-            font-weight: 700;
-        }
-
-        /* Carrousel d'images */
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-            margin-bottom: 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        /* Bouton de groupe */
-        .group-link-container {
-            background: white;
-            padding: 16px 20px;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .group-link {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: rgba(42, 171, 238, 0.1);
-            border: 2px solid rgba(42, 171, 238, 0.3);
-            color: #0088cc;
-            text-decoration: none;
-            padding: 14px 24px;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .group-link:active {
-            transform: scale(0.98);
-            background: rgba(42, 171, 238, 0.2);
-        }
-
-        .group-link svg {
-            width: 24px;
-            height: 24px;
-            fill: #0088cc;
-        }
-
-        .carousel-track {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-            height: 100%;
-        }
-
-        .carousel-slide {
-            min-width: 100%;
-            height: 100%;
-            position: relative;
-        }
-
-        .carousel-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .carousel-dots {
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 8px;
-            z-index: 10;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .dot.active {
-            background: white;
-            width: 24px;
-            border-radius: 4px;
-        }
-
-        /* Navigation fixe en bas */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 8px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            border-top: 1px solid #e0e0e0;
-            z-index: 1000;
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #666;
-            padding: 4px 12px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .nav-item.active {
-            color: #667eea;
-        }
-
-        .nav-icon {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 4px;
-        }
-
-        .nav-label {
-            font-size: 11px;
-            font-weight: 500;
-        }
-
-        .icon-home {
-            fill: currentColor;
-        }
-
-        .icon-dashboard {
-            fill: currentColor;
-        }
-
-        .icon-share {
-            fill: currentColor;
-        }
-
-        .icon-account {
-            fill: currentColor;
-        }
-
-        .content-section {
-            padding: 0 20px 20px 20px;
-        }
-
-        /* Responsive pour très petits écrans */
-        @media (max-width: 360px) {
-            .table-header, .table-row {
-                grid-template-columns: 50px 65px 65px 55px 75px;
-                font-size: 10px;
-            }
-            .table-cell {
-                font-size: 10px;
-            }
-            .vip-level {
-                font-size: 9px !important;
-                padding: 3px 5px !important;
-            }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: white; min-height: 100vh; padding-bottom: 80px; }
+        .image-carousel { position: relative; width: 100%; height: 200px; overflow: hidden; background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%); border-radius: 0 0 20px 20px; }
+        .carousel-container { display: flex; width: 300%; height: 100%; animation: slide 12s infinite ease-in-out; }
+        @keyframes slide { 0%, 30% { transform: translateX(0%); } 33%, 63% { transform: translateX(-33.33%); } 66%, 96% { transform: translateX(-66.66%); } 100% { transform: translateX(0%); } }
+        .carousel-item { width: 33.33%; height: 100%; position: relative; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; }
+        .carousel-item:nth-child(1) { background: linear-gradient(135deg, rgba(139, 69, 19, 0.3), rgba(160, 82, 45, 0.3)), url('https://image.noelshack.com/fichiers/2026/01/7/1767565966-file-000000008c507246beba20d6f11b51a8.jpg'); background-size: cover; background-position: center; }
+        .carousel-item:nth-child(2) { background: linear-gradient(135deg, rgba(139, 69, 19, 0.3), rgba(184, 134, 11, 0.3)), url('https://image.noelshack.com/fichiers/2026/01/7/1767566101-1713816392838.jpeg'); background-size: cover; background-position: center; }
+        .carousel-item:nth-child(3) { background: linear-gradient(135deg, rgba(160, 82, 45, 0.3), rgba(139, 69, 19, 0.3)), url('https://image.noelshack.com/fichiers/2026/01/7/1767566270-kjc-1559-1.jpg'); background-size: cover; background-position: center; }
+        .carousel-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 2; }
+        .nescafe-logo { font-size: 42px; font-weight: bold; color: white; text-shadow: 0 4px 8px rgba(0,0,0,0.3); margin-bottom: 8px; animation: fadeInOut 12s infinite; }
+        .nescafe-tagline { font-size: 14px; color: rgba(255,255,255,0.95); text-shadow: 0 2px 4px rgba(0,0,0,0.3); animation: fadeInOut 12s infinite; }
+        @keyframes fadeInOut { 0%, 30% { opacity: 1; } 31%, 32% { opacity: 0; } 33%, 63% { opacity: 1; } 64%, 65% { opacity: 0; } 66%, 96% { opacity: 1; } 97%, 100% { opacity: 0; } }
+        .carousel-border { position: absolute; bottom: 0; left: 0; right: 0; height: 6px; background: linear-gradient(90deg, #8B4513 0%, #D2691E 25%, #CD853F 50%, #DEB887 75%, #8B4513 100%); border-radius: 0 0 20px 20px; }
+        .content { padding: 0; }
+        .products-section { padding: 20px 0; }
+        .section-title { font-size: 20px; font-weight: bold; color: #8B4513; padding: 0 15px 15px 15px; margin: 0; }
+        .products-scroll { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 15px 20px 15px; }
+        .product-card { background: white; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.3s ease; }
+        .product-card:hover { transform: translateY(-5px); }
+        .product-image { height: 100px; display: flex; align-items: center; justify-content: center; background: #8B4513; }
+        .product-name { font-size: 16px; font-weight: bold; color: #333; padding: 12px 12px 8px 12px; margin: 0; text-align: center; }
+        .product-info { padding: 0 12px 12px 12px; }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 12px; }
+        .info-row .label { color: #666; font-weight: 500; }
+        .info-row .value { color: #333; font-weight: 600; }
+        .info-row .value.green { color: #4CAF50; }
+        .info-row.total { border-top: 1px solid #e0e0e0; padding-top: 8px; margin-top: 8px; }
+        .info-row.total .value { color: #8B4513; font-size: 14px; }
+        .btn-buy { width: calc(100% - 24px); margin: 0 12px 12px 12px; padding: 10px; background: linear-gradient(135deg, #8B4513, #A0522D); color: white; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .btn-buy:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(139, 69, 19, 0.4); }
+        .btn-buy:disabled { background: #ccc; cursor: not-allowed; }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; padding: 20px; }
+        .modal.active { display: flex !important; }
+        .modal-content { background: white; border-radius: 20px; padding: 25px; max-width: 350px; width: 100%; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .modal-title { font-size: 20px; font-weight: bold; color: #8B4513; margin: 0 0 20px 0; text-align: center; }
+        .modal-body { margin-bottom: 20px; }
+        .confirm-question { font-size: 15px; color: #333; margin: 0 0 15px 0; text-align: center; font-weight: 500; }
+        .confirm-details { background: #f8f8f8; padding: 15px; border-radius: 12px; }
+        .confirm-details h4 { font-size: 16px; color: #8B4513; margin: 0 0 10px 0; text-align: center; }
+        .confirm-details p { font-size: 13px; margin: 6px 0; color: #333; }
+        .modal-actions { display: flex; gap: 10px; }
+        .btn-cancel, .btn-confirm { flex: 1; padding: 12px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .btn-cancel { background: #e0e0e0; color: #666; }
+        .btn-cancel:hover { background: #d0d0d0; }
+        .btn-confirm { background: linear-gradient(135deg, #4CAF50, #45a049); color: white; }
+        .btn-confirm:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4); }
+        .btn-confirm:disabled { background: #ccc; cursor: not-allowed; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; justify-content: space-around; align-items: center; padding: 8px 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; border-top: 1px solid #e0e0e0; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #666; padding: 4px 12px; transition: all 0.3s ease; cursor: pointer; }
+        .nav-item.active { color: #667eea; }
+        .nav-icon { width: 24px; height: 24px; margin-bottom: 4px; fill: currentColor; }
+        .nav-label { font-size: 11px; font-weight: 500; }
     </style>
 </head>
 <body>
-    <!-- Notification -->
-    <div id="notification" class="notification"></div>
-
-    <!-- Carrousel d'images pleine largeur -->
-    <div class="carousel-container">
-        <div class="carousel-track" id="carouselTrack">
-            <div class="carousel-slide">
-                <img src="https://image.noelshack.com/fichiers/2025/52/7/1766961160-file-00000000428c7243b865a5ac559d29ca-1.jpg" alt="Image 1">
-            </div>
-            <div class="carousel-slide">
-                <img src="https://image.noelshack.com/fichiers/2025/52/7/1766961253-file-0000000038f07243ac7cde18a0a0a688.jpg" alt="Image 2">
-            </div>
-            <div class="carousel-slide">
-                <img src="https://image.noelshack.com/fichiers/2025/52/7/1766961314-images-2.jpeg" alt="Image 3">
-            </div>
-            <div class="carousel-slide">
-                <img src="https://image.noelshack.com/fichiers/2025/52/7/1766961253-file-0000000038f07243ac7cde18a0a0a688.jpg" alt="Image 4">
-            </div>
+    <div class="image-carousel">
+        <div class="carousel-container">
+            <div class="carousel-item"></div>
+            <div class="carousel-item"></div>
+            <div class="carousel-item"></div>
         </div>
-        <div class="carousel-dots" id="carouselDots"></div>
-    </div>
-
-    <!-- Bouton de groupe Telegram -->
-    <div class="group-link-container">
-        <a href="https://t.me/Schweppes197" class="group-link" target="_blank">
-            <svg viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
-            </svg>
-            Service client Schweppes
-        </a>
+        <div class="carousel-overlay">
+            <div class="nescafe-logo">NESTCAFE</div>
+            <div class="nescafe-tagline">☕ Savourez l'instant</div>
+        </div>
+        <div class="carousel-border"></div>
     </div>
 
     <div class="content">
-        <!-- Section VIP -->
-        <div class="vip-section">
-            <div class="vip-scroll-container">
-                <div class="vip-scroll" id="vipScroll">
-                    <!-- VIP 1 -->
-                    <div class="vip-card">
-                        <div class="vip-badge">VIP 1</div>
-                        <div class="vip-amount">5.500 FCFA<div class="vip-usd">≈ 9,39 $</div></div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Revenus quotidien</div>
-                            <div class="vip-info-value">1.050 FCFA <span class="usd">≈ 1,79 $</span></div>
-                        </div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Cycle</div>
-                            <div class="vip-info-value">21 jours</div>
-                        </div>
-                        <div class="vip-divider"></div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Revenus Total</div>
-                            <div class="vip-info-value">22.050 FCFA <span class="usd">≈ 37,50 $</span></div>
-                        </div>
-                        <button class="vip-action-btn" id="btn1" onclick="investProduct(1, 5500)">
-                            <i class="fas fa-rocket"></i> Investir
-                        </button>
-                    </div>
-
-                    <!-- VIP 2 -->
-                    <div class="vip-card vip-premium">
-                        <div class="vip-badge">VIP 2</div>
-                        <div class="vip-amount">10.500 FCFA<div class="vip-usd">≈ 21,33 $</div></div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Revenus quotidien</div>
-                            <div class="vip-info-value">2.500 FCFA <span class="usd">≈ 4,26 $</span></div>
-                        </div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Cycle</div>
-                            <div class="vip-info-value">19 jours</div>
-                        </div>
-                        <div class="vip-divider"></div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Revenus Total</div>
-                            <div class="vip-info-value">47.500 FCFA <span class="usd">≈ 80,93 $</span></div>
-                        </div>
-                        <button class="vip-action-btn" id="btn2" onclick="investProduct(2, 10500)">
-                            <i class="fas fa-rocket"></i> Investir
-                        </button>
-                    </div>
-
-                    <!-- VIP 3 -->
-                    <div class="vip-card vip-elite">
-                        <div class="vip-badge">VIP 3</div>
-                        <div class="vip-amount">18.500 FCFA<div class="vip-usd">≈ 31,52 $</div></div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Revenus quotidien</div>
-                            <div class="vip-info-value">4.000 FCFA <span class="usd">≈ 6,80 $</span></div>
-                        </div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Cycle</div>
-                            <div class="vip-info-value">18 jours</div>
-                        </div>
-                        <div class="vip-divider"></div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Revenus Total</div>
-                            <div class="vip-info-value">72.000 FCFA <span class="usd">≈ 122,45 $</span></div>
-                        </div>
-                        <button class="vip-action-btn" id="btn3" onclick="investProduct(3, 10500)">
-                            <i class="fas fa-rocket"></i> Investir
-                        </button>
-                    </div>
-
-                    <!-- VIP 4 -->
-                    <div class="vip-card vip-gold">
-                        <div class="vip-badge">VIP 4</div>
-                        <div class="vip-amount">35.000 FCFA<div class="vip-usd">≈ 59,63 $</div></div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Revenus quotidien</div>
-                            <div class="vip-info-value">6.500 FCFA <span class="usd">≈ 11,05 $</span></div>
-                        </div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Cycle</div>
-                            <div class="vip-info-value">17 jours</div>
-                        </div>
-                        <div class="vip-divider"></div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Revenus Total</div>
-                            <div class="vip-info-value">110.500 FCFA <span class="usd">≈ 187,93 $</span></div>
-                        </div>
-                        <button class="vip-action-btn" id="btn4" onclick="investProduct(4, 35000)">
-                            <i class="fas fa-rocket"></i> Investir
-                        </button>
-                    </div>
-
-                    <!-- VIP 5 -->
-                    <div class="vip-card">
-                        <div class="vip-badge">VIP 5</div>
-                        <div class="vip-amount">100.000 FCFA<div class="vip-usd">≈ 170,37 $</div></div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Revenus quotidien</div>
-                            <div class="vip-info-value">20.350 FCFA <span class="usd">≈ 34,67 $</span></div>
-                        </div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Cycle</div>
-                            <div class="vip-info-value">16 jours</div>
-                        </div>
-                        <div class="vip-divider"></div>
-                        <div class="vip-info">
-                            <div class="vip-info-label">Revenus Total</div>
-                            <div class="vip-info-value">325.600 FCFA <span class="usd">≈ 554,73 $</span></div>
-                        </div>
-                        <button class="vip-action-btn" id="btn5" onclick="investProduct(5, 100000)">
-                            <i class="fas fa-rocket"></i> Investir
-                        </button>
-                    </div>
-                </div>
+        <div class="products-section">
+            <h2 class="section-title">Produits d'Investissement NESTCAFE</h2>
+            <div class="products-scroll" id="productsContainer">
+                <!-- Les produits seront générés dynamiquement -->
             </div>
         </div>
 
-        <!-- Section Tableau des Revenus AMÉLIORÉ -->
-        <div class="revenue-section">
-            <h2 class="revenue-title">Tableau des Revenus</h2>
-            <div class="revenue-container">
-                <div class="revenue-table">
-                    <div class="table-header">
-                        <div class="table-cell">VIP</div>
-                        <div class="table-cell">Investir</div>
-                        <div class="table-cell">Rev/Jour</div>
-                        <div class="table-cell">Cycle</div>
-                        <div class="table-cell">Total </div>
+        <div id="modal" class="modal">
+            <div class="modal-content">
+                <h3 class="modal-title">Confirmation d'achat</h3>
+                <div class="modal-body">
+                    <p class="confirm-question">Êtes-vous sûr d'acheter ce produit ?</p>
+                    <div class="confirm-details">
+                        <h4 id="modalVipBadge">Produits -A</h4>
+                        <p><strong>Coût:</strong> <span id="modalAmount">5.500 FCFA</span></p>
+                        <p><strong>Bénéfice journalier:</strong> <span id="modalDaily">1.250 FCFA</span></p>
+                        <p><strong>Cycle:</strong> <span id="modalCycle">15 jours</span></p>
+                        <p><strong>Bénéfices total:</strong> <span id="modalTotal">18.750 FCFA</span></p>
                     </div>
-                    <div class="table-row" id="revenueRow1">
-                        <div class="table-cell vip-level vip-1">VIP 1</div>
-                        <div class="table-cell">5.500 FCFA</div>
-                        <div class="table-cell">1.050 FCFA</div>
-                        <div class="table-cell"><span class="cycle-badge">21j</span></div>
-                        <div class="table-cell">22.050 FCFA</div>
-                    </div>
-                    <div class="table-row" id="revenueRow2">
-                        <div class="table-cell vip-level vip-2">VIP 2</div>
-                        <div class="table-cell">10.500 FCFA</div>
-                        <div class="table-cell">2.500 FCFA</div>
-                        <div class="table-cell"><span class="cycle-badge">19j</span></div>
-                        <div class="table-cell">47.500 FCFA</div>
-                    </div>
-                    <div class="table-row" id="revenueRow3">
-                        <div class="table-cell vip-level vip-3">VIP 3</div>
-                        <div class="table-cell">18.500 FCFA</div>
-                        <div class="table-cell">4.000 FCFA</div>
-                        <div class="table-cell"><span class="cycle-badge">18j</span></div>
-                        <div class="table-cell">72.000 FCFA</div>
-                    </div>
-                    <div class="table-row" id="revenueRow4">
-                        <div class="table-cell vip-level vip-4">VIP 4</div>
-                        <div class="table-cell">35.000 FCFA</div>
-                        <div class="table-cell">6.500 FCFA</div>
-                        <div class="table-cell"><span class="cycle-badge">17j</span></div>
-                        <div class="table-cell">110.500 FCFA</div>
-                    </div>
-                    <div class="table-row" id="revenueRow5">
-                        <div class="table-cell vip-level vip-5">VIP 5</div>
-                        <div class="table-cell">100.000 FCFA</div>
-                        <div class="table-cell">20.350 FCFA</div>
-                        <div class="table-cell"><span class="cycle-badge">16j</span></div>
-                        <div class="table-cell">325.600 FCFA</div>
-                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn-cancel" id="btnCancel">Annuler</button>
+                    <button class="btn-confirm" id="confirmBtn">Confirmer</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal de confirmation -->
-    <div class="modal-overlay" id="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="modal-vip-badge" id="modalVipBadge">VIP 1</div>
-                <h3 class="modal-title">Confirmer l'investissement</h3>
-                <p class="modal-subtitle">Veuillez vérifier les détails avant de confirmer</p>
-            </div>
-            <div class="modal-info-grid">
-                <div class="modal-info-row">
-                    <div class="modal-info-label">Montant à investir</div>
-                    <div class="modal-info-value" id="modalAmount">3.500 FCFA</div>
-                </div>
-                <div class="modal-info-row">
-                    <div class="modal-info-label">Revenu quotidien</div>
-                    <div class="modal-info-value" id="modalDaily">350 FCFA</div>
-                </div>
-                <div class="modal-info-row">
-                    <div class="modal-info-label">Durée du cycle</div>
-                    <div class="modal-info-value" id="modalCycle">48 jours</div>
-                </div>
-                <div class="modal-info-row">
-                    <div class="modal-info-label">Revenu total</div>
-                    <div class="modal-info-value" id="modalTotal">16.800 FCFA</div>
-                </div>
-            </div>
-            <div class="modal-buttons">
-                <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Annuler</button>
-                <button class="modal-btn modal-btn-confirm" onclick="confirmInvestment()" id="confirmBtn">
-                    <span id="confirmText">Confirmer l'investissement</span>
-                    <span id="loadingSpinner" style="display: none;">
-                        <div class="loading-spinner"></div> Traitement...
-                    </span>
-                </button>
-            </div>
-        </div>
-    </div>
+    <div id="notification" style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); background:#10b981; color:white; padding:15px 25px; border-radius:10px; z-index:3000; font-weight:600; box-shadow:0 4px 12px rgba(0,0,0,0.3);"></div>
 
-    <!-- Navigation fixe en bas -->
     <nav class="bottom-nav">
-        <a href="accueil.html" class="nav-item active" data-page="accueil">
-            <svg class="nav-icon icon-home" viewBox="0 0 24 24">
-                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
-            </svg>
-            <span class="nav-label">Accueil</span>
-        </a>
-        <a href="machine.html" class="nav-item" data-page="actifs">
-            <svg class="nav-icon icon-dashboard" viewBox="0 0 24 24">
-                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
-            </svg>
-            <span class="nav-label">Actifs</span>
-        </a>
-        <a href="equipe.html" class="nav-item" data-page="partage">
-            <svg class="nav-icon icon-share" viewBox="0 0 24 24">
-                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/>
-            </svg>
-            <span class="nav-label">Partage</span>
-        </a>
-        <a href="solde.html" class="nav-item" data-page="compte">
-            <svg class="nav-icon icon-account" viewBox="0 0 24 24">
-                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
-            </svg>
-            <span class="nav-label">Compte</span>
-        </a>
+        <a class="nav-item active" href="accueil.html"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="nav-label">Accueil</span></a>
+        <a class="nav-item" href="machine.html"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg><span class="nav-label">Actifs</span></a>
+        <a class="nav-item" href="equipe.html"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></svg><span class="nav-label">Partage</span></a>
+        <a class="nav-item" href="solde.html"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg><span class="nav-label">Compte</span></a>
     </nav>
 
     <script type="module">
-        /* ========================= IMPORT FIREBASE ========================= */
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
         import { getDatabase, ref, get, update, push, onValue, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-        /* ========================= CONFIG FIREBASE ========================= */
         const firebaseConfig = {
             apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
             authDomain: "schweppes-15df3.firebaseapp.com",
@@ -1027,22 +130,80 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getDatabase(app);
-
-        /* ========================= VARIABLES GLOBALES ========================= */
         let currentUser = null;
         let currentSolde = 0;
         let currentProduct = null;
 
-        /* ========================= PRODUITS VIP ========================= */
+        // Configuration des produits
         const PRODUCT_CONFIG = {
-            1: { productId: 1, nom: "VIP 1", price: 5500, dailyRevenue: 1050, cycleDuration: 22, totalRevenue: 22050, limit: 1 },
-            2: { productId: 2, nom: "VIP 2", price: 10500, dailyRevenue: 2500, cycleDuration: 19, totalRevenue: 47500, limit: 1 },
-            3: { productId: 3, nom: "VIP 3", price: 18500, dailyRevenue: 4000, cycleDuration: 18, totalRevenue: 72, limit: 1 },
-            4: { productId: 4, nom: "VIP 4", price: 35000, dailyRevenue: 6500, cycleDuration: 17, totalRevenue: 110500, limit: 1 },
-            5: { productId: 5, nom: "VIP 5", price: 100000, dailyRevenue: 20350, cycleDuration: 16, totalRevenue: 325600, limit: 2 }
+            1: { 
+                productId: 1, 
+                nom: "Produits -A", 
+                price: 5500, 
+                dailyRevenue: 1250, 
+                cycleDuration: 15, 
+                totalRevenue: 18750, 
+                limit: 1,
+                image: "https://image.noelshack.com/fichiers/2026/01/7/1767566579-714fmrtnyel-sl1500.jpg",
+                gradient: "linear-gradient(135deg, rgba(139, 69, 19, 0.3), rgba(160, 82, 45, 0.3))"
+            },
+            2: { 
+                productId: 2, 
+                nom: "Produits -B", 
+                price: 10500, 
+                dailyRevenue: 2500, 
+                cycleDuration: 15, 
+                totalRevenue: 37500, 
+                limit: 1,
+                image: "https://image.noelshack.com/fichiers/2026/01/7/1767566989-1.jpg",
+                gradient: "linear-gradient(135deg, rgba(205, 133, 63, 0.3), rgba(222, 184, 135, 0.3))"
+            },
+            3: { 
+                productId: 3, 
+                nom: "Produits -C", 
+                price: 25000, 
+                dailyRevenue: 4000, 
+                cycleDuration: 15, 
+                totalRevenue: 60000, 
+                limit: 1,
+                image: "https://image.noelshack.com/fichiers/2026/01/7/1767567329-chocolat-en-poudre-avec-feves-de-cacao-nestle-324x389.jpg",
+                gradient: "linear-gradient(135deg, rgba(210, 105, 30, 0.3), rgba(255, 140, 0, 0.3))"
+            },
+            4: { 
+                productId: 4, 
+                nom: "Produits -D", 
+                price: 50000, 
+                dailyRevenue: 8500, 
+                cycleDuration: 15, 
+                totalRevenue: 127500, 
+                limit: 1,
+                image: "https://image.noelshack.com/fichiers/2026/01/7/1767567532-chocolat-en-poudre-cacaote-et-malte-tonimalt-324x389.jpg",
+                gradient: "linear-gradient(135deg, rgba(139, 69, 19, 0.3), rgba(101, 67, 33, 0.3))"
+            },
+            5: { 
+                productId: 5, 
+                nom: "Produits -E", 
+                price: 100000, 
+                dailyRevenue: 25500, 
+                cycleDuration: 15, 
+                totalRevenue: 382500, 
+                limit: 1,
+                image: "https://image.noelshack.com/fichiers/2026/02/1/1767567825-images-2.jpeg",
+                gradient: "linear-gradient(135deg, rgba(160, 82, 45, 0.3), rgba(139, 69, 19, 0.3))"
+            },
+            6: { 
+                productId: 6, 
+                nom: "VIP 6", 
+                price: 200000, 
+                dailyRevenue: 51000, 
+                cycleDuration: 15, 
+                totalRevenue: 765000, 
+                limit: 1,
+                image: "https://image.noelshack.com/fichiers/2026/02/1/1767568039-cafe-soluble-viennois-nescafe-324x389.jpg",
+                gradient: "linear-gradient(135deg, rgba(210, 105, 30, 0.3), rgba(184, 134, 11, 0.3))"
+            }
         };
 
-        /* ========================= UTILITAIRES ========================= */
         const formatCurrency = (n) => Number(n).toLocaleString("fr-FR") + " FCFA";
 
         function showNotification(message, type = "success") {
@@ -1053,87 +214,66 @@
             setTimeout(() => n.style.display = "none", 4000);
         }
 
-        /* ========================= BALANCE LIVE ========================= */
         function setupBalanceListener(uid) {
-            onValue(ref(db, `users/${uid}/balance`), snap => {
-                currentSolde = Number(snap.val() || 0);
+            onValue(ref(db, `users/${uid}/balance`), snap => { 
+                currentSolde = Number(snap.val() || 0); 
             });
         }
 
-        /* ========================= CHECK INVEST ACTIF ========================= */
         async function checkActiveInvestments(uid, productId) {
             const snap = await get(ref(db, `investments/${uid}`));
             if (!snap.exists()) return 0;
             let count = 0;
             Object.values(snap.val()).forEach(inv => {
-                if (
-                    inv.productId === productId &&
-                    inv.status === "active" &&
-                    inv.remainingDays > 0
-                ) count++;
+                if (inv.productId === productId && inv.status === "active" && inv.remainingDays > 0) count++;
             });
             return count;
         }
 
-        /* ========================= LIMITES BOUTONS ========================= */
-        async function updateInvestmentLimits(uid) {
-            for (const id in PRODUCT_CONFIG) {
-                const product = PRODUCT_CONFIG[id];
-                const active = await checkActiveInvestments(uid, product.productId);
-                const btn = document.getElementById(`btn${id}`);
-                if (!btn) continue;
-                if (active >= product.limit) {
-                    btn.disabled = true;
-                    btn.innerHTML = '<i class="fas fa-lock"></i> Limite atteinte';
-                } else {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i class="fas fa-rocket"></i> Investir';
-                }
-            }
-        }
-
-        /* ========================= MODAL ========================= */
-        window.openModal = (productId) => {
+        function openModal(productId) {
             currentProduct = PRODUCT_CONFIG[productId];
+            console.log("Opening modal for product:", currentProduct);
+            
             document.getElementById("modalVipBadge").textContent = currentProduct.nom;
             document.getElementById("modalAmount").textContent = formatCurrency(currentProduct.price);
             document.getElementById("modalDaily").textContent = formatCurrency(currentProduct.dailyRevenue);
             document.getElementById("modalCycle").textContent = currentProduct.cycleDuration + " jours";
             document.getElementById("modalTotal").textContent = formatCurrency(currentProduct.totalRevenue);
-            document.getElementById("modal").classList.add("active");
-        };
+            
+            const modal = document.getElementById("modal");
+            modal.classList.add("active");
+            console.log("Modal classes:", modal.className);
+        }
 
-        window.closeModal = () => {
+        function closeModal() {
             document.getElementById("modal").classList.remove("active");
             currentProduct = null;
-        };
+        }
 
-        /* ========================= CLIQUE INVESTIR ========================= */
-        window.investProduct = async (productId) => {
+        function investProduct(productId) {
+            console.log("Invest product called:", productId);
+            
             if (!currentUser) {
                 showNotification("Veuillez vous connecter", "error");
                 return;
             }
+            
             const product = PRODUCT_CONFIG[productId];
             if (currentSolde < product.price) {
                 showNotification("Solde insuffisant", "error");
                 return;
             }
+            
             openModal(productId);
-        };
+        }
 
-        /* ========================= CONFIRM INVEST ========================= */
-        window.confirmInvestment = async () => {
+        async function confirmInvestment() {
             if (!currentUser || !currentProduct) return;
             const btn = document.getElementById("confirmBtn");
             btn.disabled = true;
             
             try {
-                const active = await checkActiveInvestments(
-                    currentUser.uid,
-                    currentProduct.productId
-                );
-                
+                const active = await checkActiveInvestments(currentUser.uid, currentProduct.productId);
                 if (active >= currentProduct.limit) {
                     showNotification("Limite atteinte", "error");
                     closeModal();
@@ -1148,6 +288,7 @@
                 const invRef = push(ref(db, `investments/${currentUser.uid}`));
                 updates[`investments/${currentUser.uid}/${invRef.key}`] = {
                     productId: currentProduct.productId,
+                    productName: currentProduct.nom,
                     amount: currentProduct.price,
                     dailyRevenue: currentProduct.dailyRevenue,
                     totalRevenue: currentProduct.totalRevenue,
@@ -1170,9 +311,64 @@
             } finally {
                 btn.disabled = false;
             }
-        };
+        }
 
-        /* ========================= AUTH INIT ========================= */
+        async function updateInvestmentLimits(uid) {
+            for (const id in PRODUCT_CONFIG) {
+                const product = PRODUCT_CONFIG[id];
+                const active = await checkActiveInvestments(uid, product.productId);
+                const btn = document.getElementById(`btn${id}`);
+                if (!btn) continue;
+                if (active >= product.limit) {
+                    btn.disabled = true;
+                    btn.textContent = 'Limite atteinte';
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Acheter';
+                }
+            }
+        }
+
+        function renderProducts() {
+            const container = document.getElementById("productsContainer");
+            container.innerHTML = "";
+            
+            for (const id in PRODUCT_CONFIG) {
+                const product = PRODUCT_CONFIG[id];
+                const card = document.createElement("div");
+                card.className = "product-card";
+                card.innerHTML = `
+                    <div class="product-image" style="background: ${product.gradient}, url('${product.image}'); background-size: cover; background-position: center;"></div>
+                    <h3 class="product-name">${product.nom}</h3>
+                    <div class="product-info">
+                        <div class="info-row"><span class="label">Coût:</span><span class="value">${formatCurrency(product.price)}</span></div>
+                        <div class="info-row"><span class="label">Bénéfice :</span><span class="value green">${formatCurrency(product.dailyRevenue)}</span></div>
+                        <div class="info-row"><span class="label">Cycle:</span><span class="value">${product.cycleDuration} jours</span></div>
+                        <div class="info-row total"><span class="label">Total:</span><span class="value">${formatCurrency(product.totalRevenue)}</span></div>
+                    </div>
+                    <button class="btn-buy" id="btn${id}">Acheter</button>
+                `;
+                container.appendChild(card);
+            }
+            
+            // Ajouter les événements après que tous les boutons soient créés
+            for (const id in PRODUCT_CONFIG) {
+                const btn = document.getElementById(`btn${id}`);
+                if (btn) {
+                    btn.addEventListener('click', function() {
+                        investProduct(parseInt(id));
+                    });
+                }
+            }
+        }
+
+        // Événements du modal
+        document.getElementById("btnCancel").addEventListener('click', closeModal);
+        document.getElementById("confirmBtn").addEventListener('click', confirmInvestment);
+
+        // Initialisation
+        renderProducts();
+
         onAuthStateChanged(auth, user => {
             if (user) {
                 currentUser = user;
@@ -1182,40 +378,6 @@
                 currentUser = null;
                 currentSolde = 0;
             }
-        });
-
-        /* ========================= CARROUSEL ========================= */
-        document.addEventListener('DOMContentLoaded', function() {
-            const track = document.getElementById('carouselTrack');
-            const dotsContainer = document.getElementById('carouselDots');
-            const slides = document.querySelectorAll('.carousel-slide');
-            
-            let currentSlide = 0;
-            
-            // Créer les dots
-            slides.forEach((_, index) => {
-                const dot = document.createElement('div');
-                dot.className = 'dot';
-                if (index === 0) dot.classList.add('active');
-                dot.addEventListener('click', () => goToSlide(index));
-                dotsContainer.appendChild(dot);
-            });
-            
-            function goToSlide(index) {
-                currentSlide = index;
-                track.style.transform = `translateX(-${currentSlide * 100}%)`;
-                
-                // Mettre à jour les dots
-                document.querySelectorAll('.dot').forEach((dot, i) => {
-                    dot.classList.toggle('active', i === currentSlide);
-                });
-            }
-            
-            // Auto-play
-            setInterval(() => {
-                currentSlide = (currentSlide + 1) % slides.length;
-                goToSlide(currentSlide);
-            }, 5000);
         });
     </script>
 </body>
