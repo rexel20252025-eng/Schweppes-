@@ -57,6 +57,92 @@
             font-weight: bold;
         }
 
+        .welcome-section {
+            background: linear-gradient(135deg, #fff8dc 0%, #ffe4b5 100%);
+            padding: 40px 20px;
+            margin: 30px auto;
+            max-width: 900px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(210, 105, 30, 0.2);
+        }
+
+        .welcome-title {
+            font-size: 2em;
+            color: #8B4513;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .welcome-text {
+            font-size: 1.15em;
+            color: #555;
+            line-height: 1.8;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .info-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        .info-card.access {
+            border-left-color: #4CAF50;
+        }
+
+        .info-card.cycle {
+            border-left-color: #2196F3;
+        }
+
+        .info-card.refund {
+            border-left-color: #FF9800;
+        }
+
+        .card-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 1.05em;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #ffd700 0%, #ffed4e 100%);
+            padding: 3px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: #333;
+        }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -130,6 +216,14 @@
             .description {
                 font-size: 1em;
             }
+
+            .welcome-title {
+                font-size: 1.6em;
+            }
+
+            .card-title {
+                font-size: 1.3em;
+            }
         }
     </style>
 </head>
@@ -137,6 +231,39 @@
     <div class="hero-image">
         <div class="hero-content">
             <h1>☕ NESTCAFE ☕</h1>
+        </div>
+    </div>
+
+    <div class="welcome-section">
+        <h2 class="welcome-title">🎉 Bienvenue chers membres de NESTCAFE ! 🎉</h2>
+        <p class="welcome-text">
+            Découvrez comment fonctionne notre système unique et avantageux.
+        </p>
+    </div>
+
+    <div class="info-cards">
+        <div class="info-card access">
+            <div class="card-icon">🔓</div>
+            <h3 class="card-title">Accès Complet</h3>
+            <p class="card-text">
+                Chaque membre a accès à <span class="highlight">tous les produits</span> pendant une période de <span class="highlight">45 jours</span>. Profitez pleinement de notre catalogue !
+            </p>
+        </div>
+
+        <div class="info-card cycle">
+            <div class="card-icon">📱</div>
+            <h3 class="card-title">Système de Vérification</h3>
+            <p class="card-text">
+                Un système automatique vérifie l'accès. Après 45 jours, votre téléphone n'aura plus accès jusqu'au prochain cycle. C'est automatique et sécurisé !
+            </p>
+        </div>
+
+        <div class="info-card refund">
+            <div class="card-icon">💰</div>
+            <h3 class="card-title">Remboursement 100%</h3>
+            <p class="card-text">
+                Après chaque cycle, votre investissement est <span class="highlight">remboursé à 100%</span> ! Pas besoin d'investir à nouveau, sauf si vous souhaitez acheter d'autres produits.
+            </p>
         </div>
     </div>
 
@@ -152,7 +279,7 @@
             L'équipe résoudra votre problème.
         </p>
 
-        <a href="#" class="cta-button">
+        <a href="https://t.me/NESTCAFE5" class="cta-button">
             📞 Service Client
         </a>
     </div>
