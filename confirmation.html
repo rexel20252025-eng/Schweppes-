@@ -17,6 +17,7 @@
             min-height: 100vh;
             padding: 0;
             margin: 0;
+            overflow-x: hidden;
         }
 
         .container {
@@ -25,6 +26,7 @@
             width: 100%;
             min-height: 100vh;
             animation: slideUp 0.6s ease-out;
+            overflow-x: hidden;
         }
 
         @keyframes slideUp {
@@ -108,6 +110,8 @@
 
         .content {
             padding: 40px 30px;
+            overflow-x: hidden;
+            max-width: 100%;
         }
 
         .info-section {
@@ -162,6 +166,8 @@
             cursor: pointer;
             transition: transform 0.2s;
             box-shadow: 0 4px 15px rgba(139,69,19,0.2);
+            max-width: 100%;
+            overflow: hidden;
         }
 
         .payment-number:hover {
@@ -172,6 +178,8 @@
             font-size: 20px;
             font-weight: bold;
             letter-spacing: 1px;
+            word-break: break-all;
+            max-width: 70%;
         }
 
         .copy-btn {
@@ -349,25 +357,6 @@
         </div>
 
         <div class="content">
-            <div class="info-section">
-                <h2>
-                    <span class="icon">📋</span>
-                    Détails de la recharge
-                </h2>
-                <div class="info-row">
-                    <span class="info-label">Opérateur</span>
-                    <span class="info-value" id="operator">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Numéro à recharger</span>
-                    <span class="info-value" id="phone">-</span>
-                </div>
-                <div class="info-row">
-                    <span class="info-label">Montant</span>
-                    <span class="info-value" id="amount">0</span> FCFA
-                </div>
-            </div>
-
             <div class="instructions">
                 <h3>📝 Procédure de paiement</h3>
                 <ol>
@@ -383,9 +372,28 @@
             <div class="payment-number" onclick="copyToClipboard()">
                 <div>
                     <div style="font-size: 14px; opacity: 0.9; margin-bottom: 5px;">Numéro de paiement</div>
-                    <span id="paymentNumber">-</span>
+                    <span id="paymentNumber2">-</span>
                 </div>
                 <button class="copy-btn" type="button">📋 Copier</button>
+            </div>
+
+            <div class="info-section">
+                <h2>
+                    <span class="icon">📋</span>
+                    Détails de la recharge
+                </h2>
+                <div class="info-row">
+                    <span class="info-label">Opérateur</span>
+                    <span class="info-value" id="operator3">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Numéro à recharger</span>
+                    <span class="info-value" id="phone3">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Montant</span>
+                    <span class="info-value" id="amount3">0</span> FCFA
+                </div>
             </div>
 
             <form id="confirmationForm">
@@ -466,7 +474,7 @@
 
     // Copier le numéro dans le presse-papier
     window.copyToClipboard = function () {
-        const number = document.getElementById('paymentNumber')?.textContent;
+        const number = document.getElementById('paymentNumber2')?.textContent;
         if (!number || number === '-') return;
 
         navigator.clipboard.writeText(number)
@@ -478,10 +486,16 @@
     window.addEventListener('load', () => {
         const rechargeData = JSON.parse(sessionStorage.getItem('rechargeData'));
         if (rechargeData) {
-            document.getElementById('paymentNumber').textContent = rechargeData.operatorNumber || 'N/A';
-            document.getElementById('amount').textContent = rechargeData.amount || '0';
-            document.getElementById('phone').textContent = rechargeData.phone || 'N/A';
-            document.getElementById('operator').textContent = rechargeData.operator?.toUpperCase() || 'N/A';
+            const paymentNumber = rechargeData.operatorNumber || 'N/A';
+            const amount = rechargeData.amount || '0';
+            const phone = rechargeData.phone || 'N/A';
+            const operator = rechargeData.operator?.toUpperCase() || 'N/A';
+            
+            // Remplir les éléments du bas
+            document.getElementById('paymentNumber2').textContent = paymentNumber;
+            document.getElementById('amount3').textContent = amount;
+            document.getElementById('phone3').textContent = phone;
+            document.getElementById('operator3').textContent = operator;
         } else {
             showNotification('⚠️ Erreur de chargement des données', 'error');
             setTimeout(() => window.location.href = 'recharge.html', 2000);
