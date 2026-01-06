@@ -80,22 +80,31 @@ function formatCurrency(amount) {
 
 function formatDate(ts) {
     if(!ts) return "Date inconnue";
-    const date = new Date(Number(ts));
-    return date.toLocaleString('fr-FR', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+    const time = Number(ts);
+    const date = new Date(time);
+    return date.toLocaleString('fr-FR', {
+        day:'2-digit',
+        month:'2-digit',
+        year:'numeric',
+        hour:'2-digit',
+        minute:'2-digit'
+    });
 }
 
 function statusBadge(status) {
     const s = (status || '').toLowerCase();
-    if(s === 'success' || s === 'payé' || s === 'succès' || s === 'terminé') return `<span class="badge badge-success">${status}</span>`;
-    if(s === 'pending' || s === 'en attente' || s === 'traitement bancaire') return `<span class="badge badge-pending">${status}</span>`;
+    if(s === 'success' || s === 'payé' || s === 'succès' || s === 'terminé')
+        return `<span class="badge badge-success">${status}</span>`;
+    if(s === 'pending' || s === 'en attente' || s === 'traitement bancaire')
+        return `<span class="badge badge-pending">${status}</span>`;
     return `<span class="badge badge-failed">${status}</span>`;
 }
 
 function createWithdrawalCard(w) {
     const amt = formatCurrency(w.amount || 0);
     const fees = formatCurrency(w.fees || 0);
-    const net = formatCurrency((w.amount || 0) - (w.fees || 0));
-    const dateStr = formatDate(w.date || w.timestamp || Date.now());
+    const net = formatCurrency((w.amount || 0) - (w.fees || 0)); // corrigé
+    const dateStr = formatDate(w.timestamp || w.date || w.order || Date.now());
 
     return `
     <div class="card">
@@ -116,27 +125,22 @@ function displayWithdrawalHistory(history){
     }
     container.innerHTML = '';
 
-    const todayStr = new Date().toDateString();
-
     Object.entries(history)
-        .sort(([,a],[,b]) => {
-            const aDateObj = new Date(a.date || a.timestamp);
-            const bDateObj = new Date(b.date || b.timestamp);
+        .sort(([, a], [, b]) => {
+            const aTime = a.timestamp 
+                ? Number(a.timestamp)
+                : (a.date ? Number(a.date)
+                : (a.order ? Number(a.order) : 0));
 
-            const aDateStr = aDateObj.toDateString();
-            const bDateStr = bDateObj.toDateString();
+            const bTime = b.timestamp 
+                ? Number(b.timestamp)
+                : (b.date ? Number(b.date)
+                : (b.order ? Number(b.order) : 0));
 
-            // 1️⃣ Les retraits d'aujourd'hui en haut
-            if(aDateStr === todayStr && bDateStr !== todayStr) return -1;
-            if(bDateStr === todayStr && aDateStr !== todayStr) return 1;
-
-            // 2️⃣ Si même jour, tri par timestamp (heure) descendant
-            if(aDateStr === bDateStr) return (b.timestamp || b.date) - (a.timestamp || a.date);
-
-            // 3️⃣ Sinon tri normal par order ou date descendant
-            return (b.order || b.date) - (a.order || a.date);
+            // Tri descendant : plus récent en haut
+            return bTime - aTime;
         })
-        .forEach(([,w]) => {
+        .forEach(([, w]) => {
             container.innerHTML += createWithdrawalCard(w);
         });
 }
