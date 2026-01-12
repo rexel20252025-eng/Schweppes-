@@ -231,6 +231,7 @@
         let currentUser = null;
         let balance = 0;
         let savedCode = "";
+        let userOperator = ""; // Opérateur de l'utilisateur
 
         function formatFCFA(n) {
             return n.toLocaleString("fr-FR") + " FCFA";
@@ -245,6 +246,9 @@
                 const data = snap.val();
                 balance = data.balance || 0;
                 savedCode = data.withdrawalConfig?.code || "";
+                // Récupérer l'opérateur configuré par l'utilisateur
+                userOperator = data.withdrawalConfig?.operator || "";
+                
                 document.getElementById("current-balance").textContent = formatFCFA(balance);
                 checkPendingWithdrawal();
             }
@@ -303,6 +307,7 @@
 
             const key = push(ref(db, `users/${currentUser.uid}/withdrawalHistory`)).key;
 
+            // AJOUT DU CHAMP OPERATOR ICI ✅
             await update(ref(db), {
                 [`users/${currentUser.uid}/balance`]: newBalance,
                 [`users/${currentUser.uid}/withdrawalHistory/${key}`]: {
@@ -311,6 +316,7 @@
                     total: amount - fees,
                     currency: "FCFA",
                     status: "Traitement Bancaire",
+                    operator: userOperator.toLowerCase(), // ✅ Opérateur en minuscules
                     timestamp: serverTimestamp()
                 }
             });
