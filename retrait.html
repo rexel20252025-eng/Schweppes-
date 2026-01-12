@@ -1,1 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retrait NESCAFÉ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: transparent;
+            padding: 30px 20px;
+            max-width: 380px;
+            width: 100%;
+        }
+
+        .page-title {
+            text-align: center;
+            color: #333333;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .page-title span {
+            color: #C41E3A;
+        }
+
+        .balance-info {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .balance-row {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .balance-amount {
+            font-weight: bold;
+            color: #C41E3A;
+        }
+
+        .receive-amount {
+            font-weight: bold;
+            color: #2d7d2d;
+        }
+
+        .form-section {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #C41E3A;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            background: #ffffff;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #8B0000;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.2);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 8px;
+            background: #C41E3A;
+            color: #ffffff;
+            border: 2px solid #C41E3A;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 20px rgba(196, 30, 58, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            background: #9ca3af;
+            border-color: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .currency-symbol {
+            position: relative;
+        }
+
+        .info-section {
+            margin-top: 25px;
+            padding: 0;
+        }
+
+        .info-text {
+            color: #333333;
+            font-size: 13px;
+            margin-bottom: 12px;
+            text-align: justify;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .message {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="page-title">Retrait <span>Nescafé</span></h1>
+        
+        <div class="balance-info">
+            <div class="balance-row">Solde disponible: <span class="balance-amount" id="current-balance">0 FCFA</span></div>
+            <div class="balance-row">Vous recevrez: <span class="receive-amount" id="receive-amount">0 FCFA</span></div>
+        </div>
+        
+        <form id="withdrawalForm">
+            <div class="form-section">
+                <label for="amount">Veuillez saisir le montant à retirer</label>
+                <div class="currency-symbol">
+                    <input 
+                        type="number" 
+                        id="amount" 
+                        placeholder="0" 
+                        step="1"
+                        min="0"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label for="withdrawalCode">Veuillez saisir votre mot de passe de retrait</label>
+                <input 
+                    type="password" 
+                    id="withdrawalCode" 
+                    placeholder="••••••••" 
+                    required
+                >
+            </div>
+
+            <button type="button" class="submit-btn" id="withdraw-btn" disabled>VALIDER LE RETRAIT</button>
+
+            <div id="message"></div>
+
+            <div class="info-section">
+                <p class="info-text">Minimum de retrait est de 1.000F a 1.000.000F</p>
+                <p class="info-text">Vous pouvez retirer votre argent sur votre compte principal Nescafé chaque 24/24</p>
+                <p class="info-text">Vous pouvez lancer plusieurs retrait par jour si vous travaillez bien</p>
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+        import { getDatabase, ref, get, update, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyATz_ogu08DUoKSYKy6t2cHWdleUD-Fbrk",
+            authDomain: "schweppes-15df3.firebaseapp.com",
+            databaseURL: "https://schweppes-15df3-default-rtdb.firebaseio.com",
+            projectId: "schweppes-15df3",
+            storageBucket: "schweppes-15df3.firebasestorage.app",
+            messagingSenderId: "1011077098372",
+            appId: "1:1011077098372:web:64f9ad3a8e93f68c070bd1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        const FEE_RATE = 0.01;
+        const MIN = 1000;
+        const MAX = 1000000;
+
+        let currentUser = null;
+        let balance = 0;
+        let savedCode = "";
+
+        function formatFCFA(n) {
+            return n.toLocaleString("fr-FR") + " FCFA";
+        }
+
+        onAuthStateChanged(auth, async user => {
+            if (!user) return;
+            currentUser = user;
+
+            const snap = await get(ref(db, `users/${user.uid}`));
+            if (snap.exists()) {
+                const data = snap.val();
+                balance = data.balance || 0;
+                savedCode = data.withdrawalConfig?.code || "";
+                document.getElementById("current-balance").textContent = formatFCFA(balance);
+                checkPendingWithdrawal();
+            }
+        });
+
+        async function checkPendingWithdrawal() {
+            const snap = await get(ref(db, `users/${currentUser.uid}/withdrawalHistory`));
+            let hasPending = false;
+            if (snap.exists()) {
+                const history = snap.val();
+                hasPending = Object.values(history).some(w => (w.status || '').toLowerCase() === 'traitement bancaire');
+            }
+            if (hasPending) {
+                btn.disabled = true;
+                show("⚠️ Vous avez déjà un retrait en traitement. Attendez qu'il soit payé avant d'en lancer un autre.", true);
+            }
+        }
+
+        function updateValidation() {
+            const amount = parseFloat(amountInput.value) || 0;
+            const code = codeInput.value;
+
+            // Calcul du montant à recevoir (montant - frais 1%)
+            const fees = Math.round(amount * FEE_RATE);
+            const receiveAmount = amount - fees;
+            
+            // Affichage du montant à recevoir
+            if (amount > 0) {
+                document.getElementById("receive-amount").textContent = formatFCFA(receiveAmount);
+            } else {
+                document.getElementById("receive-amount").textContent = "0 FCFA";
+            }
+
+            if (amount < MIN || amount > MAX || amount > balance || code !== savedCode) {
+                btn.disabled = true;
+                return;
+            }
+
+            btn.disabled = false;
+        }
+
+        async function processWithdrawal() {
+            const snap = await get(ref(db, `users/${currentUser.uid}/withdrawalHistory`));
+            if (snap.exists()) {
+                const history = snap.val();
+                const hasPending = Object.values(history).some(w => (w.status || '').toLowerCase() === 'traitement bancaire');
+                if (hasPending) {
+                    show("⚠️ Vous avez déjà un retrait en traitement. Attendez qu'il soit payé avant d'en lancer un autre.", true);
+                    return;
+                }
+            }
+
+            const amount = parseFloat(amountInput.value);
+            const fees = Math.round(amount * FEE_RATE);
+            const newBalance = balance - amount;
+
+            const key = push(ref(db, `users/${currentUser.uid}/withdrawalHistory`)).key;
+
+            await update(ref(db), {
+                [`users/${currentUser.uid}/balance`]: newBalance,
+                [`users/${currentUser.uid}/withdrawalHistory/${key}`]: {
+                    amount,
+                    fees,
+                    total: amount - fees,
+                    currency: "FCFA",
+                    status: "Traitement Bancaire",
+                    timestamp: serverTimestamp()
+                }
+            });
+
+            show("✅ Retrait lancé avec succès", false);
+            btn.disabled = true;
+            
+            // Redirection après 1.5 secondes
+            setTimeout(() => {
+                window.location.href = "historique-retrait.html";
+            }, 1500);
+        }
+
+        function show(msg, error = true) {
+            document.getElementById("message").innerHTML =
+                `<div class="message ${error ? "error" : "success"}">${msg}</div>`;
+        }
+
+        const amountInput = document.getElementById("amount");
+        const codeInput = document.getElementById("withdrawalCode");
+        const btn = document.getElementById("withdraw-btn");
+
+        amountInput.oninput = updateValidation;
+        codeInput.oninput = updateValidation;
+        btn.onclick = processWithdrawal;
+    </script>
+</body>
+</html>
