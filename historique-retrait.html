@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Historique de Retrait - NESTCAFE</title>
 <style>
-body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif; background: linear-gradient(135deg, #f5ebe0 0%, #ecddd0 100%); color:#333; margin:0; padding:0; }
-.header { display:flex; align-items:center; margin-bottom:20px; padding:15px; border-bottom:2px solid #8B4513; background: linear-gradient(135deg, #d2691e 0%, #8B4513 100%); }
-.back-arrow { font-size:24px; cursor:pointer; margin-right:15px; color:#fff; transition: color 0.3s; }
-.back-arrow:hover { color:#f5deb3; }
-.header-title { font-size:18px; font-weight:600; color:#fff; }
+body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif; background: #ffffff; color:#333; margin:0; padding:0; }
+.header { display:flex; align-items:center; margin-bottom:15px; padding:12px; border-bottom:2px solid #e0e0e0; background: #ffffff; }
+.back-arrow { font-size:20px; cursor:pointer; margin-right:12px; color:#8B4513; transition: color 0.3s; }
+.back-arrow:hover { color:#d2691e; }
+.header-title { font-size:16px; font-weight:600; color:#8B4513; }
 
 #history-container {
     max-width: 600px;
@@ -18,18 +18,18 @@ body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ub
 }
 
 .card {
-    background: linear-gradient(135deg, #fff8f0 0%, #fff 100%);
+    background: linear-gradient(135deg, #f5ebe0 0%, #ecddd0 100%);
     border:1px solid #d2b48c;
-    border-radius:12px;
-    padding:12px 15px;
-    margin:10px 0;
-    box-shadow:0 1px 4px rgba(139,69,19,0.1);
+    border-radius:10px;
+    padding:10px 12px;
+    margin:8px 0;
+    box-shadow:0 2px 8px rgba(139,69,19,0.15);
     transition: box-shadow 0.3s, transform 0.2s;
     display: flex;
-    gap: 15px;
+    gap: 12px;
 }
 
-.card:hover { box-shadow:0 2px 6px rgba(139,69,19,0.2); transform:translateY(-1px); }
+.card:hover { box-shadow:0 4px 12px rgba(139,69,19,0.25); transform:translateY(-2px); }
 
 .operator-logo-container {
     display: flex;
@@ -37,30 +37,65 @@ body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ub
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    gap: 8px;
+    gap: 5px;
+}
+
+.nestcafe-logo {
+    width: 35px;
+    height: 35px;
+    object-fit: contain;
+    border-radius: 6px;
+    background: #fff;
+    padding: 3px;
+    box-shadow: 0 1px 4px rgba(139,69,19,0.2);
+    border: 1.5px solid #8B4513;
+}
+
+.transfer-arrow {
+    font-size: 16px;
+    color: #8B4513;
+    margin: 1px 0;
+}
+
+.transfer-status {
+    font-size: 9px;
+    font-weight: 600;
+    color: #8B4513;
+    text-align: center;
+    padding: 2px 5px;
+    border-radius: 6px;
+    background: #fff3cd;
+    white-space: nowrap;
+    max-width: 85px;
+    line-height: 1.2;
+}
+
+.transfer-status.paid {
+    background: #d4edda;
+    color: #155724;
 }
 
 .operator-logo {
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     object-fit: contain;
-    border-radius: 8px;
+    border-radius: 6px;
     background: #fff;
-    padding: 5px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
 }
 
 .operator-name {
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 700;
     text-transform: uppercase;
     color: #8B4513;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
     text-align: center;
     background: linear-gradient(135deg, #f5deb3 0%, #d2b48c 100%);
-    padding: 3px 8px;
-    border-radius: 10px;
-    box-shadow: 0 1px 3px rgba(139,69,19,0.15);
+    padding: 2px 6px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(139,69,19,0.15);
     white-space: nowrap;
 }
 
@@ -68,12 +103,14 @@ body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ub
     flex: 1;
 }
 
-.row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid #f5e6d3; }
+.row { display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid #f5e6d3; }
 .row:last-child { border-bottom:none; }
-.label { font-size:14px; color:#8B4513; font-weight:500; }
-.value { font-size:14px; color:#333; font-weight:600; text-align:right; }
+.label { font-size:12px; color:#8B4513; font-weight:500; }
+.value { font-size:12px; color:#333; font-weight:600; text-align:right; }
+.value.red { color:#dc3545; }
+.value.green { color:#28a745; }
 
-.badge { padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; text-transform:capitalize; }
+.badge { padding:2px 8px; border-radius:15px; font-size:10px; font-weight:600; text-transform:capitalize; }
 .badge-success { background-color:#d4edda; color:#155724; }
 .badge-pending { background-color:#fff3cd; color:#856404; }
 .badge-failed { background-color:#f8d7da; color:#721c24; }
@@ -116,6 +153,9 @@ const OPERATOR_LOGOS = {
     'airtel': 'https://example.com/airtel-logo.png'
 };
 
+// --- LOGO NESTCAFE ---
+const NESTCAFE_LOGO = 'https://image.noelshack.com/fichiers/2026/03/6/1768668863-cafe-soluble-decafeine-nescafe-classic-10-sachets-nestle.jpg';
+
 // --- Init Firebase ---
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -148,7 +188,7 @@ function statusBadge(status) {
     return `<span class="badge badge-failed">${status}</span>`;
 }
 
-function getOperatorLogo(operator) {
+function getOperatorLogo(operator, status) {
     if(!operator) return '';
     
     // Normaliser le nom de l'opérateur en minuscules
@@ -157,10 +197,20 @@ function getOperatorLogo(operator) {
     // Chercher le logo correspondant
     const logoUrl = OPERATOR_LOGOS[operatorKey];
     
+    // Déterminer le texte du statut de transfert
+    const s = (status || '').toLowerCase();
+    const isPaid = s === 'success' || s === 'payé' || s === 'succès' || s === 'terminé';
+    const transferText = isPaid ? 'Transfert terminé' : 'Transfert en cours';
+    const statusClass = isPaid ? 'paid' : '';
+    
     // Vérifier si le logo existe et n'est pas un placeholder
     if(logoUrl && !logoUrl.includes('example.com')) {
         return `
         <div class="operator-logo-container">
+            <img src="${NESTCAFE_LOGO}" alt="NESTCAFE" class="nestcafe-logo">
+            <div class="transfer-arrow">↓</div>
+            <div class="transfer-status ${statusClass}">${transferText}</div>
+            <div class="transfer-arrow">↓</div>
             <img src="${logoUrl}" alt="${operator}" class="operator-logo" onerror="this.parentElement.style.display='none'">
             <span class="operator-name">${operator}</span>
         </div>`;
@@ -175,15 +225,15 @@ function createWithdrawalCard(w) {
     const fees = formatCurrency(w.fees || 0);
     const net = formatCurrency((w.amount || 0) - (w.fees || 0));
     const dateStr = formatDate(w.timestamp || w.date || w.order || Date.now());
-    const operatorLogo = getOperatorLogo(w.operator);
+    const operatorLogo = getOperatorLogo(w.operator, w.status);
 
     return `
     <div class="card">
         ${operatorLogo}
         <div class="card-content">
-            <div class="row"><span class="label">Montant retiré :</span><span class="value">− ${amt}</span></div>
-            <div class="row"><span class="label">Frais d'opération :</span><span class="value">− ${fees}</span></div>
-            <div class="row"><span class="label">Montant à recevoir :</span><span class="value">${net}</span></div>
+            <div class="row"><span class="label">Montant retiré :</span><span class="value red">− ${amt}</span></div>
+            <div class="row"><span class="label">Frais d'opération :</span><span class="value red">− ${fees}</span></div>
+            <div class="row"><span class="label">Montant à recevoir :</span><span class="value green">${net}</span></div>
             <div class="row"><span class="label">Statut :</span><span class="value">${statusBadge(w.status)}</span></div>
             <div class="row"><span class="label">Date de retrait :</span><span class="value">${dateStr}</span></div>
         </div>
