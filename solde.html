@@ -5,363 +5,357 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interface Mobile</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: white;
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .content {
-            padding: 0;
-        }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding-bottom: 80px;
+}
 
-        .palette-card {
-            background: linear-gradient(135deg, rgba(139, 69, 19, 0.95) 0%, rgba(210, 105, 30, 0.95) 100%);
-            padding: 20px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            border-radius: 0 0 25px 25px;
-            position: relative;
-            overflow: hidden;
-        }
+.content {
+    padding: 0;
+    max-width: 480px;
+    margin: 0 auto;
+}
 
-        .money-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            font-size: 40px;
-            opacity: 0.12;
-            pointer-events: none;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-            padding: 10px;
-            z-index: 0;
-        }
+.palette-card {
+    background: white;
+    padding: 15px 20px;
+    color: #1f2937;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    border-radius: 0 0 20px 20px;
+    border: 1px solid #e5e7eb;
+    position: relative;
+    overflow: hidden;
+}
 
-        .money-icon {
-            animation: float 6s ease-in-out infinite;
-        }
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+}
 
-        .money-icon:nth-child(2) { animation-delay: 1s; }
-        .money-icon:nth-child(3) { animation-delay: 2s; }
-        .money-icon:nth-child(4) { animation-delay: 3s; }
-        .money-icon:nth-child(5) { animation-delay: 4s; }
+.user-logo {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    border: 2px solid #e0e7ff;
+    box-shadow: 0 3px 10px rgba(99, 102, 241, 0.3);
+}
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
+.user-details {
+    flex: 1;
+}
 
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            position: relative;
-            z-index: 1;
-        }
+.user-name {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 2px;
+    letter-spacing: -0.2px;
+    color: #1f2937;
+}
 
-        .user-logo {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            font-weight: bold;
-            backdrop-filter: blur(10px);
-        }
+.user-id {
+    font-size: 11px;
+    opacity: 0.6;
+    font-weight: 500;
+    color: #6b7280;
+}
 
-        .user-details {
-            flex: 1;
-        }
+.balance-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+}
 
-        .user-name {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
+.balance-item {
+    background: white;
+    border-radius: 14px;
+    padding: 12px;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
 
-        .user-id {
-            font-size: 13px;
-            opacity: 0.9;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
+.balance-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    border-color: #d1d5db;
+}
 
-        .balance-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            position: relative;
-            z-index: 1;
-        }
+.balance-label {
+    font-size: 10px;
+    opacity: 0.7;
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #6b7280;
+    position: relative;
+    z-index: 1;
+}
 
-        .balance-item {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
+.balance-amount {
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: #1f2937;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
 
-        .balance-label {
-            font-size: 12px;
-            opacity: 0.95;
-            margin-bottom: 8px;
-            font-weight: 500;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-        }
+.balance-count {
+    font-size: 9px;
+    opacity: 0.65;
+    margin-top: 4px;
+    font-weight: 500;
+    color: #9ca3af;
+    position: relative;
+    z-index: 1;
+}
 
-        .balance-amount {
-            font-size: 18px;
-            font-weight: bold;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
+.action-buttons {
+    padding: 12px 20px;
+    display: flex;
+    gap: 10px;
+}
 
-        .balance-count {
-            font-size: 10px;
-            opacity: 0.8;
-            margin-top: 4px;
-        }
+.btn-action {
+    flex: 1;
+    padding: 13px;
+    border: none;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    text-decoration: none;
+    color: white;
+}
 
-        .action-buttons {
-            padding: 20px;
-            display: flex;
-            gap: 15px;
-        }
+.btn-icon {
+    width: 18px;
+    height: 18px;
+    fill: white;
+}
 
-        .btn-action {
-            flex: 1;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-decoration: none;
-            color: white;
-        }
+.btn-recharge {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
 
-        .btn-icon {
-            width: 20px;
-            height: 20px;
-            fill: white;
-        }
+.btn-recharge:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.35);
+}
 
-        .btn-recharge {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-        }
+.btn-retrait {
+    background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%);
+    color: white;
+}
 
-        .btn-recharge:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(76, 175, 80, 0.4);
-        }
+.btn-retrait:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(244, 63, 94, 0.35);
+}
 
-        .btn-retrait {
-            background: linear-gradient(135deg, #FF6B6B 0%, #EE5A52 100%);
-            color: white;
-        }
+.menu-list {
+    padding: 5px 20px 15px 20px;
+}
 
-        .btn-retrait:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
-        }
+.menu-item {
+    background: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    text-decoration: none;
+}
 
-        .menu-list {
-            padding: 10px 20px 20px 20px;
-        }
+.menu-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
 
-        .menu-item {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            text-decoration: none;
-        }
+.menu-icon {
+    width: 26px;
+    height: 26px;
+}
 
-        .menu-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+.menu-item:nth-child(1) .menu-icon { fill: #8b5cf6; }
+.menu-item:nth-child(1):hover { background: rgba(139, 92, 246, 0.05); }
+.menu-item:nth-child(2) .menu-icon { fill: #ec4899; }
+.menu-item:nth-child(2):hover { background: rgba(236, 72, 153, 0.05); }
+.menu-item:nth-child(3) .menu-icon { fill: #3b82f6; }
+.menu-item:nth-child(3):hover { background: rgba(59, 130, 246, 0.05); }
+.menu-item:nth-child(4) .menu-icon { fill: #f59e0b; }
+.menu-item:nth-child(4):hover { background: rgba(245, 158, 11, 0.05); }
 
-        .menu-icon {
-            width: 24px;
-            height: 24px;
-        }
+.menu-text {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    color: #1f2937;
+}
 
-        .menu-item:nth-child(1) .menu-icon { fill: #8B5CF6; }
-        .menu-item:nth-child(1) .menu-text { color: #8B5CF6; }
-        .menu-item:nth-child(2) .menu-icon { fill: #EC4899; }
-        .menu-item:nth-child(2) .menu-text { color: #EC4899; }
-        .menu-item:nth-child(3) .menu-icon { fill: #3B82F6; }
-        .menu-item:nth-child(3) .menu-text { color: #3B82F6; }
-        .menu-item:nth-child(4) .menu-icon { fill: #F59E0B; }
-        .menu-item:nth-child(4) .menu-text { color: #F59E0B; }
-        .menu-item:nth-child(5) .menu-icon { fill: #10B981; }
-        .menu-item:nth-child(5) .menu-text { color: #10B981; }
-        .menu-item:nth-child(6) .menu-icon { fill: #06B6D4; }
-        .menu-item:nth-child(6) .menu-text { color: #06B6D4; }
+.menu-arrow {
+    width: 18px;
+    height: 18px;
+    fill: #9ca3af;
+    transition: transform 0.3s ease;
+}
 
-        .menu-text {
-            flex: 1;
-            font-size: 15px;
-            font-weight: 600;
-            text-decoration: none;
-            color: inherit;
-        }
+.menu-item:hover .menu-arrow {
+    transform: translateX(4px);
+}
 
-        .menu-arrow {
-            width: 20px;
-            height: 20px;
-            fill: #999;
-        }
+.btn-download {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 18px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
 
-        .btn-download {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 16px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 10px rgba(102, 126, 234, 0.3);
-            transition: all 0.3s ease;
-            margin-bottom: 10px;
-            text-decoration: none;
-        }
+.btn-download:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+}
 
-        .btn-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
-        }
+.download-icon {
+    width: 22px;
+    height: 22px;
+    fill: white;
+}
 
-        .download-icon {
-            width: 22px;
-            height: 22px;
-            fill: white;
-        }
+.btn-logout {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    padding: 18px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+    transition: all 0.3s ease;
+    margin-top: 10px;
+}
 
-        .btn-logout {
-            background: linear-gradient(135deg, #FF4757 0%, #E84118 100%);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            padding: 16px;
-            width: 100%;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.3);
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
+.btn-logout:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4);
+}
 
-        .btn-logout:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(255, 71, 87, 0.4);
-        }
+.logout-icon {
+    width: 22px;
+    height: 22px;
+    fill: white;
+}
 
-        .logout-icon {
-            width: 22px;
-            height: 22px;
-            fill: white;
-        }
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
 
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 8px 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-        }
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    color: #666;
+    padding: 4px 12px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
 
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            color: #666;
-            padding: 4px 12px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
+.nav-item.active {
+    color: #667eea;
+}
 
-        .nav-item.active {
-            color: #667eea;
-        }
+.nav-icon {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 4px;
+}
 
-        .nav-icon {
-            width: 24px;
-            height: 24px;
-            margin-bottom: 4px;
-        }
+.nav-label {
+    font-size: 11px;
+    font-weight: 500;
+}
 
-        .nav-label {
-            font-size: 11px;
-            font-weight: 500;
-        }
-
-        .icon-home { fill: currentColor; }
-        .icon-dashboard { fill: currentColor; }
-        .icon-share { fill: currentColor; }
-        .icon-account { fill: currentColor; }
+.icon-home { fill: currentColor; }
+.icon-dashboard { fill: currentColor; }
+.icon-share { fill: currentColor; }
+.icon-account { fill: currentColor; }
     </style>
 </head>
 <body>
     <div class="content">
         <div class="palette-card">
             <div class="money-bg">
-                <span class="money-icon">💰</span>
-                <span class="money-icon">💵</span>
-                <span class="money-icon">💳</span>
-                <span class="money-icon">💸</span>
-                <span class="money-icon">🪙</span>
-                <span class="money-icon">💰</span>
-                <span class="money-icon">💵</span>
-                <span class="money-icon">💳</span>
+              
             </div>
             
             <div class="user-info">
